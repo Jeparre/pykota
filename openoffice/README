@@ -1,0 +1,105 @@
+# $Id: README 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+====================================================================
+
+This directory contains some screenshots of direct access to PyKota's
+database through OpenOffice.org, as well as a sample report in both
+PDF and OpenOffice.org's sxc format.
+
+The sample report is a Jobs per User diagram, created from a
+simple SQL query to PyKota's database from within OpenOffice.org
+
+Since it works but I don't know OpenOffice enough to do something 
+really nice with it, I've added these screenshots and here's a small 
+howto below. For people interested in a more complete howto, please 
+see : http://kandalaya.org/download/oo-pgsql.html 
+
+PyKota + PostgreSQL + OpenOffice.org HowTO :
+--------------------------------------------
+
+        - Install and configure :
+        
+          godbcconfig
+          gtkodbcconfig0
+          iodbc
+          libiodbc2
+          odbc-postgresql
+          odbcinst1
+          unixodbc
+          
+        - Within gODBCConfig, add the PostgreSQL driver by 
+          filling the Configure Driver form :
+          
+                   Name : PostgreSQL
+            Description : PostgreSQL
+                 Driver : /usr/lib/postgresql/psqlodbc.so
+                  Setup : /usr/lib/odbc/libodbcpsqlS.so
+              FileUsage : 1
+        
+          See gODBCConfig1.png
+          
+          Then create a system DSN (only the more important fields
+          are listed below) :
+          
+                   DSN : PyKota
+           Description : PostgreSQL access to PyKota
+                Driver : PostgreSQL
+              Database : pykota
+            Servername : your.postgresql.server.here
+              Username : pykotauser
+              Password : pykotauser's password
+                  Port : 5432
+                  
+          See gODBCConfig2.png
+          
+        - Then in OpenOffice.org add a new data source, selecting
+          ODBC in the Database Type field. By clicking on the URL
+          field's continuation dots, the PyKota DSN should appear.
+          Just select it and you're done.
+          
+          See ooo1.png
+          
+        - You can now create your own queries to the PyKota database,
+          and create any report you want.
+          
+          See ooo2.png
+          
+        - When you've got something nice, please contribute it back  
+          so we can learn from your experience.
+        
+WARNING :        
+
+        The above procedure doesn't work if you use the OpenLDAP backend
+        to store PyKota's datas. A similar procedure is probably possible
+        but last time I checked, the LDAP attributes accessible from
+        OpenOffice.org were limited to what one usually finds in 
+        address books, unfortunately.
+
+Windows Users :
+
+        You'll find information on how to use the PostgreSQL ODBC
+        driver with OpenOffice.org for Windows at :
+
+        en: http://www.openoffice.org/nonav/issues/showattachment.cgi/3481/postgresql.sxw
+        de: http://de.openoffice.org/doc/howto/datenquelle/tech_pgsql.html
+        es: http://es.openoffice.org/files/documents/73/799/pgsql-win.sxw
+        
+        Thanks to Johannes Lämmermann for this information.
+====================================================================

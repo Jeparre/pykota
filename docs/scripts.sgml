@@ -1,0 +1,117 @@
+<!-- $Id: scripts.sgml 2551 2005-10-09 20:39:06Z jerome $ -->
+
+<chapter>
+  <title>Useful Shell Scripts</title>
+  <para>Last modified on $Date: 2005-10-09 22:39:06 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    <application>PyKota</application> comes with a number of shell scripts which
+    help do complex things. They can be used as-is, but you may prefer to adapt
+    them to your own configuration. All are installed in the <filename>/usr/share/pykota</filename>
+    directory.
+  </para>  
+  
+  <sect1>
+    <title>waitprinter.sh</title>
+    <para>
+      This script which accepts a printer's hostname or <acronym>IP</acronym> address as its first parameter 
+      is used to wait for a printer which supports the <acronym>SNMP</acronym> protocol to be in <literal>idle</literal> state.
+      It exits as soon as the printer is <literal>idle</literal>, else loops forever.
+    </para>
+    
+    <para>
+      When defining an hardware <literal>accounter</literal> for a printer, it is important to wait for the printer being
+      <literal>idle</literal> before asking it for its internal page counter, otherwise results could
+      be inaccurate. If the printer is asked while the job is still being printed, then the page counter's
+      value will be lower than expected with regard to the real job's size.
+    </para>
+    
+    <para>
+      <command>waitprinter.sh</command> can be used to be sure that <application>PyKota</application>
+      waits until no job is being printed, and no paper sheet is travelling inside the printer. 
+    </para>
+    
+    <tip>
+      <title>Tip</title>
+      <para>
+        See the sample configuration file <filename>conf/pykota.conf.sample</filename> for examples.
+      </para>
+    </tip>  
+  </sect1>
+  
+  <sect1>
+    <title>papwaitprinter.sh</title>
+    <para>
+      This script which accepts a printer's AppleTalk name as its first parameter 
+      is used to wait for a printer which supports the <acronym>AppleTalk</acronym> protocol to be in <literal>idle</literal> state.
+      It exits as soon as the printer is <literal>idle</literal>, else loops forever.
+    </para>
+    
+    <para>
+      When defining an hardware <literal>accounter</literal> for a printer, it is important to wait for the printer being
+      <literal>idle</literal> before asking it for its internal page counter, otherwise results could
+      be inaccurate. If the printer is asked while the job is still being printed, then the page counter's
+      value will be lower than expected with regard to the real job's size.
+    </para>
+    
+    <para>
+      <command>papwaitprinter.sh</command> can be used to be sure that <application>PyKota</application>
+      waits until no job is being printed, and no paper sheet is travelling inside the printer. 
+    </para>  
+    
+    <tip>
+      <title>Tip</title>
+      <para>
+        See the sample configuration file <filename>conf/pykota.conf.sample</filename> for examples.
+      </para>
+    </tip>  
+  </sect1>
+  
+  <sect1>
+    <title>mailandpopup.sh</title>
+    <para>
+      This script can be used in the <literal>mailto</literal> directive of <filename>pykota.conf</filename>
+      to both send an email and display a <application>Winpopup</application> message on the user's screen,
+      whenever print quota is low or reached.
+    </para>
+    
+    <para>
+      For this script to work successfully, you may need to have a <application>Samba</application> 
+      Primary Domain Controller. Some modifications may be needed in other configurations.
+    </para>
+    
+    <tip>
+      <title>Tip</title>
+      <para>
+        See the sample configuration file <filename>conf/pykota.conf.sample</filename> for examples.
+      </para>
+    </tip>  
+  </sect1>
+  
+  <sect1>
+    <title>pagecount.pl</title>
+    <para>
+      This <application>Perl</application> script can be used in the <literal>accounter</literal> directive of <filename>pykota.conf</filename>,
+      to ask a printer for its internal page counter by sending a specially crafted <acronym>PJL</acronym> job
+      to it over the AppSocket protocol, usually on <acronym>TCP</acronym> port 9100.
+      It accepts the printer's hostname or <acronym>IP</acronym> address as its first parameter,
+      and the optional <acronym>TCP</acronym> port as its second parameter (it defaults to 9100).
+    </para>  
+    
+    <para>
+      Most of the time you'll use this script in combination with a script which waits for the printer
+      to be in <literal>idle</literal> state, in something like :
+<screen>      
+accounter: hardware(somewaitscript.sh && pagecount.pl %(printer)s)
+</screen>
+    </para>
+    
+    <tip>
+      <title>Tip</title>
+      <para>
+        See the sample configuration file <filename>conf/pykota.conf.sample</filename> for examples.
+      </para>
+    </tip>  
+  </sect1>
+</chapter>
+

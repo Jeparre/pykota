@@ -1,0 +1,98 @@
+<!-- $Id: pkturnkey.sgml 2560 2005-10-09 21:44:19Z jerome $ -->
+
+<chapter>
+  <title>Initialize your database with pkturnkey</title>
+  <para>Last modified on $Date: 2005-10-09 23:44:19 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    The ultimate goal of the <command>pkturnkey</command> command line tool is
+    to transform <application>PyKota</application> into a turn-key solution.
+  </para>  
+  
+  <para>
+    For now its functionnalities are fairly limited, but it can :
+    <itemizedlist>
+      <listitem>
+        <para>
+          Import existing print queues into <application>PyKota</application>'s database.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          Import existing users into <application>PyKota</application>'s database.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          Import existing users groups into <application>PyKota</application>'s database.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          Tell you which accounting method is the best for your printers.
+        </para>
+      </listitem>  
+    </itemizedlist>
+  </para>
+  
+  <para>
+    In the future, it is possible that this command will entirely generate configuration
+    files for you, and do a bunch of other things to ease the installation and 
+    configuration of <application>PyKota</application>
+  </para>
+  
+  <para>
+    One very important thing to remember is that, by default, <command>pkturnkey</command>
+    doesn't modify anything, unless you tell it to really do so by using its
+    <literal>--force</literal> (or <literal>-f</literal>) command line switch.
+    This lets you familiarize with what would happen before doing it for real,
+    especially because <command>pkturnkey</command> displays the other commands
+    it would launch.
+  </para>
+  
+  <para>
+    You can restrict the datas you want to import into the database by using the
+    appropriate command line switches, or by passing printers' names as non-option
+    arguments at the end of the command line.
+  </para>
+  
+  <para>
+    The following example will import all existing print queues, as well as all
+    users whose uid is comprised between 1000 and 50000 and all groups whose
+    gid is comprised between 5000 and 6000 :
+    <screen>
+$ pkturnkey --force --uidmin 1000 --dousers --uidmax 50000 --dogroups --gidmin 5000 --gidmax 6000    
+    </screen>
+  </para>
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>pkturnkey</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt"><arg>-f</arg><arg>--force</arg></group>
+        <group choice="opt"><arg>-d</arg><arg>--dousers</arg></group>
+        <group choice="opt"><arg>-D</arg><arg>--dogroups</arg></group>
+        <group choice="opt">
+          <arg>-u <replaceable>uid</replaceable></arg>
+          <arg>--uidmin <replaceable>uid</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-U <replaceable>uid</replaceable></arg>
+          <arg>--uidmax <replaceable>uid</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-g <replaceable>gid</replaceable></arg>
+          <arg>--gidmin <replaceable>gid</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-G <replaceable>gid</replaceable></arg>
+          <arg>--gidmax <replaceable>gid</replaceable></arg>
+        </group>  
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

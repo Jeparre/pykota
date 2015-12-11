@@ -1,0 +1,17 @@
+DESTDIR=
+
+all: build
+
+build: build-stamp
+build-stamp:
+	docbook2html pykota.sgml
+	docbook2pdf pykota.sgml
+	touch build-stamp
+
+install: build
+	mkdir -p $(DESTDIR)/usr/share/doc/pykota/html/
+	cp pykota.pdf $(DESTDIR)/usr/share/doc/pykota/
+	cp *.html $(DESTDIR)/usr/share/doc/pykota/html/
+
+clean:
+	rm -f pykota.pdf *.html build-stamp

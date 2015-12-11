@@ -1,0 +1,26 @@
+<!-- $Id: pkinvoice.sgml 3115 2006-12-03 10:50:20Z jerome $ -->
+
+<chapter>
+  <title>Invoice your users with pkinvoice</title>
+  <para>Last modified on $Date: 2006-12-03 11:50:20 +0100 (dim, 03 déc 2006) $</para>
+  
+  <para>
+    <command>pkinvoice</command> is a command line tool with which you'll be able to extract jobs from the printing history,
+    and generate nice looking and configurable <acronym>PDF</acronym> invoices.
+  </para>  
+  
+  <para>
+    You'll be allowed to optionally filter the data extraction based on starting and ending dates, which
+    defaults to the complete history, user, printer, client hostname, etc...
+  </para>
+  
+  <para>
+    The generated documents will contain one page per user, and the amount on the invoice will represent
+    how many credits each user spent during the specified time period.
+  </para>
+  
+  <para>
+    For more details, please refer to <command>pkinvoice</command>'s manual page.
+  </para>
+</chapter>
+

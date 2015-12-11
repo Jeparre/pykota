@@ -1,0 +1,375 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# A notifier for PyKota
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pknotify 3403 2008-07-18 08:25:10Z jerome $
+#
+#
+
+import sys
+import socket
+import errno
+import signal
+import xmlrpclib
+
+try :
+    import PAM
+except ImportError :    
+    hasPAM = 0
+else :    
+    hasPAM = 1
+
+from pykota.tool import Tool, PyKotaToolError, PyKotaCommandLineError, crashed, N_
+
+__doc__ = N_("""pknotify v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Notifies or ask questions to end users who launched the PyKotIcon application.
+
+command line usage :
+
+  pknotify  [options]  [arguments]
+
+options :
+
+  -v | --version             Prints pknotify's version number then exits.
+  -h | --help                Prints this message then exits.
+  
+  -d | --destination h[:p]   Sets the destination hostname and optional
+                             port onto which contact the remote PyKotIcon
+                             application. This option is mandatory.
+                             When not specified, the port defaults to 7654.
+                             
+  -a | --ask                 Tells pknotify to ask something to the end
+                             user. Then pknotify will output the result.
+                       
+  -C | --checkauth           When --ask is used and both an 'username' and a
+                             'password' are asked to the end user, then
+                             pknotify will try to authenticate the user
+                             through PAM. If authentified, this program
+                             will print "AUTH=YES", else "AUTH=NO".
+                             If a field is missing, "AUTH=IMPOSSIBLE" will
+                             be printed. If the user is authenticated, then
+                             "USERNAME=xxxx" will be printed as well.
+                             
+  -c | --confirm             Tells pknotify to ask for either a confirmation                       
+                             or abortion.
+                             
+  -D | --denyafter N         With --checkauth above, makes pknotify loop                           
+                             up to N times if the password is incorrect.
+                             After having reached the limit, "DENY" will
+                             be printed, which effectively rejects the job.
+                             The default value of N is 1, meaning the job
+                             is denied after the first unsuccessful try.
+                             
+  -N | --noremote action     If it's impossible to connect to the remote
+                             PyKotIcon machine, do this action instead.
+                             Allowed actions are 'CONTINUE' and 'CANCEL', 
+                             which will respectively allow the processing
+                             of the print job to continue, or the job to
+                             be cancelled. The default value is CANCEL.
+                             
+  -n | --notify              Tells pknotify to send an informational message
+                             to the end user.
+                             
+  -q | --quit                Tells pknotify to send a message asking the
+                             PyKotIcon application to exit. This option can
+                             be combined with the other ones to make PyKotIcon
+                             exit after having sent the answer from the dialog.
+                             
+  -t | --timeout T           Tells pknotify to ignore the end user's answer if
+                             it comes past T seconds after the dialog box being
+                             opened. The default value is 0 seconds, which 
+                             tells pknotify to wait indefinitely.
+                             Use this option to avoid having an user who
+                             leaved his computer stall a whole print queue.
+                             
+  You MUST specify either --ask, --confirm, --notify or --quit.
+
+  arguments :             
+  
+    -a | --ask : Several arguments are accepted, of the form
+                 "label:varname:defaultvalue". The result will
+                 be printed to stdout in the following format :
+                 VAR1NAME=VAR1VALUE
+                 VAR2NAME=VAR2VALUE
+                 ...
+                 If the dialog was cancelled, nothing will be
+                 printed. If one of the varname is 'password'
+                 then this field is asked as a password (you won't
+                 see what you type in), and is NOT printed. Although
+                 it is not printed, it will be used to check if
+                 authentication is valid if you specify --checkauth.
+                 
+    -c | --confirm : A single argument is expected, representing the
+                     message to display. If the dialog is confirmed
+                     then pknotify will print OK, else CANCEL.
+                     
+    -n | --notify : A single argument is expected, representing the                 
+                    message to display. In this case pknotify will
+                    always print OK.
+                    
+examples :                    
+
+  pknotify -d client:7654 --noremote CONTINUE --confirm "This job costs 10 credits"
+  
+  Would display the cost of the print job and asks for confirmation.
+  If the end user doesn't have PyKotIcon running and accepting connections
+  from the print server, PyKota will consider that the end user accepted
+  to print this job.
+  
+  pknotify --destination $PYKOTAJOBORIGINATINGHOSTNAME:7654 \\
+           --checkauth --ask "Your name:username:" "Your password:password:"
+           
+  Asks an username and password, and checks if they are valid.         
+  NB : The PYKOTAJOBORIGINATINGHOSTNAME environment variable is
+  only set if you launch pknotify from cupspykota through a directive
+  in ~pykota/pykota.conf
+  
+  The TCP port you'll use must be reachable on the client from the
+  print server.
+""")
+        
+class TimeoutError(Exception) :        
+    """An exception for timeouts."""
+    def __init__(self, message = ""):
+        self.message = message
+        Exception.__init__(self, message)
+    def __repr__(self):
+        return self.message
+    __str__ = __repr__
+    
+class PyKotaNotify(Tool) :        
+    """A class for pknotify."""
+    def sanitizeMessage(self, msg) :
+        """Replaces \\n and returns a messagee in xmlrpclib Binary format."""
+        return xmlrpclib.Binary(self.userCharsetToUTF8(msg.replace("\\n", "\n")))
+        
+    def convPAM(self, auth, queries=[], userdata=None) :
+        """Prepares PAM datas."""
+        response = []
+        for (query, qtype) in queries :
+            if qtype == PAM.PAM_PROMPT_ECHO_OFF :
+                response.append((self.password, 0))
+            elif qtype in (PAM.PAM_PROMPT_ECHO_ON, PAM.PAM_ERROR_MSG, PAM.PAM_TEXT_INFO) :
+                self.printInfo("Unexpected PAM query : %s (%s)" % (query, qtype), "warn")
+                response.append(('', 0))
+            else:
+                return None
+        return response
+
+    def checkAuth(self, username, password) :    
+        """Checks if we could authenticate an username with a password."""
+        if not hasPAM :    
+            raise PyKotaToolError, _("You MUST install PyPAM for this functionnality to work !")
+        else :    
+            retcode = False
+            self.password = password
+            self.regainPriv()
+            auth = PAM.pam()
+            auth.start("passwd")
+            auth.set_item(PAM.PAM_USER, username)
+            auth.set_item(PAM.PAM_CONV, self.convPAM)
+            try :
+                auth.authenticate()
+                auth.acct_mgmt()
+            except PAM.error, resp :
+                self.printInfo(_("Authentication error for user %s : %s") % (username, resp), "warn")
+            except :
+                self.printInfo(_("Internal error : can't authenticate user %s") % username, "error")
+            else :
+                self.logdebug(_("Password correct for user %s") % username)
+                retcode = True
+            self.dropPriv()    
+            return retcode
+            
+    def alarmHandler(self, signum, frame) :        
+        """Alarm handler."""
+        raise TimeoutError, _("The end user at %s:%i didn't answer within %i seconds. The print job will be cancelled.") % (self.destination, self.port, self.timeout)
+        
+    def main(self, arguments, options) :
+        """Notifies or asks questions to end users through PyKotIcon."""
+        try :
+            (self.destination, self.port) = options["destination"].split(":")
+            self.port = int(self.port)
+        except ValueError :
+            self.destination = options["destination"]
+            self.port = 7654
+            
+        try :
+            denyafter = int(options["denyafter"])
+            if denyafter < 1 :
+                raise ValueError
+        except (ValueError, TypeError) :        
+            denyafter = 1
+            
+        try :    
+            self.timeout = int(options["timeout"])
+            if self.timeout < 0 :
+                raise ValueError
+        except (ValueError, TypeError) :
+            self.timeout = 0
+            
+        if self.timeout :
+            signal.signal(signal.SIGALRM, self.alarmHandler)
+            signal.alarm(self.timeout)
+            
+        try :    
+            try :    
+                server = xmlrpclib.ServerProxy("http://%s:%s" % (self.destination, self.port))
+                if options["ask"] :
+                    try :
+                        denyafter = int(options["denyafter"])
+                        if denyafter < 1 :
+                            raise ValueError
+                    except (ValueError, TypeError) :    
+                        denyafter = 1
+                    labels = []
+                    varnames = []
+                    varvalues = {}
+                    for arg in arguments :
+                        try :
+                            (label, varname, varvalue) = arg.split(":", 2)
+                        except ValueError :    
+                            raise PyKotaCommandLineError, "argument '%s' is invalid !" % arg
+                        labels.append(self.sanitizeMessage(label))
+                        varname = varname.lower()
+                        varnames.append(varname)
+                        varvalues[varname] = self.sanitizeMessage(varvalue)
+                        
+                    passnumber = 1    
+                    authok = None
+                    while (authok != "AUTH=YES") and (passnumber <= denyafter) :
+                        result = server.askDatas(labels, varnames, varvalues)    
+                        if not options["checkauth"] :
+                            break
+                        if result["isValid"] :
+                            if ("username" in varnames) and ("password" in varnames) :
+                                if self.checkAuth(self.UTF8ToUserCharset(result["username"].data[:]), 
+                                                  self.UTF8ToUserCharset(result["password"].data[:])) :
+                                    authok = "AUTH=YES"
+                                else :    
+                                    authok = "AUTH=NO"
+                            else :        
+                                authok = "AUTH=IMPOSSIBLE"        
+                        passnumber += 1        
+                                    
+                    if options["checkauth"] and options["denyafter"] \
+                       and (passnumber > denyafter) \
+                       and (authok != "AUTH=YES") :
+                        print "DENY"
+                    if result["isValid"] :
+                        for varname in varnames :
+                            if (varname != "password") \
+                               and ((varname != "username") or (authok in (None, "AUTH=YES"))) :
+                                print "%s=%s" % (varname.upper(), self.UTF8ToUserCharset(result[varname].data[:]))
+                        if authok is not None :        
+                            print authok        
+                elif options["confirm"] :
+                    print server.showDialog(self.sanitizeMessage(arguments[0]), True)
+                elif options["notify"] :
+                    print server.showDialog(self.sanitizeMessage(arguments[0]), False)
+                    
+                if options["quit"] :    
+                    server.quitApplication()
+            except (xmlrpclib.ProtocolError, socket.error, socket.gaierror), msg :
+                print options["noremote"]
+                #try :
+                #    errnum = msg.args[0]
+                #except (AttributeError, IndexError) :
+                #    pass
+                #else :    
+                #    if errnum == errno.ECONNREFUSED :
+                #        raise PyKotaToolError, "%s : %s" % (str(msg), (_("Are you sure that PyKotIcon is running and accepting incoming connections on %s:%s ?") % (self.destination, self.port)))
+                self.printInfo("%s : %s" % (_("Connection error"), str(msg)), "warn")
+            except TimeoutError, msg :    
+                self.printInfo(msg, "warn")
+                print "CANCEL"      # Timeout occured : job is cancelled.
+        finally :    
+            if self.timeout :    
+                signal.alarm(0)    
+        
+if __name__ == "__main__" :
+    retcode = 0
+    try :
+        defaults = { \
+                     "timeout" : 0,
+                     "noremote" : "CANCEL",
+                   }
+        short_options = "vhd:acnqCD:t:N:"
+        long_options = ["help", "version", "destination=", "denyafter=", \
+                        "timeout=", "ask", "checkauth", "confirm", "notify", \
+                        "quit", "noremote=" ]
+        
+        # Initializes the command line tool
+        notifier = PyKotaNotify(doc=__doc__)
+        notifier.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = notifier.parseCommandline(sys.argv[1:], short_options, long_options)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["destination"] = options["d"] or options["destination"]
+        options["ask"] = options["a"] or options["ask"]
+        options["confirm"] = options["c"] or options["confirm"]
+        options["notify"] = options["n"] or options["notify"]
+        options["quit"] = options["q"] or options["quit"]
+        options["checkauth"] = options["C"] or options["checkauth"]
+        options["denyafter"] = options["D"] or options["denyafter"]
+        options["timeout"] = options["t"] or options["timeout"] or defaults["timeout"]
+        options["noremote"] = (options["N"] or options["noremote"] or defaults["noremote"]).upper()
+        
+        if options["help"] :
+            notifier.display_usage_and_quit()
+        elif options["version"] :
+            notifier.display_version_and_quit()
+        elif (options["ask"] and (options["confirm"] or options["notify"])) \
+             or (options["confirm"] and (options["ask"] or options["notify"])) \
+             or ((options["checkauth"] or options["denyafter"]) and not options["ask"]) \
+             or (options["notify"] and (options["ask"] or options["confirm"])) :
+            raise PyKotaCommandLineError, _("incompatible options, see help.")
+        elif (not options["destination"]) \
+             or not (options["quit"] or options["ask"] or options["confirm"] or options["notify"]) :
+            raise PyKotaCommandLineError, _("some options are mandatory, see help.")
+        elif options["noremote"] not in ("CANCEL", "CONTINUE") :
+            raise PyKotaCommandLineError, _("incorrect value for the --noremote command line switch, see help.")
+        elif (not args) and (not options["quit"]) :
+            raise PyKotaCommandLineError, _("some options require arguments, see help.")
+        else :
+            retcode = notifier.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        print "CANCEL"  # Forces the cancellation of the print job if a command line switch is incorrect
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            notifier.crashed("%s failed" % sys.argv[0])
+        except :    
+            crashed("%s failed" % sys.argv[0])
+        retcode = -1
+        
+    sys.exit(retcode)    

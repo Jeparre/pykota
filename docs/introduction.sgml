@@ -1,0 +1,278 @@
+<!-- $Id: introduction.sgml 3116 2006-12-03 11:26:33Z jerome $ -->
+
+<chapter>
+  <title id="introduction">Introduction to PyKota</title>
+  
+  <para>Last modified on $Date: 2006-12-03 12:26:33 +0100 (dim, 03 déc 2006) $</para>
+  
+  <para>
+    This chapter will briefly introduce you to PyKota, and will familiarize
+    you with this software and its components.
+  </para>
+  
+  
+  <sect1>
+    <title>What is <application>PyKota</application> ?</title>
+    
+    <para>
+      <application>PyKota</application> is a print quota and print accounting software solution
+      for GNU/Linux and compatible print servers.
+    </para>
+    
+    <para>
+      PyKota currently supports the
+      <ulink url="http://www.cups.org"><application>CUPS</application></ulink>
+      <footnote><para>Common UNIX Printing System</para></footnote>
+      printing subsystem, although older releases also supported 
+      <ulink url="http://lprng.sourceforge.net"><application>LPRng</application></ulink>.
+    </para>
+    
+    <para>
+      PyKota is distributed under the terms of the GNU General Public License of the
+      <ulink url="http://www.fsf.org">Free Software Foundation</ulink>. This means that
+      you are allowed to use, modify or redistribute its code provided that you respect
+      the terms of this license.
+    </para>
+    
+    <para>
+      We believe that despite being a bit rough around the edges sometimes, <application>PyKota</application>
+      offers an unmatched flexibility and probably all you want to do with a print quota software is
+      either already included, easily scriptable with a few lines of shell scripting, or planned
+      for the next release.
+    </para>
+    
+    <para>
+      <application>PyKota</application> is however a somewhat complex piece of software, and installing
+      it will mandate that you also install several dependencies beforehand, as you'll see in the
+      next chapter.
+    </para>
+    
+    <para>
+      <application>PyKota</application> is made of the following components :
+      <itemizedlist>
+        <listitem>
+          <para>
+            Configuration files, which must be placed into the system user
+            <literal>pykota</literal>'s home directory as defined in <filename>/etc/passwd</filename>
+            <footnote>
+              <para>If your <filename>/etc/passwd</filename> contains something like
+                <literal>pykota:x:1001:1001:PyKota Admin,,,:/etc/pykota:/bin/sh</literal>
+                then the home directory is <filename>/etc/pykota</filename>
+              </para>
+            </footnote> :
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <filename>pykotadmin.conf</filename> : this file contains sensitive database settings
+                  allowing the <application>PyKota</application> software to modify the
+                  print quota database. This file should be protected and should only be
+                  made readable by the administrators of <application>PyKota</application>
+                  and the system user the printing subsystem is running as.
+                  The possibility for a particular user to read this file determines if
+                  this user is a <application>PyKota</application> Administrator or not,
+                  so please give particular attention to this file's permissions.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <filename>pykota.conf</filename> : this is the main configuration file for 
+                  <application>PyKota</application>. It contains database settings which
+                  allow the <application>PyKota</application> software to access to the print
+                  quota database in readonly mode, as well as global and print queue specific
+                  configuration directives. With a properly configured <application>PyKota</application>, 
+                  letting normal users read this file is safe
+                  excepted where you want to forbid users to read other users' print quota
+                  information. However if you're not confident about your database settings,
+                  it's better to not let normal users read this file. This way they can't even
+                  use any of the <application>PyKota</application> command line tools.
+                </para>
+              </listitem>  
+            </itemizedlist>
+          </para>
+        </listitem>  
+        <listitem>
+          <para>
+            Either a <application>PostgreSQL</application>, <application>MySQL</application> or <application>SQLite</application> database, or an <acronym>LDAP</acronym>
+            <footnote><para>Lightweight Directory Access Protocol</para></footnote>
+            <acronym>DIT</acronym>
+            <footnote><para>Directory Information Tree</para></footnote> :
+            <application>PyKota</application> can store its datas into any of these. Support
+            for other database backends might be added in a future release.
+          </para>
+        </listitem>  
+        <listitem>
+          <para>
+            A generic <acronym>CUPS</acronym> backend wrapper, named <command>cupspykota</command> :
+            this software captures all print jobs passing through the print queues it manages,
+            and does the accounting and quota checking. It can reject print jobs in a number
+            of circumstances like the user being over quota, and interact with the end user through the use of external
+            commands or shell scripts. This software is written in such a manner than system
+            administrators can plug their own scripts at the most strategic points of the 
+            printing process, through specific directives that you put in <application>PyKota</application>'s
+            configuration files.
+          </para>
+        </listitem>  
+        <listitem>
+          <para>
+            Several command line tools to manage print quotas and accounting. All of these
+            commands accept the <literal>--version</literal> and <literal>--help</literal>
+            command line switches, and all have a manual page. Many manual pages are available
+            in several native languages and contain usage examples. Some commands have many
+            options and switches, so please read their help carefully.
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <command>pksetup</command> : to install PyKota in a completely
+                  interactive way, but currently only under Debian and Ubuntu.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkturnkey</command> : to help you do the initial
+                  configuration and database initialization. This command almost transforms <application>PyKota</application>
+                  into a turn-key solution, hence the name.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkprinters</command> : to manage printers and printers groups.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkusers</command> : to manage users and users groups.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>edpykota</command> : to manage users' and users groups' print quota entries.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkbcodes</command> : to manage billing codes.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>repykota</command> : to do some basic print quota reporting.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                   <command>dumpykota</command> : to dump the database's contents in a portable
+                   way. This command can be used to export <application>PyKota</application>'s
+                   datas to third party software, like print log analyzers or spreadsheets, and
+                   numerous output formats are supported, like <acronym>csv</acronym> and <acronym>XML</acronym>
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                   <command>autopykota</command> : to automate the creation of user print accounts on
+                   first print. This command is not meant to be used from the command line, but
+                   instead from <filename>pykota.conf</filename>'s <literal>policy</literal> directive.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pykosd</command> : to display their remaining credits or
+                  pages to end users. This is an <acronym>OSD</acronym> <footnote><para>On Screen Display</para></footnote>
+                  application which works under the X Window system.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pykotme</command> : to give detailed quotes to end users before they print, this way
+                  they know in advance how much a print job will cost to them and can decide to route it to
+                  a less costly printer.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                   <command>pkbanner</command> : to generate dynamic banner pages when printing.
+                   This command is
+                   not meant to be used from the command line, but
+                   instead from <filename>pykota.conf</filename>'s <literal>startingbanner</literal> 
+                   and <literal>endingbanner</literal> directives. If you prefer you can use
+                   your own generator of dynamic banner pages or even static banner pages.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>warnpykota</command> : to warn users over quota from time to time, for example
+                  from <filename>crontab</filename>. Users are warned while printing in any case, so
+                  this command is meant to be used as a periodic reminder.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkmail</command> : to let users obtain their print quota situation by email.
+                  In the future other functionnalities will be added.
+                  This command is not meant to be used from the command line, but
+                  instead as a pipe from your mail server's <filename>/etc/aliases</filename> file.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pknotify</command> : a client for the <application>PyKotIcon</application> cross-platform generic network dialog box manager. This
+                  tools allow you to interact with end users at printing time.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkinvoice</command> : an invoice generator which can create personalized PDF invoices
+                  for your users from their printing history.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pkrefund</command> : a tool with which you can refund print jobs 
+                  when there was an accounting problem. It can generate printable receipts
+                  in the PDF format.
+                </para>
+              </listitem>  
+            </itemizedlist>
+          </para>
+        </listitem>  
+        <listitem>
+          <para>
+            Several <acronym>CGI</acronym> scripts which constitute <application>PyKota</application>'s web interface.
+            All these scripts behave differently when they are protected with an username and password
+            compared to when they are not. See <filename>pykota/cgi-bin/README</filename> for
+            details.
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <command>printquota.cgi</command> : to do basic print quota reports like repykota, 
+                  and also to examine the printing history, which is not possible with repykota for now.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>dumpykota.cgi</command> : identical to the <command>dumpykota</command>
+                  command line tool, but works from within a web browser.
+                </para>
+              </listitem>  
+              <listitem>
+                <para>
+                  <command>pykotme.cgi</command> : identical to the <command>pykotme</command>
+                  command line tool, but works from within a web browser.
+                </para>
+              </listitem>  
+            </itemizedlist>
+          </para>
+        </listitem>  
+        <listitem>
+          <para>
+            Several helper scripts and contributed stuff to handle very specific configurations.
+            Please visit the subdirectories of the <filename>pykota/</filename> source directory, and
+            you may find interesting things...
+          </para>
+        </listitem>  
+      </itemizedlist>
+    </para>
+    
+  </sect1>  
+  
+</chapter>
+

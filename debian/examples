@@ -1,0 +1,8 @@
+initscripts/postgresql/pykota-postgresql.sql
+initscripts/mysql/pykota-mysql.sql
+initscripts/sqlite/pykota-sqlite.sql
+initscripts/ldap/pykota.schema
+initscripts/ldap/pykota-sample.ldif
+conf/pykota.conf.sample
+conf/pykotadmin.conf.sample
+untested

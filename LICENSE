@@ -1,0 +1,56 @@
+# $Id: LICENSE 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+Licensing information :
+
+  * PyKota is licensed under the terms of the GNU General Public License of 
+    the Free Software Foundation, version 2, or at your option, any higher
+    version.
+
+  * You can access to PyKota's latest development tree by using 
+    SubVersion (aka SVN) :
+  
+      $ svn co svn://svn.librelogiciel.com/pykota/trunk pykota
+
+  * You are encouraged to support the project by purchasing an
+    unlimited entry pass to the restricted areas of http://www.pykota.com
+    or a Technical Support contract.
+    
+    This gives you access to all the OFFICIAL packages : tar+gzip, Debian,
+    Ubuntu, RPMs, etc... depending on the application, that you can
+    redistribute if you want.
+    
+    IMPORTANT : if you redistribute an OFFICIAL package in modified form,
+    PLEASE edit pykota/version.py to remove the word OFFICIAL from
+    the version number. If you redistribute an OFFICIAL package in
+    an unmodified form, then no problem.
+    
+  * I ask you to not label or present a version of PyKota downloaded 
+    from SVN as being the 'OFFICIAL' one. OFFICIAL packages are
+    reasonably stable and well tested before shipping, while the
+    latest development tree as extracted from subversion may contain
+    bugs and/or incomplete functionnalities.
+
+  * For more informations, please read :
+  
+        http://www.pykota.com/purchase
+        http://www.pykota.com/technical-support
+        

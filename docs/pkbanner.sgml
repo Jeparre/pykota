@@ -1,0 +1,88 @@
+<!-- $Id: pkbanner.sgml 2561 2005-10-09 22:04:12Z jerome $ -->
+
+<chapter>
+  <title>Generate banners with pkbanner</title>
+  <para>Last modified on $Date: 2005-10-10 00:04:12 +0200 (lun, 10 oct 2005) $</para>
+  
+  <para>
+    <application>CUPS</application> integrated bannering facility sucks because banners can only
+    be static PostScript files, even if they can include a few dynamic datas. Also it is possible
+    to have several banners and jobs mixed in an unexpected way because of the way <application>CUPS</application>
+    works.
+  </para>  
+  
+  <para>
+    To fix this problem for good, <application>PyKota</application> can use its own banners, which can be :
+    <itemizedlist>
+      <listitem>
+        <para>
+          Any static file, not only PostScript ones.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The output of any executable command of your choice, launched at printing time, 
+          and to which are made available a bunch of environment variables which can help
+          your command create a purely dynamic banner on the fly. In particular your 
+          command knows all about the status of the current user's print quota information.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  
+  <para>
+    Although you can use any command to generate banners for you, you can also use
+    the <command>pkbanner</command> command line tool which is included in <application>PyKota</application>.
+    It was designed for ease of use, without any compromise on its flexibility.
+  </para>
+  
+  <para>
+    For example <command>pkbanner</command> allows you to specify a particular logo and url to be
+    printed on the banner pages, as well as define a transparency factor to save toner while 
+    printing banners. You can also choose a particular page size to use, as well as include
+    additionnal textual information on the banner page.
+  </para>
+  
+  <para>
+    <command>pkbanner</command> generates PostScript code, but <application>PyKota</application>
+    accepts that you pipe its output into any other command if you ever need to use
+    another file format for your printer.
+  </para>
+  
+  <para>
+    <command>pkbanner</command> is not meant to be launched from the command line though, 
+    but only through the <literal>startingbanner</literal> and <literal>endingbanner</literal>
+    directives in <filename>pykota.conf</filename>.
+  </para>
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>pkbanner</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt">
+          <arg>-l <replaceable>image</replaceable></arg>
+          <arg>--logo <replaceable>image</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-p <replaceable>size</replaceable></arg>
+          <arg>--pagesize <replaceable>size</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-s <replaceable>luminosity</replaceable></arg>
+          <arg>--savetoner <replaceable>luminosity</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-u <replaceable>link</replaceable></arg>
+          <arg>--url <replaceable>link</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg><replaceable>additionnal info</replaceable></arg>
+        </group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

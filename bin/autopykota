@@ -1,0 +1,163 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# autopykota : script to automate user creation in PyKota
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# (c) 2007 Stefan Wold <stefan.wold@it.su.se>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: autopykota 3201 2007-07-09 19:51:01Z jerome $
+#
+#
+
+import sys
+import os
+
+from pykota.tool import PyKotaTool, PyKotaToolError, PyKotaCommandLineError, crashed, N_
+
+__doc__ = N_("""autopykota v%(__version__)s (c) %(__years__)s %(__author__)s
+
+A tool to automate user account creation and initial balance setting.
+
+THIS TOOL MUST NOT BE USED IF YOU WANT TO LIMIT YOUR USERS BY PAGE QUOTA !
+
+command line usage :
+
+  THIS TOOL MUST NOT BE USED FROM THE COMMAND LINE BUT ONLY AS PART
+  OF AN external policy IN pykota.conf
+  
+  autopykota { -i | --initbalance value } 
+
+options :
+
+  -v | --version       Prints autopykota's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -i | --initbalance b Sets the user's account initial balance value to b.
+                       If the user already exists, actual balance is left
+                       unmodified. If unset, the default value is 0.
+
+  -e | --email addr    Sets the user's e-mail address.
+  
+""")
+
+class AutoPyKota(PyKotaTool) :
+    """A class for the automat."""
+    def main(self, arguments, options) :
+        """Main entry point."""
+        username = os.environ.get("PYKOTAUSERNAME")
+        printername = os.environ.get("PYKOTAPRINTERNAME")
+        if (username is None) or (printername is None) :
+            raise PyKotaToolError, "Either the username or the printername is undefined. Fatal Error."
+        else :
+            printer = self.storage.getPrinter(printername)
+            if not printer.Exists :
+                self.logdebug("Creating printer %s which doesn't exist yet." % printername)
+                os.system('pkprinters --add --description "printer created from autopykota" "%s"' % printername)
+                printer = self.storage.getPrinterFromBackend(printername)
+                if printer.Exists :
+                    self.logdebug("Printer %s created successfully." % printername)
+                else :    
+                    self.logdebug("Impossible to create printer %s." % printername)
+                printernames = [printername]
+            else :    
+                printernames = [printer.Name] + [p.Name for p in self.storage.getParentPrinters(printer)]
+            
+            user = self.storage.getUser(username)
+            if not user.Exists :
+                self.logdebug("Creating user %s which doesn't exist yet." % username)
+                if (options["email"] is None) :
+                    os.system('pkusers --add --limitby balance --balance "%s" --description "user created from autopykota" "%s"' % (options["initbalance"], username))
+                else :
+                    os.system('pkusers --add --limitby balance --balance "%s" --email "%s" --description "user created from autopykota" "%s"' % (options["initbalance"], options["email"], username))
+                    
+                user = self.storage.getUserFromBackend(username)
+                if user.Exists :
+                    self.logdebug("User %s created successfully." % username)
+                else :    
+                    self.logdebug("Impossible to create user %s." % username)
+                
+            if user.Exists and printer.Exists :    
+                userpquota = self.storage.getUserPQuota(user, printer)
+                if not userpquota.Exists :
+                    self.logdebug("Creating a print quota entry for user %s on printers %s" % (username, printernames))
+                    os.system('edpykota --add --printer "%s" "%s"' % (','.join(printernames), username))
+                    userpquota = self.storage.getUserPQuotaFromBackend(user, printer)
+                    if userpquota.Exists :
+                        self.logdebug("User %s's print quota entry on printer %s created successfully." % (username, printername))
+                        return 0
+                    else :    
+                        self.logdebug("Impossible to create user %s's print quota entry on printer %s." % (username, printername))
+                        return -1
+                else :
+                    self.logdebug("User %s's print quota entry on printer %s already exists. Nothing to do." % (username, printername))
+                    return 0
+            else :        
+                return -1
+                
+if __name__ == "__main__" :    
+    retcode = 0
+    try :
+        defaults = { \
+                     "initbalance" : 0.0
+                   }
+        short_options = "vhi:e:"
+        long_options = ["help", "version", "initbalance=", "email="]
+        
+        # Initializes the command line tool
+        automat = AutoPyKota(doc=__doc__)
+        automat.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = automat.parseCommandline(sys.argv[1:], short_options, long_options)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["initbalance"] = options["i"] or options["initbalance"] or defaults["initbalance"]
+        options["email"] = options["e"] or options["email"]
+        
+        if options["help"] :
+            automat.display_usage_and_quit()
+        elif options["version"] :
+            automat.display_version_and_quit()
+        elif args :    
+            raise PyKotaCommandLineError, "autopykota doesn't accept non option arguments !"
+        else :
+            retcode = automat.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            automat.crashed("autopykota failed")
+        except :    
+            crashed("autopykota failed")
+        retcode = -1
+
+    try :
+        automat.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

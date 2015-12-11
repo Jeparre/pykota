@@ -1,0 +1,20 @@
+include README FAQ COPYING LICENSE TODO ChangeLog AUTHORS CREDITS SECURITY MANIFEST.in 
+include clean.sh gentarball.sh checkdeps.py bin/pkturnkey bin/pkmail bin/pkbanner
+include bin/autopykota bin/dumpykota bin/cupspykota bin/edpykota bin/warnpykota
+include bin/repykota bin/pykotme bin/pykosd bin/pkprinters bin/pkbcodes bin/pkinvoice
+include bin/pknotify bin/pkusers bin/pksetup bin/pkrefund
+include bin/waitprinter.sh bin/papwaitprinter.sh bin/mailandpopup.sh bin/README
+recursive-include po README *.sh *.po *.mo *.pot
+recursive-include man README *.sh *.1
+recursive-include docs README *.sgml *.png *.pdf *.html *.sx?
+recursive-include cgi-bin README *.cgi
+recursive-include conf README *.sample
+recursive-include initscripts README README.* *.sql *.py *.schema *.ldif
+recursive-include debian README pykota.templates Makefile.docs pykota.config pykota.cron.daily printquota.default Makefile.docs preinst postinst postrm changelog control copyright dirs docs examples links rules conffiles makedeb.sh files 
+recursive-include untested README *.sh *.ps *.pjl
+recursive-include logos README *.png *.xcf *.jpeg
+recursive-include contributed README *.pl *.sh *.py *.php
+recursive-include stylesheets README *.css
+recursive-include openoffice README *.png *.sx? *.pdf
+recursive-include tests README *.py *.sh
+recursive-include qa-assistant README *.xml

@@ -1,0 +1,67 @@
+# $Id: README.mysql 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+Documentation for the pykota-mysql.sql script :
+-----------------------------------------------
+
+This script is to be used to create an empty Quota Storage
+DataBase using MySQL as a backend.
+
+        - edit the pykota-mysql.sql file and modify the passwords at 
+          the end of the 'GRANT USAGE' lines.
+          
+        - As MySQL's administrative user, usually root,
+          do the following :
+          
+            # mysql <pykota-mysql.sql
+            
+        - If no error message appear, your MySQL PyKota storage
+          is now ready for use.
+          
+        - In ~pykota/pykota.conf, ensure that the following lines
+          are present and unique inside the [global] section :
+        
+            storagebackend : mysqlstorage
+            storageserver : localhost
+            storagename : pykota
+            storageuser : pykotauser
+            storageuserpw : readonlypw
+            
+            NB : replace 'readonlypw' with the password you chose
+            for user 'pykotauser' when you modified pykota-mysql.sql
+            
+        - In ~pykota/pykotadmin.conf ensure that the following lines
+          are present and unique inside the [global] section :
+        
+            storageadmin : pykotaadmin
+            storageadminpw : readwritepw
+            
+            NB : replace 'readwritepw' with the password you chose
+            for user 'pykotaadmin' when you modified pykota-mysql.sql
+            
+        - IMPORTANT : if your database is not located on the print server, 
+          replace 'localhost' in the lines above with your database server's 
+          hostname or IP address. If your database server doesn't listen on
+          its standard port, add the port number at the end of the hostname
+          with a colon to separate the hostname from the port.
+          See pykota/conf/pykota.conf.sample for examples.
+        
+============================================================

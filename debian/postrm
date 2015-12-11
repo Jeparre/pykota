@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: postrm 3222 2007-07-24 09:59:35Z jerome $
+
+if [ "$1" = "purge" ]; then
+        deluser --system --quiet pykota || true
+fi
+
+exit 0

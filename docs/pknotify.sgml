@@ -1,0 +1,87 @@
+<!-- $Id: pknotify.sgml 2836 2006-04-06 20:17:58Z jerome $ -->
+
+<chapter>
+  <title>Interact with end users with pknotify and pykoticon</title>
+  <para>Last modified on $Date: 2006-04-06 22:17:58 +0200 (jeu, 06 avr 2006) $</para>
+  
+  <para>
+    Printing under GNU/Linux and UNIX-Like systems usually lack features to dialog with end users.
+    They usually submit their print jobs, and then wait for them to complete, most of the time
+    silently.
+  </para>
+  
+  <para>
+    Some add-ons to printing systems, like print accounting software, could however benefit
+    a lot from being able to interact with users who submitted print jobs. That's exactly what
+    allow the <command>pknotify</command> and <command>pykoticon</command> commands, and they
+    do so in a completely generic way.
+  </para>
+  
+  <para>
+    <application>PyKotIcon</application> is a cross-platform, generic, networked, dialog box manager
+    which sits on client hosts and listen for incoming connections coming from the print servers.
+    This application is in fact a small server which publishes some of its functions over XML-RPC.
+    These functions offer the following possibilities :
+    <itemizedlist>
+      <listitem>
+        <para>
+          Display an informational message to the end user ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Display a message to the end user and asks for confirmation or cancellation.
+          The result is sent back to the calling program, usually on the print server ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Asks the end user to fill a simple form containing a number of labelled fields.
+          The values the user typed in are sent back to the calling program, usually on the print server ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Automatically shutdown the <application>PyKotIcon</application> application when asked to
+          do so by an authorized host, usually the print server.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  
+  <para>
+    It is important to know that <application>PyKotIcon</application> is completely independant from <application>PyKota</application>
+    and can be used outside of <application>PyKota</application>. In reality <application>PyKotIcon</application>
+    knows NOTHING about print accounting, and doesn't need to. That's why it's distributed separately.
+  </para>
+  
+  <para>
+    <application>pknotify</application> is a client program for <application>PyKotIcon</application>, which is usually
+    launched from directives in <filename>~pykota/pykota.conf</filename>, but which can be used directly
+    from the command line as well, if needed.
+  </para>
+  
+  <para>
+    <application>pknotify</application>, through command line options, can use any of the functions published
+    by <application>PyKotIcon</application>. In addition, if it is configured to tell <application>PyKotIcon</application>
+    to ask the end user for an username and password, it can try to authenticate this user with this password on the print server side.
+    This possibility is extremely useful when you allow anonymous logins on printing clients, but still want
+    print accounting to be done on a per user basis : each time an anonymous user prints, we can ask
+    him remotely to enter his authentication credentials. These credentials are then sent back to the
+    print server (NB : in the clear for now), which uses them to decide if printing is to be denied, or
+    allowed to continue until the next phase of print accounting and optional quota enforcement.
+  </para>
+  
+  <para>
+    For more details, see <command>pknotify</command>'s manual page.
+  </para>
+  
+  <warning><title>Warning</title>
+    <para>
+      While <application>PyKotIcon</application> sits on the printing clients, it is in fact
+      a server application. While <application>pknotify</application> is run on the print server,
+      it is in fact a client application to <application>PyKotIcon</application>.
+    </para>
+  </warning>
+</chapter>
+

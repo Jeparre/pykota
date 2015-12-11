@@ -1,0 +1,168 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Print Quota Quote sender
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pykotme 3133 2007-01-17 22:19:42Z jerome $
+#
+#
+
+import sys
+import os
+import pwd
+
+from pykota.tool import PyKotaTool, PyKotaCommandLineError, crashed, N_
+
+from pkpgpdls import analyzer, pdlparser
+    
+
+__doc__ = N_("""pykotme v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Gives print quotes to users.
+
+command line usage :
+
+  pykotme  [options]  [files]
+
+options :
+
+  -v | --version       Prints pykotme's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -P | --printer p     Gives a quote for this printer only. Actually p can
+                       use wildcards characters to select only
+                       some printers. The default value is *, meaning
+                       all printers.
+                       You can specify several names or wildcards, 
+                       by separating them with commas.
+  
+examples :                              
+
+  $ pykotme --printer apple file1.ps file2.ps
+  
+  This will give a print quote to the current user. The quote will show
+  the price and size of a job consisting in file1.ps and file2.ps 
+  which would be sent to the apple printer.
+  
+  $ pykotme --printer apple,hplaser <file1.ps
+  
+  This will give a print quote to the current user. The quote will show
+  the price and size of a job consisting in file1.ps as read from
+  standard input, which would be sent to the apple or hplaser
+  printer.
+
+  $ pykotme 
+  
+  This will give a quote for a job consisting of what is on standard 
+  input. The quote will list the job size, and the price the job
+  would cost on each printer.
+""")
+        
+        
+class PyKotMe(PyKotaTool) :        
+    """A class for pykotme."""
+    def main(self, files, options) :
+        """Gives print quotes."""
+        if (not sys.stdin.isatty()) and ("-" not in files) :
+            files.append("-")
+        totalsize = 0    
+        for filename in files :    
+            try :
+                parser = analyzer.PDLAnalyzer(filename)
+                totalsize += parser.getJobSize()
+            except (pdlparser.PDLParserError, IOError), msg :    
+                self.printInfo(msg)
+            
+        printers = self.storage.getMatchingPrinters(options["printer"])
+        if not printers :
+            raise PyKotaCommandLineError, _("There's no printer matching %s") % options["printer"]
+            
+        username = pwd.getpwuid(os.getuid())[0]
+        user = self.storage.getUser(username)
+        if user.Exists and user.LimitBy and (user.LimitBy.lower() == "balance"):
+            print _("Your account balance : %.2f") % (user.AccountBalance or 0.0)
+            
+        print _("Job size : %i pages") % totalsize    
+        if user.Exists :
+            if user.LimitBy == "noprint" :
+                print _("Your account settings forbid you to print at this time.")
+            else :    
+                for printer in printers :
+                    userpquota = self.storage.getUserPQuota(user, printer)
+                    if userpquota.Exists :
+                        if printer.MaxJobSize and (totalsize > printer.MaxJobSize) :
+                            print _("You are not allowed to print so many pages on printer %s at this time.") % printer.Name
+                        else :    
+                            cost = userpquota.computeJobPrice(totalsize)
+                            msg = _("Cost on printer %s : %.2f") % (printer.Name, cost)
+                            if printer.PassThrough :
+                                msg = "%s (%s)" % (msg, _("won't be charged, printer is in passthrough mode"))
+                            elif user.LimitBy == "nochange" :    
+                                msg = "%s (%s)" % (msg, _("won't be charged, your account is immutable"))
+                            print msg    
+            
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        defaults = { \
+                     "printer" : "*", \
+                   }
+        short_options = "vhP:"
+        long_options = ["help", "version", "printer="]
+        
+        # Initializes the command line tool
+        sender = PyKotMe(doc=__doc__)
+        sender.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = sender.parseCommandline(sys.argv[1:], short_options, long_options, allownothing=1)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["printer"] = options["P"] or options["printer"] or defaults["printer"]
+        
+        if options["help"] :
+            sender.display_usage_and_quit()
+        elif options["version"] :
+            sender.display_version_and_quit()
+        else :
+            retcode = sender.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            sender.crashed("pykotme failed")
+        except :    
+            crashed("pykotme failed")
+        retcode = -1
+
+    try :
+        sender.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

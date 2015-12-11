@@ -1,0 +1,94 @@
+it's a pyt# $Id: TODO 3167 2007-04-16 22:13:44Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+TODO, in no particular order :
+        
+        - Add a third settable price for printers : a minimal cost
+          for a page, with a default value of 0.0. The value would
+          be used instead of the computed price in the case of ink
+          accounting if the computed price would be lower than this
+          minimal price. The value wouldn't be used (yet?) for 
+          normal page accounting.
+          
+        - Document the PYKOTA_HOME environment variable.
+        
+        - LDAP : See if setting cn=ThePrinter for user print quota entries
+          could be done, only in the case where userquotabase=user
+          (idem for groups). Would make direct modifications (e.g.
+          with gq) more easy.
+          
+        - Allow the disabling of an user print quota entry without
+          deleting it.
+        
+        - Store the value of the user's account balance in the
+          printing history (the value at the time of printing) 
+          as well as in the payments history (as a safety check
+          in case an user complains).
+          
+        - PJL for non-networked backends (see ML's history)
+        
+        - Add the listing of the member printers in pkprinters if the printer
+          is a printer group.
+          
+        - Allow several levels of administrative priviledges by allowing
+          files like ~pykota/pykotadmin.someusername.conf (readonly by
+          user 'someusername'), and have the database server deal
+          with the permissions : no need for additionnal code or data
+          in PyKota's database !
+        
+        - Try to talk to education based distribution coordinators
+          (SambaEdu, SkoleLinux, K12LTSP, ...) to see how to
+          better integrate PyKota with these.
+          
+        - Add most configuration directives to the database itself,
+          while still allowing to overwrite them with the configuration
+          files at run time.
+        
+        - Price and statistics per page format.
+        
+        - Allow the admin to choose an action to take when the database
+          is unavailable (server is down or something like that), so
+          introduce two directives :
+          
+            nodb: accept|reject|hold
+            lognodb: /path/to/file/for/later/batch/update/of/database
+        
+        - CUPS accepts the "STATE: ..." message as backchannel
+          data : use this to tell CUPS what action has been taken
+          for current job. I did some testing but wasn't able to
+          make it work...
+          
+        - Documentation...
+          
+        - Learn more bits of PHP to help with phpPyKotaAdmin, which
+          is a GREAT tool !
+       
+        - Multidatabase support, e.g. store users in LDAP, quota  
+          related datas in PostgreSQL, history in text file,
+          and so on... For 2.0, probably not before.
+          
+        - Re-add support for LPRng if interest is high enough (it is
+          not for now)
+        
+        
+============================================================
+
+Please e-mail bugs to: alet@librelogiciel.com (Jerome Alet)

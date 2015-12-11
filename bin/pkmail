@@ -1,0 +1,187 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# An email gateway for PyKota
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pkmail 3137 2007-01-18 18:21:26Z jerome $
+#
+#
+
+import sys
+import os
+import popen2
+import smtplib
+import email
+from email.MIMEText import MIMEText
+from email.Header import Header
+import email.Utils
+
+from pykota.tool import PyKotaTool, PyKotaCommandLineError, crashed, N_
+    
+__doc__ = N_("""pkmail v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Email gateway for PyKota.
+
+command line usage :
+
+  pkmail  [options]
+
+options :
+
+  -v | --version       Prints pkmail's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+    
+  This command is meant to be used from your mail server's aliases file,
+  as a pipe. It will then accept commands send to it in email messages,
+  and will send the answer to the command's originator.
+  
+  To use this command, create an email alias in /etc/aliases with
+  the following format :
+  
+    pykotacmd: "|/usr/bin/pkmail"
+    
+  Then run the 'newaliases' command to regenerate the aliases database.
+  
+  You can now send commands by email to 'pykotacmd@yourdomain.com', with
+  the command in the subject.
+  
+  List of supported commands :
+  
+        report [username]
+  
+  NB : For pkmail to work correctly, you may have to put the 'mail'
+  system user in the 'pykota' system group to ensure this user can
+  read the /etc/pykota/pykotadmin.conf file, and restart your
+  mail server (e.g. /etc/init.d/exim restart). It is strongly advised
+  that you think at least twice before doing this though.
+  
+  Use at your own risk !
+""")
+        
+        
+class PKMail(PyKotaTool) :        
+    """A class for pkmail."""
+    def main(self, files, options) :
+        """Accepts commands passed in an email message."""
+        data = sys.stdin.read()
+        message = email.message_from_string(data)
+        useremail = message["From"]
+        whoami = message["To"]
+        cmdargs = message["Subject"].split()
+        try :
+            (command, arguments) = (cmdargs[0].capitalize(), cmdargs[1:])
+        except IndexError :    
+            raise PyKotaCommandLineError, "No command found !"
+        
+        badchars = """/<>&"'#!%*$,;\\"""
+        cheatmeonce = 0
+        for c in "".join(arguments) :
+            if c in badchars :
+                cheatmeonce = 1
+            
+        if cheatmeonce :    
+            self.printInfo("Possible intruder at %s : %s" % (useremail, str(arguments)), "warn")
+            result = "Either you mistyped your command, or you're a bad guy !"
+        else :
+            self.logdebug("Launching internal command '%s' with arguments %s" % (command, str(arguments)))
+            cmdfunc = getattr(self, "cmd%s" % command, self.cmdDefault)
+            result = cmdfunc(arguments)
+        
+        self.logdebug("Sending answer to : %s" % useremail)
+        emailmsg = MIMEText(result, _charset=self.charset)
+        emailmsg["Subject"] = Header(_("Result of your commands"), charset=self.charset)
+        emailmsg["From"] = whoami
+        emailmsg["To"] = useremail
+        emailmsg["Date"] = email.Utils.formatdate(localtime=True)
+        server = smtplib.SMTP(self.smtpserver)
+        server.sendmail(whoami, [ useremail ], emailmsg.as_string())
+        server.quit()
+        self.logdebug("Answer sent to : %s" % useremail)
+        
+        return 0
+        
+    def runCommand(self, cmd) :    
+        """Executes a command."""
+        self.logdebug("Launching : '%s'" % cmd)
+        os.environ["PATH"] = "%s:/bin:/usr/bin:/usr/local/bin:/opt/bin:/sbin:/usr/sbin" % os.environ.get("PATH", "")
+        child = popen2.Popen3(cmd)
+        child.tochild.close()
+        result = child.fromchild.read()
+        status = child.wait()
+        if os.WIFEXITED(status) :
+            status = os.WEXITSTATUS(status)
+        self.logdebug("'%s' exited with status %s" % (cmd, status))
+        return result
+        
+    def cmdDefault(self, arguments) :    
+        """Default command : sends an 'unknown command' message."""
+        return "Unknown command."
+        
+    def cmdReport(self, args) :    
+        """Generates a print quota report."""
+        return self.runCommand("repykota %s" % ' '.join([ '"%s"' % a for a in args ]))
+            
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        defaults = { \
+                   }
+        short_options = "vh"
+        long_options = ["help", "version"]
+        
+        # Initializes the command line tool
+        mailparser = PKMail(doc=__doc__)
+        mailparser.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = mailparser.parseCommandline(sys.argv[1:], short_options, long_options, allownothing=1)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        
+        if options["help"] :
+            mailparser.display_usage_and_quit()
+        elif options["version"] :
+            mailparser.display_version_and_quit()
+        else :
+            retcode = mailparser.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            mailparser.crashed("pkmail failed")
+        except :    
+            crashed("pkmail failed")
+        retcode = -1
+
+    try :
+        mailparser.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

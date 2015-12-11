@@ -1,0 +1,206 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Print Quota Data Dumper
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: dumpykota 3165 2007-04-16 16:52:23Z jerome $
+#
+#
+
+import sys
+
+from pykota.tool import PyKotaCommandLineError, crashed, N_
+from pykota.dumper import DumPyKota
+
+__doc__ = N_("""dumpykota v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Dumps PyKota database's content.
+
+command line usage :
+
+  dumpykota [options] [filterexpr]
+
+options :
+
+  -v | --version       Prints dumpykota's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -d | --data type     Dumps 'type' datas. Allowed types are :
+                       
+                         - history : dumps the jobs history.
+                         - users : dumps users.
+                         - groups : dumps user groups.
+                         - printers : dump printers.
+                         - upquotas : dump user quotas.
+                         - gpquotas : dump user groups quotas.
+                         - payments : dumps user payments.
+                         - pmembers : dumps printer groups members.
+                         - umembers : dumps user groups members.
+                         - billingcodes : dumps billing codes.
+                         - all : dumps all PyKota datas. The output format
+                                 is always XML in this case.
+                         
+                       NB : the -d | --data command line option   
+                       is MANDATORY.
+  
+  -f | --format fmt    Dumps datas in the 'fmt' format. When not specified,
+                       the format is to dump datas in the csv format (comma
+                       separated values). All data dumped is between double
+                       quotes. Allowed formats are :
+                       
+                         - csv : separate datas with commas
+                         - ssv : separate datas with semicolons
+                         - tsv : separate datas with tabs
+                         - xml : dump data as XML 
+                         - cups : dump datas in CUPS' page_log format :
+                                  ONLY AVAILABLE WITH --data history
+                         
+  -o | --output fname  All datas will be dumped to the file instead of
+                       to the standard output. The special '-' filename
+                       is the default value and means stdout.
+                       WARNING : existing files are truncated !
+
+  -O | --orderby exp   Change the ordering or result. 'exp' is a comma
+                       separated list of ordering statements, for example
+                       '--orderby +username,-printername'. Not all expression
+                       values are meaningful, so using this command line 
+                       switch is not recommanded if you don't know the 
+                       exact layout of PyKota's database schema.
+                       
+  -s | --sum           Summarize the selected datas.
+                           ONLY AVAILABLE WITH --data history or payments
+
+  Use the filter expressions to extract only parts of the 
+  datas. Allowed filters are of the form :
+                
+         key=value
+                         
+  Allowed keys for now are :  
+                       
+         username       User's name
+         groupname      Users group's name
+         printername    Printer's name
+         pgroupname     Printers group's name
+         hostname       Client's hostname
+         jobid          Job's Id
+         billingcode    Job's billing code
+         start          Job's date of printing
+         end            Job's date of printing
+         
+  Dates formatting with 'start' and 'end' filter keys :
+  
+    YYYY : year boundaries
+    YYYYMM : month boundaries
+    YYYYMMDD : day boundaries
+    YYYYMMDDhh : hour boundaries
+    YYYYMMDDhhmm : minute boundaries
+    YYYYMMDDhhmmss : second boundaries
+    yesterday[+-NbDays] : yesterday more or less N days (e.g. : yesterday-15)
+    today[+-NbDays] : today more or less N days (e.g. : today-15)
+    tomorrow[+-NbDays] : tomorrow more or less N days (e.g. : tomorrow-15)
+    now[+-NbDays] : now more or less N days (e.g. now-15)
+
+  'now' and 'today' are not exactly the same since today represents the first
+  or last second of the day depending on if it's used in a start= or end=
+  date expression. The utility to be able to specify dates in the future is
+  a question which remains to be answered :-)
+  
+  Contrary to other PyKota management tools, wildcard characters are not 
+  expanded, so you can't use them.
+  
+  NB : not all keys are allowed for each data type, so the result may be 
+  empty if you use a key not available for a particular data type.
+  
+Examples :
+
+  $ dumpykota --data history --format csv >myfile.csv
+  
+  This dumps the history in a comma separated values file, for possible
+  use in a spreadsheet.
+  
+  $ dumpykota --data users --format xml -o users.xml
+  
+  Dumps all users datas to the users.xml file.
+  
+  $ dumpykota --data history printername=HP2100 username=jerome
+  
+  Dumps the job history for user jerome on printer HP2100 only.
+  
+  $ dumpykota --data history start=200503 end=20050730234615
+  
+  Dumps all jobs printed between March 1st 2005 at midnight and
+  July 30th 2005 at 23 hours 46 minutes and 15 secondes included.
+""")
+        
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        defaults = { \
+                     "format" : "csv", \
+                     "output" : "-", \
+                   }
+        short_options = "vhd:f:o:sO:"
+        long_options = ["help", "version", "data=", "format=", "output=", "sum", "orderby="]
+        
+        # Initializes the command line tool
+        dumper = DumPyKota(doc=__doc__)
+        dumper.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = dumper.parseCommandline(sys.argv[1:], short_options, long_options, allownothing=1)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["data"] = options["d"] or options["data"]
+        options["format"] = options["f"] or options["format"] or defaults["format"]
+        options["output"] = options["o"] or options["output"] or defaults["output"]
+        options["sum"] = options["s"] or options["sum"]
+        options["orderby"] = options["O"] or options["orderby"]
+        
+        if options["help"] :
+            dumper.display_usage_and_quit()
+        elif options["version"] :
+            dumper.display_version_and_quit()
+        elif options["data"] is None :    
+            raise PyKotaCommandLineError, _("The -d | --data command line option is mandatory, see help.")
+        else :
+            retcode = dumper.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            dumper.crashed("dumpykota failed")
+        except :    
+            crashed("dumpykota failed")
+        retcode = -1
+
+    try :
+        dumper.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

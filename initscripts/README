@@ -1,0 +1,88 @@
+# $Id: README 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+This directory contains scripts to initialise the PyKota
+storage database. Use the one which best suits your need
+depending on the storage backend you want to use.
+
+There's one subdirectory per backend type supported.
+
+Files :
+=======
+
+  * postgresql/pykota-postgresql.sql :
+  
+    This file creates an empty Quota Storage Database, using PostgreSQL
+    as a backend. You have to use it the first time you install PyKota
+    if you want to use PostgreSQL as the Quota Storage Backend.
+    
+  * ldap/pykota.schema :  
+  
+    This file adds the necessary classes and attributes to an existing
+    LDAP directory for use with PyKota. Read this file and the 
+    associated ldap/README.ldap files for details.
+    
+    
+Old files, kept to allow people to upgrade from very old versions of PyKota :   
+=============================================================================
+    
+  * upgrade-to-1.19.sql :  
+  
+    This file upgrades the PostgreSQL Quota Storage Database schema
+    from versions before 1.19alpha7 to version 1.19alpha7 and above.
+    NEVER USE IT IF YOU ALREADY RUN 1.19alpha7 OR ABOVE !
+    
+  * upgrade-to-1.16.sql :  
+  
+    This file upgrades the PostgreSQL Quota Storage Database schema
+    from versions before 1.16 to version 1.16.
+    NEVER USE IT IF YOU ALREADY RUN 1.16 OR ABOVE !
+    
+  * upgrade-to-1.14.sql :  
+  
+    This file upgrades the PostgreSQL Quota Storage Database schema
+    from versions before 1.14 to version 1.14.
+    NEVER USE IT IF YOU ALREADY RUN 1.14 OR ABOVE !
+    
+  * VERYOLDpykota-upgrade-postgresql.sql :
+  
+    This file upgrades the PostgreSQL Quota Storage Database schema
+    from versions before 1.01 to version 1.01.
+    
+    IT'S THERE FOR HISTORICAL REASONS ONLY : DON'T USE IT, USE
+    THE SCRIPT DESCRIBED BELOW INSTEAD !
+    
+  * upgrade-from-before-1.03.py :
+  
+    This shell script upgrades the PostgreSQL Quota Storage Database schema
+    from versions 1.01 or 1.02 to version 1.03.
+    PLEASE DO A BACKUP OF YOUR PYKOTA DATABASE BEFORE RUNNING THIS SCRIPT !
+    Also this script will try to connect to PostgreSQL as the postgres user
+    (i.e. PostgreSQL's administrator), on the local machine (PyKota Storage 
+    Server), without prompting for a password. Please read this script and 
+    adapt it to your own configuration before running it. THIS IS IMPORTANT.
+    
+    THIS SCRIPT MAKES ANY REASONABLE CHECK TO ENSURE THAT YOUR DATAS WON'T 
+    BE LOST, AND ALSO DUMPS YOUR OLD DATABASE TO A TEXT FILE BEFORE DOING
+    ANYTHING. IT WAS TESTED SEVERAL TIMES AND SHOULDN'T PRODUCE ANY ERROR
+    EXCEPT ABOUT THE pykotaadmin and pykotauser POSTGRESQL USERS WHO 
+    ALREADY EXIST WHEN THE DATABASE SCHEMA IS UPGRADED. THIS IS NORMAL !
+  

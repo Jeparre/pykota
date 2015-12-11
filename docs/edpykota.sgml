@@ -1,0 +1,68 @@
+<!-- $Id: edpykota.sgml 2833 2006-04-05 19:17:51Z jerome $ -->
+
+<chapter>
+  <title id="edpykota">Manage Print Quotas with edpykota</title>
+  <para>Last modified on $Date: 2006-04-05 21:17:51 +0200 (mer, 05 avr 2006) $</para>
+  
+  <para>
+    You'll use this tool to create, manage or delete print quota entries for users
+    or users groups on printers or printers groups.
+  </para>
+  
+  <para>
+    By default, before being allowed to print through <application>PyKota</application>,
+    an user must exist in the database and have a print quota entry on every printer
+    he should be allowed to use. As seen in the previous chapter, the simplest way to add an user named <literal>jerome</literal> to the database is
+    to type :
+<screen>    
+$ pkusers --add jerome
+</screen>
+
+    But this is not sufficient to allow user <literal>jerome</literal> to print. You have to create a print quota entry for <literal>jerome</literal> on all printers
+    he is allowed to print to. The easiest way to do so is to type :
+<screen>    
+$ edpykota --add jerome
+</screen>
+  </para>
+  
+  <para>
+    The commands above have created user <literal>jerome</literal> in the database, and have automatically
+    created print quota entries with no limit for this user on all existing printers. This means
+    that user <literal>jerome</literal> is allowed to print without limitation, but that full accounting
+    will still be done for this user : you'll know whenever he prints and how much.
+  </para>
+  
+  <para>
+    Here's an incomplete list of features :
+    
+    <itemizedlist>
+      <listitem>
+        <para>
+          Add and delete users and groups print quota entries ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Define, increase or decrease hard and soft page limits for users ou users groups, on a per printer basis ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Reset or modify page counters for users or groups, on a per printer basis ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          List print quota entries ;
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  
+  <para>
+    For more details on the use of <command>edpykota</command>, please see this command's manual
+    page or help.
+  </para>
+  
+</chapter>
+

@@ -1,0 +1,60 @@
+This package was debianized by Peter Hawkins <peterh@debian.org> on
+Tue, 18 Nov 2003 14:47:59 +1100.
+
+It was downloaded from:
+http://www.pykota.com/software/pykota/download
+(SVN snapshot)
+
+Upstream Authors: Jerome Alet <alet@librelogiciel.com>
+
+Copyright:
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License with
+your Debian GNU/Linux system, in /usr/share/common-licenses/GPL, or with
+the Debian GNU/Linux pykota source package as the file COPYING.  If not,
+write to the Free Software Foundation, 51 Franklin St, Fifth Floor, Boston,
+MA  02110-1301  USA.
+
+
+The file LICENSE in the source tree contains the instructions which are
+included below.
+The author's wishes do not make the software DFSG non-free, since the
+official/non-official distinction is a request, not a requirement. That said,
+the debian package complies with the author's wishes and is labelled as
+unofficial; I encourage you to support free software and buy an official
+version if pykota turns out to be useful for you.
+
+============================================================
+
+Licensing information :
+
+  * PyKota is licensed under the terms of the GNU General Public License of 
+    the Free Software Foundation, version 2, or at your option, any higher
+    version.
+
+  * You can access to PyKota's latest development tree by using 
+    SubVersion (aka SVN) :
+  
+      $ svn co svn://svn.librelogiciel.com/pykota/trunk pykota
+
+  * You are encouraged to support the project by purchasing unlimited
+    entry passes to 'OFFICIAL' packages, or Technical Support contracts.
+    
+  * I ask you to not label or present a version of PyKota downloaded 
+    from SVN as being the 'OFFICIAL' one.
+
+  * For more informations, please read :
+  
+        http://www.pykota.com/purchase
+        http://www.pykota.com/technical-support
+        

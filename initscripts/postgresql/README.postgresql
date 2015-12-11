@@ -1,0 +1,173 @@
+# $Id: README.postgresql 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+Documentation for the pykota-postgresql.sql script :
+----------------------------------------------------
+
+This script is to be used to create an empty Quota Storage
+DataBase using PostgreSQL as a backend.
+
+If you have already installed PyKota, and have datas in your
+Quota Storage DataBase, you may prefer to skip this section
+and read the next one.
+
+        - edit the pykota-postgresql.sql file and modify the passwords on
+          the 'CREATE USER' lines.
+          
+        - Launch the psql frontend and connect to the
+          database template1 as a PostgreSQL administrator
+          (i.e. the postgres user) :
+          
+          as user 'root' :
+          
+            # su - postgres
+            
+          you're now user 'postgres', then continue with :   
+          
+            $ psql -f pykota-postgresql.sql template1
+            
+          or depending on your settings you may prefer :  
+          
+            $ psql -h localhost -U postgres -f pykota-postgresql.sql template1
+          
+        - If no error message appears, your PostgreSQL PyKota storage 
+          is now ready for use. NB : a lot of NOTICE messages might appear,
+          this is perfectly normal.
+          
+        - In ~pykota/pykota.conf, ensure that the following lines
+          are present and unique inside the [global] section :
+        
+            storagebackend : pgstorage
+            storageserver : localhost
+            storagename : pykota
+            storageuser : pykotauser
+            storageuserpw : readonlypw
+            
+            NB : replace 'readonlypw' with the password you chose
+            for user 'pykotauser' when you modified pykota-postgresql.sql
+            
+        - In ~pykota/pykotadmin.conf ensure that the following lines
+          are present and unique inside the [global] section :
+        
+            storageadmin : pykotaadmin
+            storageadminpw : readwritepw
+            
+            NB : replace 'readwritepw' with the password you chose
+            for user 'pykotaadmin' when you modified pykota-postgresql.sql
+        
+        - IMPORTANT : if your database is not located on the print server, 
+          replace 'localhost' in the lines above with your database server's 
+          hostname or IP address. If your database server doesn't listen on
+          its standard port, add the port number at the end of the hostname
+          with a colon to separate the hostname from the port.
+          See pykota/conf/pykota.conf.sample for examples.
+          
+============================================================
+
+Upgrade scripts :
+
+  DON'T DO ANYTHING IF THIS IS YOUR FIRST INSTALLATION
+  OF PYKOTA.
+
+  Some scripts to upgrade old PyKota databases to the new
+  database schema are included. You may have to run all
+  of them or only some of them, depending on your 
+  version of PyKota. Usually running them several times, for
+  example if you used several different development versions
+  of PyKota, won't do any harm.
+  
+  If you're connected as user 'root', you have to be user 'postgres'
+  instead :
+          
+            # su - postgres
+            
+  You're now user 'postgres', then continue the upgrade by following
+  the instructions below, depending on the version you actually use :
+  
+  * An SQL script to upgrade a 1.22 PyKota Storage DataBase to
+    1.23 is included. Launch it this way on the Quota Storage Server :
+    
+        $ psql -U postgres pykota
+        pykota=# \i upgrade-to-1.23.sql
+        pykota=# \q
+        $
+        
+    This script adds many fields to existing tables, and a table to
+    manage billing codes.
+    
+  * An SQL script to upgrade a 1.20 PyKota Storage DataBase to
+    1.21 is included. Launch it this way on the Quota Storage Server :
+    
+        $ psql -U postgres pykota
+        pykota=# \i upgrade-to-1.21.sql
+        pykota=# \q
+        $
+        
+    This script adds many fields to existing tables, and also adds
+    some tables in indexes.
+    
+  * An SQL script to upgrade a 1.18 PyKota Storage DataBase to
+    1.19 is included. Launch it this way on the Quota Storage Server :
+    
+        $ psql -U postgres pykota
+        pykota=# \i upgrade-to-1.19.sql
+        pykota=# \q
+        $
+        
+    This script adds a field to the print job history. The field that
+    is added is : hostname
+    
+  * An SQL script to upgrade a pre-1.16 PyKota Storage DataBase to
+    1.16 is included. Launch it this way on the Quota Storage Server :
+    
+        $ psql -U postgres pykota
+        pykota=# \i upgrade-to-1.16.sql
+        pykota=# \q
+        $
+        
+    This script adds some fields to the print job history, so that
+    more complete information will be known. The fields that
+    are added are : jobprice, filename, title, copies and print 
+    command options. Also some indexes are created to speed things up.
+  
+What is below is for historical reasons only, real people don't use  
+such old beasts, and YOU SHOULDN'T EITHER !
+
+  * An SQL script to upgrade a pre-1.14 PyKota Storage DataBase to
+    1.14 is included. Launch it this way on the Quota Storage Server :
+    
+        $ psql -U postgres pykota
+        pykota=# \i upgrade-to-1.14.sql
+        pykota=# \q
+        $
+        
+    This script adds an "email" field for each user. This field, if not    
+    NULL, is used as the email address of the user when sending warning
+    messages in case he is over quota.
+    
+  * An sql script to upgrade a pre-1.01 PyKota Quota Storage DataBase to 
+    1.01 is still included for historical reasons. PLEASE DON'T USE IT ! 
+  
+  * If you are already running an old version of PyKota (<1.03) and 
+    want to upgrade to 1.03, YOU HAVE TO RUN the 
+    upgrade-from-before-1.03.py shell script. NOT LAUNCHING THIS SCRIPT 
+    WILL CAUSE PYKOTA TO STOP WORKING ! PLEASE NEVER RUN THIS SCRIPT IF 
+    YOUR EXISTING VERSION OF PYKOTA IS ALREADY 1.03 OR HIGHER. 

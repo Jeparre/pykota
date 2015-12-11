@@ -1,0 +1,91 @@
+# $Id: README.sqlite 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+===================================================================
+
+Documentation :
+---------------
+
+pykota.sqlite :
+
+    This file can be used to create an empty SQLite3 database
+    for use with PyKota, in the case you don't want to use
+    either PostgreSQL, MySQL, or LDAP :
+    
+    NB : an SQLite3 database can't be shared between several
+    PyKota managed print servers, contrarily to the other
+    database backends.
+    
+    HowTo :
+    
+      - Install SQLite v3.2.1 or higher, and its development files,
+        for example on my Debian box :
+        
+                # apt-get install sqlite3 libsqlite3-dev
+                
+        You can also download SQLite from http://www.sqlite.org        
+
+      - Download and install PySQLite v2.0.5 or higher from :
+      
+                http://www.pysqlite.org
+
+        Install it this way :
+
+                # tar -zxf pysqlite-2.0.5.tar.gz
+                # cd pysqlite-2.0.5
+                # python setup.py install
+                
+        Under Debian, if the package exists for your version of Debian,
+        simply do :
+        
+                # apt-get install python-pysqlite2
+                
+      - Create an SQLite3 database for PyKota :
+
+                # sqlite3 ~pykota/pykota.db <pykota.sqlite
+                # chown pykota.pykota ~pykota/pykota.db
+                # chmod 660 ~pykota/pykota.db
+                # chown pykota.pykota ~pykota       (seems to be necessary)
+                
+        NB : adapt the permissions so that the user your printing
+             system runs as (e.g. user 'lp') can read and write
+             to the /etc/pykota/pykota.db file.
+                
+      - In ~pykota/pykotadmin.conf, just comment out all the lines
+
+      - In ~pykota/pykota.conf, ensure that the following lines
+        are present and unique inside the [global] section :
+
+                storagebackend : sqlitestorage
+                storagename : /etc/pykota/pykota.db
+                
+        And comment out all other directives which name begins with 'storage'.
+        NB : feel free to use a different path to store pykota.db, and
+             adapt your configuration files and permissions accordingly.
+                
+Your PyKota setup is now ready to be used with an SQLite3 database.             
+
+IMPORTANT : with PyKota's SQLite backend there's no possibility to separate
+readonly accesses from readwrite accesses for now, so don't set your
+permissions too loosely if untrusted users have local shell access on
+your print server.
+
+Please report bugs to : alet@librelogiciel.com
+
+===================================================================

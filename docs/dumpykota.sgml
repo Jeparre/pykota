@@ -1,0 +1,123 @@
+<!-- $Id: dumpykota.sgml 2551 2005-10-09 20:39:06Z jerome $ -->
+
+<chapter>
+  <title>Export datas to other software with dumpykota</title>
+  <para>Last modified on $Date: 2005-10-09 22:39:06 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    If you want to reuse <application>PyKota</application> datas from another
+    software, but don't want to modify your existing application to
+    have it connect to <application>PyKota</application>'s database, your
+    best option is the new <command>dumpykota</command> command.
+  </para>
+  
+  <para>
+    <command>dumpykota</command> can export <application>PyKota</application>
+    datas in a number of formats. The supported output formats are
+    comma separated values, semicolon separated values, tab separated values, and <acronym>XML</acronym>.
+  </para>  
+  
+  <para>
+    For the print job history's datas, a special format identical to <application>CUPS</application>' <literal>page_log</literal>
+    format is also supported.
+    This allows you to interface <application>PyKota</application> with third party tools like
+    <application>phpPrintAnalyzer</application> which is a logfile analyzer for <application>CUPS</application>.
+  </para>  
+  
+  <para>
+    More formats may be added in the future. In particular, 
+    <acronym>SQL</acronym> and <acronym>LDIF</acronym> are planned, but 
+    are currently not implemented. 
+  </para>
+  
+  <para>
+    <command>dumpykota</command> can't dump all datas at once though, you have
+    to specify which type of datas you want. The possible types are :
+    <itemizedlist>
+      <listitem><para>Users</para></listitem>
+      <listitem><para>Users groups</para></listitem>
+      <listitem><para>Printers</para></listitem>
+      <listitem><para>Printers groups membership</para></listitem>
+      <listitem><para>Users groups membership</para></listitem>
+      <listitem><para>Users print quota entries</para></listitem>
+      <listitem><para>Users groups print quota entries</para></listitem>
+      <listitem><para>History of payments</para></listitem>
+      <listitem><para>History of print jobs</para></listitem>
+    </itemizedlist>  
+  </para>
+  
+  <para>
+    You can then import the dumped datas into a spreadsheet for example, 
+    if you want to create complex reports with nice looking graphs and
+    the like.
+  </para>
+  
+  <para>
+    An important feature of this command is the possibility to use
+    a simple but powerful filtering mechanism to only export the datas
+    you want. You can pass any number of filter expressions which will
+    be ANDed together to select only certain records in the database.
+    For example the filter expression <literal>username=jerome</literal>
+    would only dump datas pertaining to user <literal>jerome</literal>
+    while the filter expression <literal>start=2005</literal> used
+    when dumping the history would only dump jobs printed during
+    the year <literal>2005</literal>.
+  </para>
+  
+  <para>
+    Several keys like <literal>username</literal> are possible, but some
+    only apply to certain data types. Using a key which is not supported
+    for a particular data type may return an incorrect result.
+    <tip><title>Tip</title>
+      <para>
+        Please refer to dumpykota's help or manual page to obtain
+        the complete list of supported keys.
+      </para>
+    </tip>  
+  </para>
+  
+  <para>
+    This command could also be used if you plan to write your own management
+    tools : just write wrappers around the <command>pkprinters</command>,
+    <command>edpykota</command>, and <command>dumpykota</command>
+    tools, and your own tools will automatically benefit from <application>PyKota</application>
+    database backend independance layer.
+    This is exactly what the third party software <application>phpPykotaAdmin</application> does.
+  </para>
+  
+  <para>
+    Finally, <command>dumpykota</command>'s functionnality is now also available remotely through
+    the use of the <command>dumpykota.cgi</command> <acronym>CGI</acronym> script.
+  </para>
+  
+  <warning>
+    <title>Warning</title>
+    <para>
+      Only <application>PyKota</application> administrators can dump PyKota's datas.
+    </para>
+  </warning>  
+        
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>dumpykota</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt">
+          <arg>-f <replaceable>outputformat</replaceable></arg>
+          <arg>--format <replaceable>outputformat</replaceable></arg>
+        </group>
+        <group choice="opt">
+          <arg>-o <replaceable>filename</replaceable></arg>
+          <arg>--output <replaceable>filename</replaceable></arg>
+        </group>
+        <group choice="req">
+          <arg>-d <replaceable>datatype</replaceable></arg>
+          <arg>--data <replaceable>datatype</replaceable></arg>
+        </group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

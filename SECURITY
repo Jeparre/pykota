@@ -1,0 +1,220 @@
+# $Id: SECURITY 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+====================================================================
+
+How to improve PyKota's security :
+----------------------------------
+
+  - Secure your printers :  
+  
+    This is the most important thing to do !
+    
+    Tell them to refuse any print job not coming from your print server. 
+    Do this with telnet to set ACLs based on incoming IP addresses if 
+    possible, or through any other way. 
+        
+    Put all your printers on a private unroutable subnet, different from 
+    the subnet on which your client hosts will reside. Ensure that the 
+    only machine allowed to access to this subnet is your print server. 
+    
+    
+  - Secure your print servers :  
+  
+    Don't give shell access to your users on your print servers, and 
+    don't let them execute unauthorized commands : they could very well 
+    compile and/or execute tools like NetCat, and send datas directly to 
+    the printer in the case the printer is networked, thus bypassing the 
+    printing system and PyKota. 
+        
+    Ensure that no regular user can read PyKota administrator's 
+    configuration file, but that both the PyKota Administrator and the 
+    user the printing system is run as can read it. With CUPS under 
+    Debian you may want to do : 
+    
+        $ chown pykota.pykota ~pykota/pykota.conf ~pykota/pykotadmin.conf    
+        $ chmod 640 ~pykota/pykota.conf
+        $ chmod 600 ~pykota/pykotadmin.conf
+        
+    Depending on your needs, you may want to put the user the printing 
+    system is run as in the group 'pykota', and relax permissions a bit 
+    so that this user can read the pykotadmin.conf file while printing. 
+    For example : 
+    
+        $ chmod 640 ~pykota/pykotadmin.conf
+        $ adduser lp pykota
+          (this makes user 'lp' a member of group 'pykota')
+    
+    Another solution, needed on some systems :
+    
+        $ chmod a+rx ~pykota/
+        $ chown lp.pykota ~pykota/pykota.conf ~pykota/pykotadmin.conf 
+        
+    Letting any user read PyKota administrator's configuration file may 
+    expose passwords or database information which would allow write 
+    access to the database, and so may transform your print quota 
+    management in a nightmare. 
+  
+    If you want to let users generate their own print quota reports, 
+    then ensure that /etc/pykota/pykota.conf is readable by these users. 
+    To do this you can either put this users in the group 'pykota' while 
+    ensuring they can't read pykotadmin.conf with 'chmod 600 pykotadmin.conf'
+    or simply allow everyone to read pykota.conf with 'chmod 644 pykota.conf'
+    
+      
+  - Secure your database connections :
+  
+    Depending on the database backend used, either PostgreSQL or LDAP, 
+    you may have to take additionnal measures to render your database 
+    more secure. Please refer to your database system's documentation 
+    to learn how to do so. This is out of the scope of the present 
+    document which will only give basic informations. 
+    
+    Keep in mind that if you use a centralized database, the first thing
+    you may want to do is to restrict which hosts can access to it, i.e.
+    only the print servers.
+  
+    PostgreSQL :
+    
+      For the PostgreSQL backend, PyKota already defines a user with 
+      read/write access and another user with read-only access to the 
+      Print Quota Database. PyKota doesn't set any passwords for these 
+      users though, but doing so is recommended, and here's how to do :
+      
+      From the root shell do :
+      
+      $ su - postgres
+      $ psql template1
+      template1=# ALTER USER pykotauser WITH PASSWORD 'a.difficult.password';
+      template1=# ALTER USER pykotaadmin WITH PASSWORD 'another.password';
+      template1=# \q
+      $ exit
+      
+      Now modify PostgreSQL's pg_hba.conf to restrict access to the PyKota
+      database to PostgreSQL users 'pykotauser' and 'pykotaadmin' only, 
+      and only if they connect from localhost and provide the correct 
+      password. Here's an excerpt from our own pg_hba.conf :
+        
+        --- CUT ---        
+        local all    postgres                              ident sameuser
+        local all    all                                   reject
+        host  pykota pykotauser  127.0.0.1 255.255.255.255 crypt
+        host  pykota pykotaadmin 127.0.0.1 255.255.255.255 crypt
+        host  pykota all         127.0.0.1 255.255.255.255 reject
+        --- CUT ---        
+        
+      As an alternative, which may depend on the default encryption setting  
+      used by your version of PostgreSQL, you may want to use the following
+      settings instead :
+
+        --- CUT ---        
+        local all    postgres                              ident sameuser
+        local all    all                                   reject
+        host  pykota pykotauser  127.0.0.1 255.255.255.255 md5
+        host  pykota pykotaadmin 127.0.0.1 255.255.255.255 md5
+        host  pykota all         127.0.0.1 255.255.255.255 reject
+        --- CUT ---        
+        
+      Finally restart PostgreSQL so that the changes will be applied :
+      
+        $ /etc/init.d/postgresql restart
+        
+      Of course, depending on your needs, you may want to secure
+      your database connections in a completely different way or 
+      add other security layers on top of this. To do so please
+      refer to PostgreSQL's documentation because this is out of
+      the scope of the present document.
+      
+    LDAP :
+    
+      For the LDAP backend, you have to ensure that no regular user can 
+      write to any PyKota specific attribute or objectClass. Otherwise 
+      they could modify their quota at will. Here too you will have to 
+      create two LDAP users which will be used for readonly and read+write
+      access to PyKota's datas. PyKota currently doesn't do this, so
+      you have to create an LDIF file this way (please adapt the
+      DNs to your own environment) :
+      
+        --- CUT ---      
+        dn: cn=pykotauser,dc=example,dc=com
+        cn: pykotauser
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        description: PyKota ReadOnly User
+        userPassword: {CRYPT}jfdsk653dsZFL
+        
+        dn: cn=pykotaadmin,dc=example,dc=com
+        cn: pykotaadmin
+        objectClass: simpleSecurityObject
+        objectClass: organizationalRole
+        description: PyKota Read+Write User
+        userPassword: {CRYPT}kqsIu43Exoi5s
+        --- CUT ---
+
+      Then add these two users to your existing LDAP tree :
+      
+        $ ldapadd -W -x -D "cn=admin,dc=example,dc=com" -f users.ldif
+    
+      Now modify your LDAP server's configuration to respectively allow
+      read+write and readonly access to the datas :
+      
+        --- CUT ---
+        by dn="cn=pykotaadmin,dc=example,dc=com" write
+        by dn="cn=pykotauser,dc=example,dc=com" read
+        --- CUT ---
+
+      Finally restart your LDAP server so that the changes will be applied :
+      
+        $ /etc/init.d/slapd restart
+        
+      Of course, depending on your needs, you may want to secure
+      your database connections in a completely different way or 
+      add other security layers on top of this. To do so please
+      refer to your LDAP server's documentation because this is out 
+      of the scope of the present document.
+        
+        
+  - Secure your CGI scripts :    
+  
+    If you use printquota.cgi or dumpykota.cgi, ensure that the user 
+    they are run as can read the pykota.conf file but NOT the 
+    pykotadmin.conf file. 
+        
+    The particular user they will be run as depends on your web server's 
+    settings. 
+        
+    If you want to further restrict the access to these CGI scripts, 
+    please read your web server's documentation to add either 
+    encryption, authentication or both. 
+        
+    The CGI scripts will honor the content of the REMOTE_USER CGI 
+    environment variable which is set by your web server if an 
+    authentication took place. If REMOTE_USER contains 'root' then, even 
+    if you didn't authenticate using the real root account and password, 
+    the scripts will consider they have been run by a PyKota 
+    administrator and will report all datas if asked to do so. If 
+    REMOTE_USER is not present, which means that you didn't chose to 
+    secure access to your CGI scripts, the same will happen. If 
+    REMOTE_USER contains something else, only datas pertaining to this 
+    user will be made available through the web. 
+    
+    NB : In any case, the CGI scripts actually included in PyKota only
+    do readonly accesses to PyKota's database.
+    
+====================================================================

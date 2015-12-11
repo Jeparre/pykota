@@ -1,0 +1,2876 @@
+# PyKota
+#
+# PyKota : Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pykota.po 3211 2007-07-23 19:48:30Z jerome $
+#
+# PyKota translation master file.
+# Copyright (c) 2003, 2004, 2005 Conseil Internet & Logiciels Libres
+# Jerome Alet <alet@librelogiciel.com>, 2003, 2004, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PyKota v1.20\n"
+"Report-Msgid-Bugs-To: alet@librelogiciel.com\n"
+"POT-Creation-Date: 2006-03-30 22:00+0200\n"
+"PO-Revision-Date: 2005-01-25 09:03+0800\n"
+"Last-Translator: Tsang Yu Pong, Teddy, Wing Kwong College in Hong Kong,"
+"<oops_teddy@yahoo.com.hk>\n"
+"Language-Team: Hong Kong, Traditional Chinese <oops_teddy@yahoo.com.hk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#
+# NB : THE FIVE ENTRIES BELOW WERE ADDED MANUALLY
+#
+msgid "ALLOW"
+msgstr ""
+
+msgid "DENY"
+msgstr ""
+
+msgid "CANCEL"
+msgstr ""
+
+msgid "PROBLEM"
+msgstr ""
+
+msgid "REFUND"
+msgstr ""
+
+#, python-format
+msgid ""
+"autopykota v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"A tool to automate user account creation and initial balance setting.\n"
+"\n"
+"THIS TOOL MUST NOT BE USED IF YOU WANT TO LIMIT YOUR USERS BY PAGE QUOTA !\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  THIS TOOL MUST NOT BE USED FROM THE COMMAND LINE BUT ONLY AS PART\n"
+"  OF AN external policy IN pykota.conf\n"
+"  \n"
+"  autopykota { -i | --initbalance value } \n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints autopykota's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -i | --initbalance b Sets the user's account initial balance value to b.\n"
+"                       If the user already exists, actual balance is left\n"
+"                       unmodified. If unset, the default value is 0.\n"
+"\n"
+"  -e | --email addr    Sets the user's e-mail address.\n"
+"  \n"
+msgstr ""
+
+#, python-format
+msgid "SIGTERM received, job %s cancelled."
+msgstr "收到信號中止信息，列印工作 %s 中斷"
+
+#, python-format
+msgid "Network error while querying the CUPS server : %s"
+msgstr ""
+
+msgid "You are not allowed to print at this time."
+msgstr ""
+
+msgid "Print job cancelled."
+msgstr ""
+
+msgid "Unlimited"
+msgstr ""
+
+msgid "ON"
+msgstr ""
+
+msgid "OFF"
+msgstr ""
+
+#, python-format
+msgid "Banner generator %s exit code is %s"
+msgstr "標題產生器 %s 中斷，代碼為 %s"
+
+msgid "Banner won't be printed : maximum number of deny banners reached."
+msgstr ""
+
+#, python-format
+msgid "Beware : computed job size (%s) != precomputed job size (%s)"
+msgstr ""
+
+msgid ""
+"The job size will be trusted anyway according to the 'trustjobsize' directive"
+msgstr ""
+
+#, python-format
+msgid ""
+"The job size will be trusted because it is inferior to the 'trustjobsize' "
+"directive's limit %s"
+msgstr ""
+
+#, python-format
+msgid ""
+"The job size will be modified according to the 'trustjobsize' directive : %s"
+msgstr ""
+
+#, python-format
+msgid ""
+"Printer %s not registered in the PyKota system, applying external policy (%"
+"s) for printer %s"
+msgstr ""
+"列印機 %s 在PyKota系統內沒有登記，因此這台列印機套用external policy (%s) "
+
+#, python-format
+msgid ""
+"User %s not registered in the PyKota system, applying external policy (%s) "
+"for printer %s"
+msgstr ""
+"使用者 %s 在PyKota內沒有登記，因此這個使用者將會套用external policy(%s) 於列"
+"印機 %s "
+
+#, python-format
+msgid ""
+"User %s doesn't have quota on printer %s in the PyKota system, applying "
+"external policy (%s) for printer %s"
+msgstr "使用者 %s 沒有列印配額於列印機 %s ，套用對外政策 (%s) 於列印機 %s"
+
+#, python-format
+msgid ""
+"External policy %s for printer %s produced an error. Job rejected. Please "
+"check PyKota's configuration files."
+msgstr "對外政策 %s 於列印機 %s 產生錯誤，列印工作被拒，請撿查PyKota的設定檔案"
+
+#, python-format
+msgid ""
+"Printer %s not registered in the PyKota system, applying default policy (%s)"
+msgstr "列印機 %s 沒有於PyKota系統內登記，套用預設的政策 (%s)"
+
+#, python-format
+msgid ""
+"User %s not registered in the PyKota system, applying default policy (%s) "
+"for printer %s"
+msgstr "使用者 %s 沒有於PyKota系統內登記，套用預設的政策 (%s)於列印機 %s"
+
+#, python-format
+msgid ""
+"User %s doesn't have quota on printer %s in the PyKota system, applying "
+"default policy (%s)"
+msgstr "使用者 %s 沒有列印配額於列印機 %s，套用預設的政策 (%s)"
+
+#, python-format
+msgid ""
+"Printer %s still not registered in the PyKota system, job will be rejected"
+msgstr "列印機 %s 依然沒有於PyKota系統內登記，列印工作要求被拒"
+
+#, python-format
+msgid ""
+"User %s still not registered in the PyKota system, job will be rejected on "
+"printer %s"
+msgstr "使用者 %s 依然沒有於PyKota系統內登記，列印工作要求被拒於列印機 %s"
+
+#, python-format
+msgid ""
+"User %s still doesn't have quota on printer %s in the PyKota system, job "
+"will be rejected"
+msgstr "使用者 %s 依然沒有列印配額於列印機 %s 在PyKota系統，列印工作被拒"
+
+msgid "Job is a dupe"
+msgstr ""
+
+msgid "Printing is denied by configuration"
+msgstr ""
+
+#, python-format
+msgid "Duplicate print jobs are not allowed on printer %s."
+msgstr ""
+
+msgid "Subprocess denied printing of a dupe"
+msgstr ""
+
+#, python-format
+msgid "Duplicate print jobs are not allowed on printer %s at this time."
+msgstr ""
+
+msgid "Subprocess allowed printing of a dupe"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Your system administrator :\n"
+"\n"
+"\t%s - <%s>\n"
+msgstr ""
+
+#, python-format
+msgid "Impossible to connect to SMTP server : %s"
+msgstr "不能夠連線至SMTP伺服器 : %s"
+
+msgid "Print Quota"
+msgstr "列印配額"
+
+#, python-format
+msgid "Impossible to send mail to %s, error %s : %s"
+msgstr "未能成功發送電郵到 %s，錯誤 %s : %s"
+
+#, python-format
+msgid "Problem when sending mail : %s"
+msgstr ""
+
+msgid "Job contains no data. Printing is denied."
+msgstr "列印工作並沒有資料存在，列印中止"
+
+msgid "Error in external policy script. Printing is denied."
+msgstr ""
+
+#, python-format
+msgid ""
+"Still no print quota entry for user %s on printer %s after external policy. "
+"Printing is denied."
+msgstr ""
+
+msgid "Printing is denied by printer policy."
+msgstr ""
+
+msgid "Job allowed by printer policy. No accounting will be done."
+msgstr ""
+
+#, python-format
+msgid "Invalid policy %s for printer %s"
+msgstr "%s 是不正確的政策設定用於列印機 %s"
+
+#, python-format
+msgid "Precomputed job size (%s pages) too large for printer %s."
+msgstr ""
+
+#, python-format
+msgid "You are not allowed to print so many pages on printer %s at this time."
+msgstr ""
+
+#, python-format
+msgid "User %s is not allowed to print at this time."
+msgstr ""
+
+msgid "Your account settings forbid you to print at this time."
+msgstr ""
+
+#, python-format
+msgid "Print Quota exceeded for user %s on printer %s"
+msgstr "使用者 %s 的列印配額於列印機 %s 經已超出配額"
+
+#, python-format
+msgid "Print Quota low for user %s on printer %s"
+msgstr "使用者 %s 的列印配額於列印機 %s經已很低"
+
+msgid "Job denied, no accounting will be done."
+msgstr ""
+
+msgid "Job cancelled, no accounting will be done."
+msgstr ""
+
+msgid "Job accounting begins."
+msgstr "列印計算開始"
+
+msgid "Job denied, no accounting has been done."
+msgstr ""
+
+msgid "Job cancelled, no accounting has been done."
+msgstr ""
+
+msgid "Job accounting ends."
+msgstr "列印計算結束"
+
+msgid ""
+"Job size forced to 0 because the real CUPS backend failed. No accounting "
+"will be done."
+msgstr ""
+
+msgid "The real CUPS backend failed, but the job will be accounted for anyway."
+msgstr ""
+
+msgid "Job size forced to 0 because printing is denied."
+msgstr "因為列印被拒，列印總頁數被強制性設定為0"
+
+msgid "Job size forced to 0 because printing was cancelled."
+msgstr ""
+
+#, python-format
+msgid "Job size : %i"
+msgstr "列印總頁數 : %i"
+
+#, python-format
+msgid "User %s's quota on printer %s won't be modified"
+msgstr ""
+
+#, python-format
+msgid "Updating user %s's quota on printer %s"
+msgstr "更新使用者 %s 的配額於列印機 %s"
+
+msgid "Job added to history."
+msgstr "列印工作已被加入到列印工作紀錄"
+
+#, python-format
+msgid "Billing code %s was updated."
+msgstr ""
+
+#, python-format
+msgid "Incorrect value for the 'onbackenderror' directive in section [%s]"
+msgstr ""
+
+#, python-format
+msgid "The real backend produced an error, we will try again in %s seconds."
+msgstr ""
+
+#, python-format
+msgid "Job %s interrupted by the administrator !"
+msgstr ""
+
+#, python-format
+msgid ""
+"dumpykota v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Dumps PyKota database's content.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  dumpykota [options] [filterexpr]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints dumpykota's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -d | --data type     Dumps 'type' datas. Allowed types are :\n"
+"                       \n"
+"                         - history : dumps the jobs history.\n"
+"                         - users : dumps users.\n"
+"                         - groups : dumps user groups.\n"
+"                         - printers : dump printers.\n"
+"                         - upquotas : dump user quotas.\n"
+"                         - gpquotas : dump user groups quotas.\n"
+"                         - payments : dumps user payments.\n"
+"                         - pmembers : dumps printer groups members.\n"
+"                         - umembers : dumps user groups members.\n"
+"                         - billingcodes : dumps billing codes.\n"
+"                         - all : dumps all PyKota datas. The output format\n"
+"                                 is always XML in this case.\n"
+"                         \n"
+"                       NB : the -d | --data command line option   \n"
+"                       is MANDATORY.\n"
+"  \n"
+"  -f | --format fmt    Dumps datas in the 'fmt' format. When not specified,\n"
+"                       the format is to dump datas in the csv format (comma\n"
+"                       separated values). All data dumped is between double\n"
+"                       quotes. Allowed formats are :\n"
+"                       \n"
+"                         - csv : separate datas with commas\n"
+"                         - ssv : separate datas with semicolons\n"
+"                         - tsv : separate datas with tabs\n"
+"                         - xml : dump data as XML \n"
+"                         - cups : dump datas in CUPS' page_log format :\n"
+"                                  ONLY AVAILABLE WITH --data history\n"
+"                         \n"
+"  -o | --output fname  All datas will be dumped to the file instead of\n"
+"                       to the standard output. The special '-' filename\n"
+"                       is the default value and means stdout.\n"
+"                       WARNING : existing files are truncated !\n"
+"\n"
+"  -O | --orderby exp   Change the ordering or result. 'exp' is a comma\n"
+"                       separated list of ordering statements, for example\n"
+"                       '--orderby +username,-printername'. Not all "
+"expression\n"
+"                       values are meaningful, so using this command line \n"
+"                       switch is not recommanded if you don't know the \n"
+"                       exact layout of PyKota's database schema.\n"
+"                       \n"
+"  -s | --sum           Summarize the selected datas.\n"
+"                           ONLY AVAILABLE WITH --data history or payments\n"
+"\n"
+"  Use the filter expressions to extract only parts of the \n"
+"  datas. Allowed filters are of the form :\n"
+"                \n"
+"         key=value\n"
+"                         \n"
+"  Allowed keys for now are :  \n"
+"                       \n"
+"         username       User's name\n"
+"         groupname      Users group's name\n"
+"         printername    Printer's name\n"
+"         pgroupname     Printers group's name\n"
+"         hostname       Client's hostname\n"
+"         jobid          Job's Id\n"
+"         billingcode    Job's billing code\n"
+"         start          Job's date of printing\n"
+"         end            Job's date of printing\n"
+"         \n"
+"  Dates formatting with 'start' and 'end' filter keys :\n"
+"  \n"
+"    YYYY : year boundaries\n"
+"    YYYYMM : month boundaries\n"
+"    YYYYMMDD : day boundaries\n"
+"    YYYYMMDDhh : hour boundaries\n"
+"    YYYYMMDDhhmm : minute boundaries\n"
+"    YYYYMMDDhhmmss : second boundaries\n"
+"    yesterday[+-NbDays] : yesterday more or less N days (e.g. : yesterday-"
+"15)\n"
+"    today[+-NbDays] : today more or less N days (e.g. : today-15)\n"
+"    tomorrow[+-NbDays] : tomorrow more or less N days (e.g. : tomorrow-15)\n"
+"    now[+-NbDays] : now more or less N days (e.g. now-15)\n"
+"\n"
+"  'now' and 'today' are not exactly the same since today represents the "
+"first\n"
+"  or last second of the day depending on if it's used in a start= or end=\n"
+"  date expression. The utility to be able to specify dates in the future is\n"
+"  a question which remains to be answered :-)\n"
+"  \n"
+"  Contrary to other PyKota management tools, wildcard characters are not \n"
+"  expanded, so you can't use them.\n"
+"  \n"
+"  NB : not all keys are allowed for each data type, so the result may be \n"
+"  empty if you use a key not available for a particular data type.\n"
+"  \n"
+"Examples :\n"
+"\n"
+"  $ dumpykota --data history --format csv >myfile.csv\n"
+"  \n"
+"  This dumps the history in a comma separated values file, for possible\n"
+"  use in a spreadsheet.\n"
+"  \n"
+"  $ dumpykota --data users --format xml -o users.xml\n"
+"  \n"
+"  Dumps all users datas to the users.xml file.\n"
+"  \n"
+"  $ dumpykota --data history printername=HP2100 username=jerome\n"
+"  \n"
+"  Dumps the job history for user jerome on printer HP2100 only.\n"
+"  \n"
+"  $ dumpykota --data history start=200503 end=20050730234615\n"
+"  \n"
+"  Dumps all jobs printed between March 1st 2005 at midnight and\n"
+"  July 30th 2005 at 23 hours 46 minutes and 15 secondes included.\n"
+msgstr ""
+
+msgid "The -d | --data command line option is mandatory, see help."
+msgstr "-d | --data是強制的指令選項，請參閱說明文件"
+
+#, python-format
+msgid ""
+"edpykota v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"A Print Quota editor for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  edpykota [options] user1 user2 ... userN\n"
+"  \n"
+"  edpykota [options] group1 group2 ... groupN\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints edpykota's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -a | --add           Adds users or groups print quota entries if\n"
+"                       they don't exist in database.\n"
+"                       \n"
+"  -d | --delete        Deletes users or groups print quota entries.\n"
+"                       Users or groups are never deleted, you have\n"
+"                       to use the pkusers command to delete them.\n"
+"                       The history will be purge from all matching\n"
+"                       jobs, unless -g | --groups is used.\n"
+"  \n"
+"  -P | --printer p     Edit quotas on printer p only. Actually p can\n"
+"                       use wildcards characters to select only\n"
+"                       some printers. The default value is *, meaning\n"
+"                       all printers. \n"
+"                       You can specify several names or wildcards, \n"
+"                       by separating them with commas.\n"
+"  \n"
+"  -g | --groups        Edit groups print quota entries instead of \n"
+"                       users print quota entries.\n"
+"                          \n"
+"  -L | --list          Lists users or groups print quota entries.\n"
+"  \n"
+"  -n | --noquota       Sets both soft and hard limits to None for users\n"
+"                       or groups print quota entries.\n"
+"  \n"
+"  -r | --reset         Resets the actual page counter for the user\n"
+"                       or group to zero on the specified printers. \n"
+"                       The life time page counter is kept unchanged.\n"
+"                       \n"
+"  -R | --hardreset     Resets the actual and life time page counters\n"
+"                       for the user or group to zero on the specified \n"
+"                       printers. This is a shortcut for '--used 0'.\n"
+"                       \n"
+"  -s | --skipexisting  In combination with the --add option above, tells\n"
+"                       edpykota to not modify existing print quota entries.\n"
+"                       \n"
+"  -S | --softlimit sl  Sets the quota soft limit to sl "
+"pages.                       \n"
+"  \n"
+"  -H | --hardlimit hl  Sets the quota hard limit to hl pages.\n"
+"  \n"
+"  -I | --increase v    Increase existing Soft and Hard limits by the value\n"
+"                       of v. You can prefix v with + or -, if no sign is\n"
+"                       used, + is assumed.\n"
+"\n"
+"  -U | --used u        Sets the page counters for the user u pages on\n"
+"                       the selected printers. Doesn't work for groups, "
+"since\n"
+"                       their page counters are the sum of all their "
+"members'\n"
+"                       page counters.\n"
+"                       Useful for migrating users from a different system\n"
+"                       where they have already used some pages. Actual\n"
+"                       and Life Time page counters may be increased or "
+"decreased\n"
+"                       if u is prefixed with + or -.\n"
+"                       WARNING : BOTH page counters are modified in all "
+"cases,\n"
+"                       so be careful.\n"
+"                       NB : if u equals '0', then the action taken is\n"
+"                       the same as if --hardreset was used.\n"
+"\n"
+"  user1 through userN and group1 through groupN can use wildcards\n"
+"  if the --add option is not set.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ edpykota --add john paul george ringo\n"
+"  \n"
+"  This will create print quota entries for users john, paul, george\n"
+"  and ringo on all printers. These print quota entries will have no\n"
+"  limit set.\n"
+"  \n"
+"  $ edpykota --printer lp -S 50 -H 60 jerome\n"
+"  \n"
+"  This will set jerome's print quota on the lp printer to a soft limit\n"
+"  of 50 pages, and a hard limit of 60 pages. Both user jerome and\n"
+"  printer lp have been previously created with the pkusers and pkprinters\n"
+"  commands, respectively.\n"
+"\n"
+"  $ edpykota -g -S 500 -H 550 financial support            \n"
+"  \n"
+"  This will set print quota soft limit to 500 pages and hard limit\n"
+"  to 550 pages for groups financial and support on all printers.\n"
+"  \n"
+"  $ edpykota --reset jerome \"jo*\"\n"
+"  \n"
+"  This will reset jerome's page counter to zero on all printers, as\n"
+"  well as every user whose name begins with 'jo'.\n"
+"  Their life time page counter on each printer will be kept unchanged.\n"
+"  You can also reset the life time page counters by using the\n"
+"  --hardreset | -R command line option.\n"
+"  \n"
+"  $ edpykota --printer hpcolor --noquota jerome\n"
+"  \n"
+"  This will tell PyKota to not limit jerome when printing on the \n"
+"  hpcolor printer. All his jobs will be allowed on this printer, but \n"
+"  accounting of the pages he prints will still be kept.\n"
+"  Print Quotas for jerome on other printers are unchanged.\n"
+"  \n"
+"  $ edpykota --delete --printer \"HP*,XER*\" jerome rachel\n"
+"  \n"
+"  This will delete users jerome and rachel's print quota\n"
+"  entries on all printers which name begin with 'HP' or\n"
+"  'XER'. The jobs printed by these users on these printers\n"
+"  will be deleted from the history.\n"
+msgstr ""
+
+#, python-format
+msgid "You can't set negative limits for %s"
+msgstr ""
+
+msgid "Extracting datas"
+msgstr ""
+
+#, python-format
+msgid "Page counter : %s"
+msgstr ""
+
+#, python-format
+msgid "Lifetime page counter : %s"
+msgstr ""
+
+#, python-format
+msgid "Soft limit : %s"
+msgstr ""
+
+#, python-format
+msgid "Hard limit : %s"
+msgstr ""
+
+#, python-format
+msgid "Date limit : %s"
+msgstr ""
+
+#, python-format
+msgid "Maximum job size : %s"
+msgstr ""
+
+#, python-format
+msgid "%s pages"
+msgstr ""
+
+#, python-format
+msgid "Warning banners printed : %s"
+msgstr ""
+
+msgid "Deletion"
+msgstr ""
+
+#, python-format
+msgid "Invalid used value %s."
+msgstr ""
+
+#, python-format
+msgid "Invalid increase value %s."
+msgstr ""
+
+#, python-format
+msgid "Invalid softlimit value %s."
+msgstr "%s 是不正確的softlimit設定值"
+
+#, python-format
+msgid "Invalid hardlimit value %s."
+msgstr "%s 是不正確的hardlimit設定值"
+
+#, python-format
+msgid "Hard limit %i is less than soft limit %i, values will be exchanged."
+msgstr "由於hard limit %i 少於soft limit %i，因此數值將會被倒置"
+
+#, python-format
+msgid "Undefined hard limit set to soft limit (%s)."
+msgstr ""
+
+#, python-format
+msgid "Undefined soft limit set to hard limit (%s)."
+msgstr ""
+
+msgid "Creation"
+msgstr ""
+
+#, python-format
+msgid "No entry matches %s. Please use pkusers to create them first."
+msgstr ""
+
+msgid "Modification"
+msgstr ""
+
+msgid "incompatible options, see help."
+msgstr "不兼容的選項，請參閱說明文件"
+
+msgid "You have to pass user or group names on the command line"
+msgstr "你必須於指令摸式下成功通過確認使用者或群組名稱"
+
+#, python-format
+msgid ""
+"repykota v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Generates print quota reports.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  repykota [options] \n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints repykota's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -u | --users         Generates a report on users quota, this is \n"
+"                       the default.\n"
+"  \n"
+"  -g | --groups        Generates a report on group quota instead of users.\n"
+"  \n"
+"  -i | --ingroups g1[,g2...]  Only lists users who are members of these\n"
+"                              groups. Reserved to PyKota Administrators.\n"
+"  \n"
+"  -P | --printer p     Report quotas on this printer only. Actually p can\n"
+"                       use wildcards characters to select only\n"
+"                       some printers. The default value is *, meaning\n"
+"                       all printers.\n"
+"                       You can specify several names or wildcards, \n"
+"                       by separating them with commas.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ repykota --printer lp\n"
+"  \n"
+"  This will print the quota status for all users who use the lp printer.\n"
+"\n"
+"  $ repykota \n"
+"  \n"
+"  This will print the quota status for all users on all printers.\n"
+"  \n"
+"  $ repykota --printer \"laser*,*pson\" jerome \"jo*\"\n"
+"  \n"
+"  This will print the quota status for user jerome and all users\n"
+"  whose name begins with \"jo\" on all printers which name begins\n"
+"  with \"laser\" or ends with \"pson\".\n"
+"  \n"
+"  If launched by an user who is not a PyKota administrator, additionnal\n"
+"  arguments representing users or groups names are ignored, and only the\n"
+"  current user/group is reported.\n"
+msgstr ""
+
+msgid "Option --ingroups is reserved to PyKota Administrators."
+msgstr ""
+
+#, python-format
+msgid "There's no printer matching %s"
+msgstr "沒有列印機能對應 %s"
+
+#, python-format
+msgid ""
+"warnpykota v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Sends mail to users over print quota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  warnpykota  [options]  [names]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints warnpykota's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -u | --users         Warns users over their print quota, this is the \n"
+"                       default.\n"
+"  \n"
+"  -g | --groups        Warns users whose groups quota are over limit.\n"
+"  \n"
+"  -P | --printer p     Verify quotas on this printer only. Actually p can\n"
+"                       use wildcards characters to select only\n"
+"                       some printers. The default value is *, meaning\n"
+"                       all printers.\n"
+"                       You can specify several names or wildcards, \n"
+"                       by separating them with commas.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ warnpykota --printer lp\n"
+"  \n"
+"  This will warn all users of the lp printer who have exceeded their\n"
+"  print quota.\n"
+"\n"
+"  $ warnpykota \n"
+"  \n"
+"  This will warn all users  who have exceeded their print quota on\n"
+"  any printer.\n"
+"\n"
+"  $ warnpykota --groups --printer \"laserjet*\" \"dev*\"\n"
+"  \n"
+"  This will warn all users of groups which names begins with \"dev\" and\n"
+"  who have exceeded their print quota on any printer which name begins \n"
+"  with \"laserjet\"\n"
+"  \n"
+"  If launched by an user who is not a PyKota administrator, additionnal\n"
+"  arguments representing users or groups names are ignored, and only the\n"
+"  current user/group is reported.\n"
+msgstr ""
+
+#, python-format
+msgid ""
+"pkbanner v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Generates banners.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkbanner  [options]  [more info]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkbanner's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -l | --logo img      Use the image as the banner's logo. The logo will\n"
+"                       be drawn at the center top of the page. The default\n"
+"                       logo is /usr/share/pykota/logos/pykota.jpeg\n"
+"                       \n"
+"  -p | --pagesize sz   Sets sz as the page size. Most well known\n"
+"                       page sizes are recognized, like 'A4' or 'Letter'\n"
+"                       to name a few. The default size is A4.\n"
+"  \n"
+"  -s | --savetoner s   Sets the text luminosity factor to s%%. This can be \n"
+"                       used to save toner. The default value is 0, which\n"
+"                       means that no toner saving will be done.\n"
+"  \n"
+"  -u | --url u         Uses u as an url to be written at the bottom of \n"
+"                       the banner page. The default url is :\n"
+"                       http://www.pykota.com/\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  Using pkbanner directly from the command line is not recommended,\n"
+"  excepted for testing purposes. You should use pkbanner in the\n"
+"  'startingbanner' or 'endingbanner' directives in pykota.conf\n"
+"  \n"
+"    startingbanner: /usr/bin/pkbanner --logo=\"\" --savetoner=75\n"
+"  \n"
+"      With such a setting in pykota.conf, all print jobs will be \n"
+"      prefixed with an A4 banner with no logo, and text luminosity will\n"
+"      be increased by 75%%. The PostScript output will be directly sent\n"
+"      to your printer.\n"
+"      \n"
+"  You'll find more examples in the sample configuration file included    \n"
+"  in PyKota.\n"
+msgstr ""
+
+msgid "Unknown"
+msgstr "未能確認"
+
+msgid "Username"
+msgstr "使用者名稱"
+
+msgid "More Info"
+msgstr ""
+
+msgid "Job"
+msgstr "列印工作"
+
+msgid "Date"
+msgstr "日期"
+
+msgid "Allowed"
+msgstr "允許"
+
+msgid "Denied"
+msgstr "禁止"
+
+msgid "Allowed with Warning"
+msgstr "允許但帶有警告"
+
+msgid "Problem"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "Result"
+msgstr "結果"
+
+msgid "Title"
+msgstr "檔案標題"
+
+msgid "Filename"
+msgstr "檔案名稱"
+
+#, python-format
+msgid "Pages printed so far on %s"
+msgstr "現正列印第 %s 頁"
+
+msgid "Account balance"
+msgstr "賬戶結餘"
+
+msgid "Soft Limit"
+msgstr "警告配額"
+
+msgid "Hard Limit"
+msgstr "有效配額"
+
+msgid "Date Limit"
+msgstr "需要在此日期前増加配額"
+
+msgid "No Limit"
+msgstr ""
+
+msgid "No Accounting"
+msgstr ""
+
+msgid "Forbidden"
+msgstr ""
+
+msgid "Printing Mode"
+msgstr ""
+
+msgid "Allowed range is (0..99)"
+msgstr "有效範圍是 (0..99)"
+
+#, python-format
+msgid "Invalid 'savetoner' option %s : %s"
+msgstr "不正確的'savetoner'選項 %s : %s"
+
+#, python-format
+msgid "Invalid 'pagesize' option %s, defaulting to A4."
+msgstr "%s 是不正確的'pagesize'設定，改為使用預設的A4"
+
+#, python-format
+msgid ""
+"pkbcodes v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"A billing codes Manager for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkbcodes [options] code1 code2 code3 ... codeN\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkbcodes version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -a | --add           Adds billing codes if they don't exist in PyKota's\n"
+"                       database. If they exist, they are modified\n"
+"                       unless -s|--skipexisting is also used.\n"
+"\n"
+"  -d | --delete        Deletes billing codes from PyKota's database.\n"
+"                       NB : the history entries with this billing code\n"
+"                       are not deleted, voluntarily.\n"
+"\n"
+"  -D | --description d Adds a textual description to billing codes.\n"
+"\n"
+"  -l | --list          List informations about the billing codes.\n"
+"\n"
+"  -r | --reset         Resets the billing codes' balance and page counters\n"
+"                       to 0.\n"
+"\n"
+"  -s | --skipexisting  In combination with the --add option above, tells\n"
+"                       pkbcodes to not modify existing billing codes.\n"
+"\n"
+"  code1 through codeN can contain wildcards if the --add option\n"
+"  is not set.\n"
+"\n"
+"examples :                              \n"
+"\n"
+"  $ pkbcodes --add -D \"My project\" myproj\n"
+"\n"
+"  Will create the myproj billing code with \"My project\"\n"
+"  as the description.\n"
+"\n"
+"  $ pkbcodes --delete \"*\"\n"
+"\n"
+"  This will completely delete all the billing codes, but without\n"
+"  removing any matching job from the history. USE WITH CARE ANYWAY !\n"
+"  \n"
+"  $ pkbcodes --list \"my*\"\n"
+"  \n"
+"  This will list all billing codes which name begins with 'my'.\n"
+msgstr ""
+
+msgid "You're not allowed to use this command."
+msgstr "你沒有權限執行這個指令"
+
+#, python-format
+msgid "There's no billingcode matching %s"
+msgstr ""
+
+msgid "pages"
+msgstr ""
+
+msgid "and"
+msgstr ""
+
+msgid "credits"
+msgstr ""
+
+#, python-format
+msgid "Billing code [%s] already exists, skipping."
+msgstr ""
+
+#, python-format
+msgid "Billing code [%s] already exists, will be modified."
+msgstr ""
+
+msgid "You have to pass billing codes on the command line"
+msgstr ""
+
+#, python-format
+msgid ""
+"pkinvoice v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"An invoice generator for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkinvoice [options] [filterexpr]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkinvoice's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -l | --logo img      Use the image as the invoice's logo. The logo will\n"
+"                       be drawn at the center top of the page. The default\n"
+"                       logo is /usr/share/pykota/logos/pykota.jpeg\n"
+"                       \n"
+"  -p | --pagesize sz   Sets sz as the page size. Most well known\n"
+"                       page sizes are recognized, like 'A4' or 'Letter'\n"
+"                       to name a few. The default size is A4.\n"
+"                       \n"
+"  -n | --number N      Sets the number of the first invoice. This number\n"
+"                       will automatically be incremented for each invoice.\n"
+"                       \n"
+"  -o | --output f.pdf  Defines the name of the invoice file which will\n"
+"                       be generated as a PDF document. If not set or\n"
+"                       set to '-', the PDF document is sent to standard\n"
+"                       output. \n"
+"                       \n"
+"  -u | --unit u        Defines the name of the unit to use on the "
+"invoice.                       \n"
+"                       The default unit is 'Credits', optionally translated\n"
+"                       to your native language if it is supported by "
+"PyKota.\n"
+"  \n"
+"  -V | --vat p         Sets the percent value of the applicable VAT to be\n"
+"                       exposed. The default is 0.0, meaning no VAT\n"
+"                       information will be included.\n"
+"  \n"
+"\n"
+"  Use the filter expressions to extract only parts of the \n"
+"  datas. Allowed filters are of the form :\n"
+"                \n"
+"         key=value\n"
+"                         \n"
+"  Allowed keys for now are :  \n"
+"                       \n"
+"         username       User's name\n"
+"         printername    Printer's name\n"
+"         hostname       Client's hostname\n"
+"         jobid          Job's Id\n"
+"         billingcode    Job's billing code\n"
+"         start          Job's date of printing\n"
+"         end            Job's date of printing\n"
+"         \n"
+"  Dates formatting with 'start' and 'end' filter keys :\n"
+"  \n"
+"    YYYY : year boundaries\n"
+"    YYYYMM : month boundaries\n"
+"    YYYYMMDD : day boundaries\n"
+"    YYYYMMDDhh : hour boundaries\n"
+"    YYYYMMDDhhmm : minute boundaries\n"
+"    YYYYMMDDhhmmss : second boundaries\n"
+"    yesterday[+-NbDays] : yesterday more or less N days (e.g. : yesterday-"
+"15)\n"
+"    today[+-NbDays] : today more or less N days (e.g. : today-15)\n"
+"    tomorrow[+-NbDays] : tomorrow more or less N days (e.g. : tomorrow-15)\n"
+"    now[+-NbDays] : now more or less N days (e.g. now-15)\n"
+"\n"
+"  'now' and 'today' are not exactly the same since today represents the "
+"first\n"
+"  or last second of the day depending on if it's used in a start= or end=\n"
+"  date expression. The utility to be able to specify dates in the future is\n"
+"  a question which remains to be answered :-)\n"
+"  \n"
+"  Contrary to other PyKota management tools, wildcard characters are not \n"
+"  expanded, so you can't use them.\n"
+"  \n"
+"examples :\n"
+"\n"
+"  $ pkinvoice --unit EURO --output /tmp/invoices.pdf start=now-30\n"
+"  \n"
+"  Will generate a PDF document containing invoices for all users\n"
+"  who have spent some credits last month. Invoices will be done in\n"
+"  EURO.  No VAT information will be included.\n"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Edited on"
+msgstr ""
+
+msgid "Number of jobs printed"
+msgstr ""
+
+msgid "Number of pages printed"
+msgstr ""
+
+msgid "Amount due"
+msgstr ""
+
+msgid "Included VAT"
+msgstr ""
+
+msgid "Here's the invoice for your printouts"
+msgstr ""
+
+msgid "Generating invoices"
+msgstr ""
+
+#, python-format
+msgid "Incorrect value '%s' for the --vat command line option"
+msgstr ""
+
+#, python-format
+msgid "Incorrect value '%s' for the --number command line option"
+msgstr ""
+
+#, python-format
+msgid "Invalid filter value [%s], see help."
+msgstr ""
+
+#, python-format
+msgid "Invoiced %i users for %i jobs, %i pages and %.3f credits"
+msgstr ""
+
+msgid "Credits"
+msgstr ""
+
+#, python-format
+msgid ""
+"pkmail v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Email gateway for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkmail  [options]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkmail's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"    \n"
+"  This command is meant to be used from your mail server's aliases file,\n"
+"  as a pipe. It will then accept commands send to it in email messages,\n"
+"  and will send the answer to the command's originator.\n"
+"  \n"
+"  To use this command, create an email alias in /etc/aliases with\n"
+"  the following format :\n"
+"  \n"
+"    pykotacmd: \"|/usr/bin/pkmail\"\n"
+"    \n"
+"  Then run the 'newaliases' command to regenerate the aliases database.\n"
+"  \n"
+"  You can now send commands by email to 'pykotacmd@yourdomain.com', with\n"
+"  the command in the subject.\n"
+"  \n"
+"  List of supported commands :\n"
+"  \n"
+"        report [username]\n"
+"  \n"
+"  NB : For pkmail to work correctly, you may have to put the 'mail'\n"
+"  system user in the 'pykota' system group to ensure this user can\n"
+"  read the /etc/pykota/pykotadmin.conf file, and restart your\n"
+"  mail server (e.g. /etc/init.d/exim restart). It is strongly advised\n"
+"  that you think at least twice before doing this though.\n"
+"  \n"
+"  Use at your own risk !\n"
+msgstr ""
+
+msgid "Result of your commands"
+msgstr ""
+
+#, python-format
+msgid ""
+"pknotify v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Notifies or ask questions to end users who launched the PyKotIcon "
+"application.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pknotify  [options]  [arguments]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version             Prints pknotify's version number then exits.\n"
+"  -h | --help                Prints this message then exits.\n"
+"  \n"
+"  -d | --destination h[:p]   Sets the destination hostname and optional\n"
+"                             port onto which contact the remote PyKotIcon\n"
+"                             application. This option is mandatory.\n"
+"                             When not specified, the port defaults to 7654.\n"
+"                             \n"
+"  -a | --ask                 Tells pknotify to ask something to the end\n"
+"                             user. Then pknotify will output the result.\n"
+"                       \n"
+"  -C | --checkauth           When --ask is used and both an 'username' and "
+"a\n"
+"                             'password' are asked to the end user, then\n"
+"                             pknotify will try to authenticate the user\n"
+"                             through PAM. If authentified, this program\n"
+"                             will print \"AUTH=YES\", else \"AUTH=NO\".\n"
+"                             If a field is missing, \"AUTH=IMPOSSIBLE\" "
+"will\n"
+"                             be printed. If the user is authenticated, then\n"
+"                             \"USERNAME=xxxx\" will be printed as well.\n"
+"                             \n"
+"  -c | --confirm             Tells pknotify to ask for either a "
+"confirmation                       \n"
+"                             or abortion.\n"
+"                             \n"
+"  -D | --denyafter N         With --checkauth above, makes pknotify "
+"loop                           \n"
+"                             up to N times if the password is incorrect.\n"
+"                             After having reached the limit, \"DENY\" will\n"
+"                             be printed, which effectively rejects the job.\n"
+"                             The default value of N is 1, meaning the job\n"
+"                             is denied after the first unsuccessful try.\n"
+"                             \n"
+"  -N | --noremote action     If it's impossible to connect to the remote\n"
+"                             PyKotIcon machine, do this action instead.\n"
+"                             Allowed actions are 'CONTINUE' and 'CANCEL', \n"
+"                             which will respectively allow the processing\n"
+"                             of the print job to continue, or the job to\n"
+"                             be cancelled. The default value is CANCEL.\n"
+"                             \n"
+"  -n | --notify              Tells pknotify to send an informational "
+"message\n"
+"                             to the end user.\n"
+"                             \n"
+"  -q | --quit                Tells pknotify to send a message asking the\n"
+"                             PyKotIcon application to exit. This option can\n"
+"                             be combined with the other ones to make "
+"PyKotIcon\n"
+"                             exit after having sent the answer from the "
+"dialog.\n"
+"                             \n"
+"  -t | --timeout T           Tells pknotify to ignore the end user's answer "
+"if\n"
+"                             it comes past T seconds after the dialog box "
+"being\n"
+"                             opened. The default value is 0 seconds, which \n"
+"                             tells pknotify to wait indefinitely.\n"
+"                             Use this option to avoid having an user who\n"
+"                             leaved his computer stall a whole print queue.\n"
+"                             \n"
+"  You MUST specify either --ask, --confirm, --notify or --quit.\n"
+"\n"
+"  arguments :             \n"
+"  \n"
+"    -a | --ask : Several arguments are accepted, of the form\n"
+"                 \"label:varname:defaultvalue\". The result will\n"
+"                 be printed to stdout in the following format :\n"
+"                 VAR1NAME=VAR1VALUE\n"
+"                 VAR2NAME=VAR2VALUE\n"
+"                 ...\n"
+"                 If the dialog was cancelled, nothing will be\n"
+"                 printed. If one of the varname is 'password'\n"
+"                 then this field is asked as a password (you won't\n"
+"                 see what you type in), and is NOT printed. Although\n"
+"                 it is not printed, it will be used to check if\n"
+"                 authentication is valid if you specify --checkauth.\n"
+"                 \n"
+"    -c | --confirm : A single argument is expected, representing the\n"
+"                     message to display. If the dialog is confirmed\n"
+"                     then pknotify will print OK, else CANCEL.\n"
+"                     \n"
+"    -n | --notify : A single argument is expected, representing "
+"the                 \n"
+"                    message to display. In this case pknotify will\n"
+"                    always print OK.\n"
+"                    \n"
+"examples :                    \n"
+"\n"
+"  pknotify -d client:7654 --noremote CONTINUE --confirm \"This job costs 10 "
+"credits\"\n"
+"  \n"
+"  Would display the cost of the print job and asks for confirmation.\n"
+"  If the end user doesn't have PyKotIcon running and accepting connections\n"
+"  from the print server, PyKota will consider that the end user accepted\n"
+"  to print this job.\n"
+"  \n"
+"  pknotify --destination $PYKOTAJOBORIGINATINGHOSTNAME:7654 \\\n"
+"           --checkauth --ask \"Your name:username:\" \"Your password:"
+"password:\"\n"
+"           \n"
+"  Asks an username and password, and checks if they are valid.         \n"
+"  NB : The PYKOTAJOBORIGINATINGHOSTNAME environment variable is\n"
+"  only set if you launch pknotify from cupspykota through a directive\n"
+"  in ~pykota/pykota.conf\n"
+"  \n"
+"  The TCP port you'll use must be reachable on the client from the\n"
+"  print server.\n"
+msgstr ""
+
+msgid "You MUST install PyPAM for this functionnality to work !"
+msgstr ""
+
+#, python-format
+msgid "Authentication error for user %s : %s"
+msgstr ""
+
+#, python-format
+msgid "Internal error : can't authenticate user %s"
+msgstr ""
+
+#, python-format
+msgid "Password correct for user %s"
+msgstr ""
+
+#, python-format
+msgid ""
+"The end user at %s:%i didn't answer within %i seconds. The print job will be "
+"cancelled."
+msgstr ""
+
+#, python-format
+msgid ""
+"Are you sure that PyKotIcon is running and accepting incoming connections on "
+"%s:%s ?"
+msgstr ""
+
+msgid "Connection error"
+msgstr ""
+
+msgid "some options are mandatory, see help."
+msgstr ""
+
+msgid "incorrect value for the --noremote command line switch, see help."
+msgstr ""
+
+msgid "some options require arguments, see help."
+msgstr ""
+
+#, python-format
+msgid ""
+"pkprinters v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"A Printers Manager for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkprinters [options] printer1 printer2 printer3 ... printerN\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkprinters's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -a | --add           Adds printers if they don't exist on the Quota \n"
+"                       Storage Server. If they exist, they are modified\n"
+"                       unless -s|--skipexisting is also used.\n"
+"                       \n"
+"  -d | --delete        Deletes printers from the quota storage.\n"
+"  \n"
+"  -D | --description d Adds a textual description to printers.\n"
+"\n"
+"  -C | --cups          Also modifies the DeviceURI in CUPS' printers.conf\n"
+"\n"
+"  -c | --charge p[,j]  Sets the price per page and per job to charge.\n"
+"                       Job price is optional.\n"
+"                       If both are to be set, separate them with a comma.\n"
+"                       Floating point and negative values are allowed.\n"
+"  \n"
+"  -g | --groups pg1[,pg2...] Adds or Remove the printer(s) to the printer \n"
+"                       groups pg1, pg2, etc... which must already exist.\n"
+"                       A printer group is just like a normal printer,\n"
+"                       only that it is usually unknown from the printing\n"
+"                       system. Create printer groups exactly the same\n"
+"                       way that you create printers, then add other \n"
+"                       printers to them with this option.\n"
+"                       Accounting is done on a printer and on all\n"
+"                       the printer groups it belongs to, quota checking\n"
+"                       is done on a printer and on all the printer groups\n"
+"                       it belongs to.\n"
+"                       If the --remove option below is not used, the \n"
+"                       default action is to add printers to the specified\n"
+"                       printer groups.\n"
+"                       \n"
+"  -l | --list          List informations about the printer(s) and the\n"
+"                       printers groups it is a member of.\n"
+"                       \n"
+"  -r | --remove        In combination with the --groups option "
+"above,                       \n"
+"                       remove printers from the specified printers groups.\n"
+"                       \n"
+"  -s | --skipexisting  In combination with the --add option above, tells\n"
+"                       pkprinters to not modify existing printers.\n"
+"                       \n"
+"  -m | --maxjobsize s  Sets the maximum job size allowed on the printer\n"
+"                       to s pages.\n"
+"                       \n"
+"  -p | --passthrough   Activate passthrough mode for the printer. In this\n"
+"                       mode, users are allowed to print without any impact\n"
+"                       on their quota or account balance.\n"
+"                       \n"
+"  -n | --nopassthrough Deactivate passthrough mode for the printer.\n"
+"                       Without -p or -n, printers are created in \n"
+"                       normal mode, i.e. no passthrough.\n"
+"  \n"
+"  printer1 through printerN can contain wildcards if the --add option \n"
+"  is not set.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ pkprinters --add -D \"HP Printer\" --charge 0.05,0.1 hp2100 hp2200 "
+"hp8000\n"
+"  \n"
+"  Will create three printers named hp2100, hp2200 and hp8000.\n"
+"  Their price per page will be set at 0.05 unit, and their price\n"
+"  per job will be set at 0.1 unit. Units are in your own currency,\n"
+"  or whatever you want them to mean.\n"
+"  All of their descriptions will be set to the string \"HP Printer\".\n"
+"  If any of these printers already exists, it will also be modified \n"
+"  unless the -s|--skipexisting command line option is also used.\n"
+"            \n"
+"  $ pkprinters --delete \"*\"\n"
+"  \n"
+"  This will completely delete all printers and associated quota "
+"information,\n"
+"  as well as their job history. USE WITH CARE !\n"
+"  \n"
+"  $ pkprinters --groups Laser,HP \"hp*\"\n"
+"  \n"
+"  This will put all printers which name matches \"hp*\" into printers "
+"groups \n"
+"  Laser and HP, which MUST already exist.\n"
+"  \n"
+"  $ pkprinters --groups LexMark --remove hp2200\n"
+"  \n"
+"  This will remove the hp2200 printer from the LexMark printer group.\n"
+msgstr ""
+
+#, python-format
+msgid "Passthrough mode : %s"
+msgstr ""
+
+#, python-format
+msgid "Routed through PyKota : %s"
+msgstr ""
+
+msgid "YES"
+msgstr ""
+
+msgid "NO"
+msgstr ""
+
+msgid "in"
+msgstr "在"
+
+msgid "Rerouting printers to CUPS"
+msgstr ""
+
+#, python-format
+msgid "Invalid charge amount value %s"
+msgstr "%s 是不正確的charge數值"
+
+#, python-format
+msgid "Invalid maximum job size value %s"
+msgstr ""
+
+#, python-format
+msgid "Printer %s already exists, skipping."
+msgstr "列印機 %s 經已存在，指令被跳過"
+
+#, python-format
+msgid "Printer %s already exists, will be modified."
+msgstr "列印機 %s 經已存在，列印機將會被變更"
+
+#, python-format
+msgid "Invalid printer name %s"
+msgstr "%s 是不正確的列印機名稱"
+
+msgid "You have to pass printer groups names on the command line"
+msgstr "你必須需入列印機群組名稱"
+
+msgid "You have to pass printer names on the command line"
+msgstr "你必須需入列印機名稱"
+
+#, python-format
+msgid ""
+"pkrefund v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Refunds jobs.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkrefund [options] [filterexpr]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkrefund's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -f | --force         Doesn't ask for confirmation before refunding jobs.\n"
+"  -r | --reason txt    Sets textual information to explain the refunding.\n"
+"\n"
+"  -l | --logo img      Use the image as the receipt's logo. The logo will\n"
+"                       be drawn at the center top of the page. The default\n"
+"                       logo is /usr/share/pykota/logos/pykota.jpeg\n"
+"\n"
+"  -p | --pagesize sz   Sets sz as the page size. Most well known\n"
+"                       page sizes are recognized, like 'A4' or 'Letter'\n"
+"                       to name a few. The default size is A4.\n"
+"\n"
+"  -n | --number N      Sets the number of the first receipt. This number\n"
+"                       will automatically be incremented for each receipt.\n"
+"\n"
+"  -o | --output f.pdf  Defines the name of the PDF file which will contain\n"
+"                       the receipts. If not set, then no PDF file will\n"
+"                       be created. If set to '-', then --force is assumed,\n"
+"                       and the PDF document is sent to standard output.\n"
+"\n"
+"  -u | --unit u        Defines the name of the unit to use on the receipts.\n"
+"                       The default unit is 'Credits', optionally translated\n"
+"                       to your native language if it is supported by "
+"PyKota.\n"
+"  \n"
+"\n"
+"  Use the filter expressions to extract only parts of the \n"
+"  datas. Allowed filters are of the form :\n"
+"                \n"
+"         key=value\n"
+"                         \n"
+"  Allowed keys for now are :  \n"
+"                       \n"
+"         username       User's name\n"
+"         printername    Printer's name\n"
+"         hostname       Client's hostname\n"
+"         jobid          Job's Id\n"
+"         billingcode    Job's billing code\n"
+"         start          Job's date of printing\n"
+"         end            Job's date of printing\n"
+"         \n"
+"  Dates formatting with 'start' and 'end' filter keys :\n"
+"  \n"
+"    YYYY : year boundaries\n"
+"    YYYYMM : month boundaries\n"
+"    YYYYMMDD : day boundaries\n"
+"    YYYYMMDDhh : hour boundaries\n"
+"    YYYYMMDDhhmm : minute boundaries\n"
+"    YYYYMMDDhhmmss : second boundaries\n"
+"    yesterday[+-NbDays] : yesterday more or less N days (e.g. : yesterday-"
+"15)\n"
+"    today[+-NbDays] : today more or less N days (e.g. : today-15)\n"
+"    tomorrow[+-NbDays] : tomorrow more or less N days (e.g. : tomorrow-15)\n"
+"    now[+-NbDays] : now more or less N days (e.g. now-15)\n"
+"\n"
+"  'now' and 'today' are not exactly the same since today represents the "
+"first\n"
+"  or last second of the day depending on if it's used in a start= or end=\n"
+"  date expression. The utility to be able to specify dates in the future is\n"
+"  a question which remains to be answered :-)\n"
+"  \n"
+"  Contrary to other PyKota management tools, wildcard characters are not \n"
+"  expanded, so you can't use them.\n"
+"  \n"
+"Examples :\n"
+"\n"
+"  $ pkrefund --output /tmp/receipts.pdf jobid=503\n"
+"  \n"
+"  This will refund all jobs which Id is 503. BEWARE : installing CUPS\n"
+"  afresh will reset the first job id at 1, so you probably want to use\n"
+"  a more precise filter as explained below. A confirmation will\n"
+"  be asked for each job to refund, and a PDF file named /tmp/receipts.pdf\n"
+"  will be created which will contain printable receipts.\n"
+"  \n"
+"  $ pkrefund --reason \"Hardware problem\" jobid=503 start=today-7\n"
+"  \n"
+"  Refunds all jobs which id is 503 but which were printed during the\n"
+"  past week. The reason will be marked as being an hardware problem.\n"
+"  \n"
+"  $ pkrefund --force username=jerome printername=HP2100\n"
+"  \n"
+"  Refunds all jobs printed by user jerome on printer HP2100. No\n"
+"  confirmation will be asked.\n"
+"  \n"
+"  $ pkrefund --force printername=HP2100 start=200602 end=yesterday\n"
+"  \n"
+"  Refunds all jobs printed on printer HP2100 between February 1st 2006\n"
+"  and yesterday. No confirmation will be asked.\n"
+msgstr ""
+
+msgid "Refunding receipt"
+msgstr ""
+
+msgid "Jobs refunded"
+msgstr ""
+
+msgid "Pages refunded"
+msgstr ""
+
+msgid "Amount refunded"
+msgstr ""
+
+msgid "Reason"
+msgstr ""
+
+msgid "Here's the receipt for the refunding of your print jobs"
+msgstr ""
+
+msgid "Generating receipts"
+msgstr ""
+
+msgid ""
+"Refunding for no reason is forbidden. Please use the --reason command line "
+"option."
+msgstr ""
+
+msgid ""
+"The PDF file containing the receipts will be sent to stdout. --force is "
+"assumed."
+msgstr ""
+
+#, python-format
+msgid "Date : %s"
+msgstr ""
+
+#, python-format
+msgid "JobId : %s"
+msgstr ""
+
+#, python-format
+msgid "User : %s"
+msgstr ""
+
+#, python-format
+msgid "Printer : %s"
+msgstr ""
+
+#, python-format
+msgid "Billing code : %s"
+msgstr ""
+
+#, python-format
+msgid "Pages : %i"
+msgstr ""
+
+#, python-format
+msgid "Credits : %.3f"
+msgstr ""
+
+#, python-format
+msgid "Title : %s"
+msgstr ""
+
+msgid "Refund (Y/N)"
+msgstr ""
+
+msgid "Y"
+msgstr ""
+
+msgid "N"
+msgstr ""
+
+#, python-format
+msgid "Refunded %i users for %i jobs, %i pages and %.3f credits"
+msgstr ""
+
+#, python-format
+msgid ""
+"pkturnkey v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"A turn key tool for PyKota. When launched, this command will initialize\n"
+"PyKota's database with all existing print queues and some or all users.\n"
+"For now, no prices or limits are set, so printing is fully accounted\n"
+"for, but not limited. That's why you'll probably want to also use\n"
+"edpykota once the database has been initialized.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkturnkey [options] [printqueues names]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkturnkey version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -c | --doconf        Give hints about what to put into pykota.conf\n"
+"  \n"
+"  -d | --dousers       Manages users accounts as well.\n"
+"  \n"
+"  -D | --dogroups      Manages users groups as well.\n"
+"                       Implies -d | --dousers.\n"
+"  \n"
+"  -e | --emptygroups   Includes empty groups.\n"
+"  \n"
+"  -f | --force         Modifies the database instead of printing what\n"
+"                       it would do.\n"
+"                       \n"
+"  -u | --uidmin uid    Only adds users whose uid is greater than or equal "
+"to\n"
+"                       uid. You can pass an username there as well, and its\n"
+"                       uid will be used automatically.\n"
+"                       If not set, 0 will be used automatically.\n"
+"                       Implies -d | --dousers.\n"
+"                       \n"
+"  -U | --uidmax uid    Only adds users whose uid is lesser than or equal to\n"
+"                       uid. You can pass an username there as well, and its\n"
+"                       uid will be used automatically.\n"
+"                       If not set, a large value will be used "
+"automatically.\n"
+"                       Implies -d | --dousers.\n"
+"\n"
+"  -g | --gidmin gid    Only adds groups whose gid is greater than or equal "
+"to\n"
+"                       gid. You can pass a groupname there as well, and its\n"
+"                       gid will be used automatically.\n"
+"                       If not set, 0 will be used automatically.\n"
+"                       Implies -D | --dogroups.\n"
+"                       \n"
+"  -G | --gidmax gid    Only adds groups whose gid is lesser than or equal "
+"to\n"
+"                       gid. You can pass a groupname there as well, and its\n"
+"                       gid will be used automatically.\n"
+"                       If not set, a large value will be used "
+"automatically.\n"
+"                       Implies -D | --dogroups.\n"
+"\n"
+"examples :                              \n"
+"\n"
+"  $ pkturnkey --dousers --uidmin jerome\n"
+"\n"
+"  Will simulate the initialization of PyKota's database will all existing\n"
+"  printers and print accounts for all users whose uid is greater than\n"
+"  or equal to jerome's one. Won't manage any users group.\n"
+"  \n"
+"  To REALLY initialize the database instead of simulating it, please\n"
+"  use the -f | --force command line switch.\n"
+"  \n"
+"  You can limit the initialization to only a subset of the existing\n"
+"  printers, by passing their names at the end of the command line.\n"
+msgstr ""
+
+#, python-format
+msgid ""
+"Printer %s is not managed by PyKota yet. Please modify printers.conf and "
+"restart CUPS."
+msgstr ""
+
+msgid "Please be patient..."
+msgstr ""
+
+msgid "Don't worry, the database WILL NOT BE MODIFIED."
+msgstr ""
+
+msgid "Please WORRY NOW, the database WILL BE MODIFIED."
+msgstr ""
+
+msgid "System users will have a print account as well !"
+msgstr ""
+
+#, python-format
+msgid "Unknown username %s : %s"
+msgstr ""
+
+msgid "System groups will have a print account as well !"
+msgstr ""
+
+#, python-format
+msgid "Unknown groupname %s : %s"
+msgstr ""
+
+msgid "Simulation terminated."
+msgstr ""
+
+msgid "Database initialized !"
+msgstr ""
+
+msgid "The --uidmin or --uidmax command line option implies --dousers as well."
+msgstr ""
+
+msgid ""
+"The --gidmin or --gidmax command line option implies --dogroups as well."
+msgstr ""
+
+msgid "The --dogroups command line option implies --dousers as well."
+msgstr ""
+
+#, python-format
+msgid ""
+"pkusers v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"An Users and Groups Manager for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pkusers [options] user1 user2 user3 ... userN\n"
+"  \n"
+"or :  \n"
+"\n"
+"  pkusers --groups [options] group1 group2 group3 ... groupN\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pkusers's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -a | --add           Adds users if they don't exist on the database.\n"
+"                       If they exist, they are modified unless\n"
+"                       -s|--skipexisting is also used.\n"
+"                       \n"
+"  -d | --delete        Deletes users from the quota storage.\n"
+"\n"
+"  -e | --email addr    Sets the email address for the users.\n"
+"                       If the addr parameter begins with @, then\n"
+"                       the username is prepended to addr to form\n"
+"                       a valid email address.\n"
+"\n"
+"  -D | --description d Adds a textual description to users or groups.\n"
+"                       \n"
+"  -g | --groups        Edit users groups instead of users.\n"
+"                          \n"
+"  -o | --overcharge f  Sets the overcharging factor applied to the user \n"
+"                       when computing the cost of a print job. Positive or \n"
+"                       negative floating point values are allowed,\n"
+"                       this allows you to do some really creative\n"
+"                       things like giving money to an user whenever\n"
+"                       he prints. The number of pages in a print job\n"
+"                       is not modified by this coefficient, only the\n"
+"                       cost of the job for a particular user.\n"
+"                       Only users have such a coefficient.\n"
+"  \n"
+"  -i | --ingroups g1[,g2...]  Puts the users into each of the groups\n"
+"                              listed, separated by commas. The groups\n"
+"                              must already exist in the Quota Storage.\n"
+"                       \n"
+"  -L | --list          Lists users or groups.\n"
+"  \n"
+"  -l | --limitby l     Choose if the user/group is limited in "
+"printing                     \n"
+"                       by its account balance or by its page quota.\n"
+"                       The default value is 'quota'. Allowed values\n"
+"                       are 'quota' 'balance' 'noquota' 'noprint' \n"
+"                       and 'nochange' :\n"
+"                       \n"
+"                         - quota : limit by number of pages per printer.\n"
+"                         - balance : limit by number of credits in account.\n"
+"                         - noquota : no limit, accounting still done.\n"
+"                         - nochange : no limit, accounting not done. \n"
+"                         - noprint : printing is denied. \n"
+"                       NB : nochange and noprint are not supported for "
+"groups.\n"
+"                       \n"
+"  -b | --balance b     Sets the user's account balance to "
+"b.                     \n"
+"                       Account balance may be increase or decreased\n"
+"                       if b is prefixed with + or -.\n"
+"                       WARNING : when decreasing account balance,\n"
+"                       the total paid so far by the user is decreased\n"
+"                       too.\n"
+"                       Groups don't have a real balance, but the\n"
+"                       sum of their users' account balance.\n"
+"                       \n"
+"  -C | --comment txt   Defines some informational text to be associated\n"
+"                       with a change to an user's account balance.\n"
+"                       Only meaningful if -b | --balance is also used.\n"
+"                       \n"
+"                       \n"
+"  -r | --remove        In combination with the --ingroups option "
+"above,                       \n"
+"                       remove users from the specified users groups.\n"
+"                       \n"
+"  -s | --skipexisting  In combination with the --add option above, tells\n"
+"                       pkusers to not modify existing users.\n"
+"                       \n"
+"  user1 through userN and group1 through groupN can use wildcards\n"
+"  if the --add option is not set.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ pkusers --add john paul george ringo/ringo@example.com\n"
+"  \n"
+"  This will add users john, paul, george and ringo to the quota\n"
+"  database. User ringo's email address will also be set to \n"
+"  'ringo@example.com'\n"
+"  \n"
+"  $ pkusers --ingroups coders,it jerome\n"
+"  \n"
+"  User jerome is put into the groups \"coders\" and \"it\" which must\n"
+"  already exist in the quota database.\n"
+"            \n"
+"  $ pkusers --limitby balance jerome\n"
+"  \n"
+"  This will tell PyKota to limit jerome by his account's balance\n"
+"  when printing.\n"
+"  \n"
+"  $ pkusers --balance +10.0 --comment \"He paid with his blood !\" jerome\n"
+"  \n"
+"  This will increase jerome's account balance by 10.0 (in your\n"
+"  own currency). You can decrease the account balance with a\n"
+"  dash prefix, and set it to a fixed amount with no prefix.\n"
+"  A comment will be stored for this balance change.\n"
+"  \n"
+"  $ pkusers --delete jerome rachel\n"
+"  \n"
+"  This will completely delete jerome and rachel from the quota\n"
+"  database. All their quotas and jobs will be deleted too.\n"
+"  \n"
+"  $ pkusers --overcharge 2.5 poorstudent\n"
+"  \n"
+"  This will overcharge the poorstudent user by a factor of 2.5.\n"
+"  \n"
+"  $ pkusers --overcharge -1 jerome\n"
+"  \n"
+"  User jerome will actually earn money whenever he prints.\n"
+"  \n"
+"  $ pkusers --overcharge 0 boss\n"
+"  \n"
+"  User boss can print at will, it won't cost him anything because the\n"
+"  cost of each print job will be multiplied by zero before charging\n"
+"  his account.\n"
+"\n"
+"  $ pkusers --email @example.com\n"
+"\n"
+"  This will set the email address for each user to username@example.com\n"
+msgstr ""
+
+#, python-format
+msgid "Invalid email address %s"
+msgstr "%s 是不正確的電郵地址"
+
+#, python-format
+msgid "There's no %s matching %s"
+msgstr ""
+
+#, python-format
+msgid "Limited by : %s"
+msgstr ""
+
+#, python-format
+msgid "Account balance : %.2f"
+msgstr ""
+
+#, python-format
+msgid "Total paid so far : %.2f"
+msgstr ""
+
+#, python-format
+msgid "Overcharging factor : %.2f"
+msgstr ""
+
+#, python-format
+msgid "Group balance : %.2f"
+msgstr ""
+
+#, python-format
+msgid "Invalid limitby value %s"
+msgstr "%s 是不正確的limitby數值"
+
+#, python-format
+msgid "Invalid overcharge value %s"
+msgstr ""
+
+#, python-format
+msgid "Invalid balance value %s"
+msgstr "%s 是不正確的balance數值"
+
+#, python-format
+msgid "There's no users group matching %s"
+msgstr ""
+
+#, python-format
+msgid "Unknown group %s"
+msgstr "未能確認的群組 %s"
+
+#, python-format
+msgid "Unknown user %s"
+msgstr "未能確認的使用者 %s"
+
+#, python-format
+msgid "%s %s already exists, skipping."
+msgstr ""
+
+#, python-format
+msgid "%s %s already exists, will be modified."
+msgstr ""
+
+#, python-format
+msgid "Invalid name %s"
+msgstr ""
+
+msgid "You have to pass user groups names on the command line"
+msgstr ""
+
+#, python-format
+msgid ""
+"pykosd v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"An OSD quota monitor for PyKota.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pykosd [options]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pykosd's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -c | --color #rrggbb Sets the color to use for display as an hexadecimal\n"
+"                       triplet, for example #FF0000 is 100%% red.\n"
+"                       Defaults to 100%% green (#00FF00).\n"
+"                       \n"
+"  -d | --duration d    Sets the duration of the display in seconds. \n"
+"                       Defaults to 3 seconds.\n"
+"                       \n"
+"  -f | --font f        Sets the font to use for "
+"display.                      \n"
+"                       Defaults to the Python OSD library's default.\n"
+"  \n"
+"  -l | --loop n        Sets the number of times the info will be displayed.\n"
+"                       Defaults to 0, which means loop forever.\n"
+"                       \n"
+"  -s | --sleep s       Sets the sleeping duration between two displays \n"
+"                       in seconds. Defaults to 180 seconds (3 minutes).\n"
+"                       \n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ pykosd -s 60 --loop 5\n"
+"  \n"
+"  Will launch pykosd. Display will be refreshed every 60 seconds,\n"
+"  and will last for 3 seconds (the default) each time. After five\n"
+"  iterations, the program will exit.\n"
+msgstr ""
+
+#, python-format
+msgid "Invalid duration option %s"
+msgstr "%s 是錯誤的duration設定"
+
+#, python-format
+msgid "Invalid loop option %s"
+msgstr "%s 是錯誤的loop設定"
+
+#, python-format
+msgid "Invalid sleep option %s"
+msgstr "%s 是錯誤的sleep設定"
+
+#, python-format
+msgid "Invalid color option %s"
+msgstr "%s是錯誤的color選項"
+
+#, python-format
+msgid "User %s doesn't exist in PyKota's database"
+msgstr "使用者 %s 並沒有存在於PyKota的資料庫內"
+
+#, python-format
+msgid "Pages used on %s : %s"
+msgstr "於列印機 %s 共使列印了 %s 頁"
+
+#, python-format
+msgid "PyKota Units left : %.2f"
+msgstr "PyKota 配額還剩 : %.2f"
+
+msgid "Printing denied."
+msgstr ""
+
+msgid "Printing not limited."
+msgstr ""
+
+msgid "Printing not limited, no accounting."
+msgstr ""
+
+#, python-format
+msgid ""
+"pykotme v%(__version__)s (c) %(__years__)s %(__author__)s\n"
+"\n"
+"Gives print quotes to users.\n"
+"\n"
+"command line usage :\n"
+"\n"
+"  pykotme  [options]  [files]\n"
+"\n"
+"options :\n"
+"\n"
+"  -v | --version       Prints pykotme's version number then exits.\n"
+"  -h | --help          Prints this message then exits.\n"
+"  \n"
+"  -P | --printer p     Gives a quote for this printer only. Actually p can\n"
+"                       use wildcards characters to select only\n"
+"                       some printers. The default value is *, meaning\n"
+"                       all printers.\n"
+"                       You can specify several names or wildcards, \n"
+"                       by separating them with commas.\n"
+"  \n"
+"examples :                              \n"
+"\n"
+"  $ pykotme --printer apple file1.ps file2.ps\n"
+"  \n"
+"  This will give a print quote to the current user. The quote will show\n"
+"  the price and size of a job consisting in file1.ps and file2.ps \n"
+"  which would be sent to the apple printer.\n"
+"  \n"
+"  $ pykotme --printer apple,hplaser <file1.ps\n"
+"  \n"
+"  This will give a print quote to the current user. The quote will show\n"
+"  the price and size of a job consisting in file1.ps as read from\n"
+"  standard input, which would be sent to the apple or hplaser\n"
+"  printer.\n"
+"\n"
+"  $ pykotme \n"
+"  \n"
+"  This will give a quote for a job consisting of what is on standard \n"
+"  input. The quote will list the job size, and the price the job\n"
+"  would cost on each printer.\n"
+msgstr ""
+
+#, python-format
+msgid "Your account balance : %.2f"
+msgstr "你的帳目結餘為 : %.2f"
+
+#, python-format
+msgid "Job size : %i pages"
+msgstr "列印總頁數 : %i 頁"
+
+#, python-format
+msgid "Cost on printer %s : %.2f"
+msgstr "於 %s 列印，你所需要的費用為 %.2f"
+
+msgid "won't be charged, printer is in passthrough mode"
+msgstr ""
+
+msgid "won't be charged, your account is immutable"
+msgstr ""
+
+#, python-format
+msgid "Unsupported accounter backend %s"
+msgstr "%s 是暫時未能夠支援的計算器"
+
+#, python-format
+msgid ""
+"Configuration file %s can't be read. Please check that the file exists and "
+"that your permissions are sufficient."
+msgstr ""
+
+#, python-format
+msgid "Configuration file %s not found."
+msgstr "未能尋找設定檔 %s"
+
+#, python-format
+msgid "Option %s not found in section global of %s"
+msgstr "%s 這個設定未能於 %s 內的section global找到"
+
+#, python-format
+msgid "Option %s not found in section %s of %s"
+msgstr "%s 這個設定未能在 %s section附屬於 %s 內找到"
+
+#, python-format
+msgid "Option ldaptls is set, but certificate %s is not readable."
+msgstr ""
+
+#, python-format
+msgid "Option logger only supports values in %s"
+msgstr "logger只支援數值在 %s"
+
+#, python-format
+msgid "Invalid preaccounter %s for printer %s"
+msgstr ""
+
+#, python-format
+msgid "Option preaccounter in section %s only supports values in %s"
+msgstr ""
+
+#, python-format
+msgid "Invalid accounter %s for printer %s"
+msgstr "%s 是不正確的計算器用於列印機 %s"
+
+#, python-format
+msgid "Option accounter in section %s only supports values in %s"
+msgstr "accounter於 %s 部份只支援數值在 %s"
+
+#, python-format
+msgid "Invalid unknown_billingcode directive %s for printer %s"
+msgstr ""
+
+#, python-format
+msgid "Directive unknown_billingcode in section %s only supports values in %s"
+msgstr ""
+
+#, python-format
+msgid "Option enforcement in section %s only supports values in %s"
+msgstr "enforcement於 %s 部份只支援數值在 %s"
+
+#, python-format
+msgid ""
+"Option onbackenderror in section %s only supports values 'charge', "
+"'nocharge', and 'retry:num:delay'"
+msgstr ""
+
+#, python-format
+msgid "Option onaccountererror in section %s only supports values in %s"
+msgstr "onaccountererror於 %s 部份只支援數值在 %s"
+
+#, python-format
+msgid "Option policy in section %s only supports values in %s"
+msgstr "政策設定在 %s 只能夠支援的數值在 %s"
+
+#, python-format
+msgid "Invalid option mailto %s for printer %s"
+msgstr "%s 是不正確的mailto選項用於列印機 %s"
+
+#, python-format
+msgid "Option mailto in section %s only supports values in %s"
+msgstr "mailto 於 %s 的部份只支援數值在 %s"
+
+#, python-format
+msgid "Invalid maximal deny banners counter %s"
+msgstr ""
+
+#, python-format
+msgid "Invalid grace delay %s"
+msgstr "%s 是不正確的寬限時間"
+
+#, python-format
+msgid "Invalid poor man's threshold %s"
+msgstr "%s 是不正確的poor man's threshold"
+
+#, python-format
+msgid "Invalid balancezero value %s"
+msgstr ""
+
+msgid ""
+"Your Print Quota account balance is Low.\n"
+"Soon you'll not be allowed to print anymore.\n"
+"Please contact the Print Quota Administrator to solve the problem."
+msgstr ""
+"你的列印配額經已很低，\n"
+"假若你不增加配額，在不久的時間後，你將不能再列印，\n"
+"請你聯絡負責列印配額的管理人員，以解決這個問題。"
+
+#, python-format
+msgid ""
+"You are not allowed to print anymore because\n"
+"your Print Quota is exceeded on printer %s."
+msgstr ""
+"你不能再列印任何文件，\n"
+"因為你在列印機 %s 已沒有列印配額。"
+
+#, python-format
+msgid ""
+"You will soon be forbidden to print anymore because\n"
+"your Print Quota is almost reached on printer %s."
+msgstr ""
+"在不久的時間内，你將會被禁止作任何列印，\n"
+"因為你在印表機 %s 的列印配額，差不多用完。"
+
+#, python-format
+msgid "Incorrect value %s for the duplicatesdelay directive in section %s"
+msgstr ""
+
+#, python-format
+msgid "Incorrect value %s for the noprintingmaxdelay directive in section %s"
+msgstr ""
+
+#, python-format
+msgid "Option accountbanner in section %s only supports values in %s"
+msgstr "accountbanner內的 %s 只能支援數值在 %s"
+
+#, python-format
+msgid "Option trustjobsize for printer %s is incorrect"
+msgstr ""
+
+msgid "History"
+msgstr "列印紀錄"
+
+msgid "Users"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Printers"
+msgstr ""
+
+msgid "Users Print Quotas"
+msgstr ""
+
+msgid "Users Groups Print Quotas"
+msgstr ""
+
+msgid "History of Payments"
+msgstr ""
+
+msgid "Printers Groups Membership"
+msgstr ""
+
+msgid "Users Groups Membership"
+msgstr ""
+
+msgid "Billing Codes"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Comma Separated Values"
+msgstr ""
+
+msgid "Semicolon Separated Values"
+msgstr ""
+
+msgid "Tabulation Separated Values"
+msgstr ""
+
+msgid "eXtensible Markup Language"
+msgstr ""
+
+msgid "CUPS' page_log"
+msgstr ""
+
+#, python-format
+msgid "Invalid modifier [%s] for --data command line option, see help."
+msgstr "不正確的修改參數 [%s] 給 --data 指令選項，請參閱說明文件"
+
+msgid ""
+"Dumping all PyKota's datas forces format to XML, and disables --sum and "
+"filters."
+msgstr ""
+
+#, python-format
+msgid "Invalid modifier [%s] for --format command line option, see help."
+msgstr "不正確的修改參數 [%s] 給 --format 指令選項，請參閱說明文件"
+
+msgid "XML output is disabled because the jaxml module is not available."
+msgstr "因為jaxml模組尙未安裝，XML輸出已停用"
+
+#, python-format
+msgid "Invalid data type [%s] for --sum command line option, see help."
+msgstr ""
+
+msgid "PyKota data dumper failed : I/O error"
+msgstr "PyKota data dumper失敗 : I/O 錯誤 "
+
+#, python-format
+msgid "Unsupported logging subsystem %s"
+msgstr "%s 暫時不支援的紀錄系統"
+
+#, python-format
+msgid "Report for %s quota on printer %s"
+msgstr "使用者 %s 的列印配額於印表機%s"
+
+#, python-format
+msgid "Pages grace time: %i days"
+msgstr "寬限日期: %i 日"
+
+#, python-format
+msgid "Price per job: %.3f"
+msgstr "毎次列印工作所需費用: %.3f"
+
+#, python-format
+msgid "Price per page: %.3f"
+msgstr "列印毎頁所需費用: %.3f"
+
+msgid ""
+"Group          overcharge   used    soft    hard    balance grace         "
+"total       paid warn"
+msgstr ""
+
+msgid ""
+"User           overcharge   used    soft    hard    balance grace         "
+"total       paid warn"
+msgstr ""
+
+msgid "unknown"
+msgstr "未能確認"
+
+#, python-format
+msgid "Real : %s"
+msgstr "硬體/軟體內部計算的數值 : %s"
+
+#, python-format
+msgid "Total : %9i"
+msgstr "總計 : %9i"
+
+msgid "N/A"
+msgstr ""
+
+#, python-format
+msgid "Unsupported reporter backend %s"
+msgstr "%s 是不能支援的reporter backend"
+
+#, python-format
+msgid "Refunded %i pages and %.3f credits by %s (%s) on %s"
+msgstr ""
+
+#, python-format
+msgid "Unsupported quota storage backend %s"
+msgstr "%s 是不能支援的配額資料庫"
+
+msgid "Done"
+msgstr ""
+
+msgid "Average speed"
+msgstr ""
+
+msgid "entries per second"
+msgstr ""
+
+#, python-format
+msgid "Strange problem with uid(%s) : %s"
+msgstr ""
+
+#, python-format
+msgid "Running as user '%s'."
+msgstr ""
+
+msgid "No user named 'pykota'. Not dropping priviledges."
+msgstr ""
+
+#, python-format
+msgid "Impossible to drop priviledges : %s"
+msgstr ""
+
+msgid "Priviledges dropped. Now running as user 'pykota'."
+msgstr ""
+
+#, python-format
+msgid "Impossible to regain priviledges : %s"
+msgstr ""
+
+msgid "Regained priviledges. Now running as root."
+msgstr ""
+
+msgid "Please report bugs to :"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Please contact your system administrator :\n"
+"\n"
+"\t%s - <%s>\n"
+msgstr ""
+"\n"
+"\n"
+"請聯絡系統管理員 :\n"
+"\t%s - <%S>\n"
+
+#, python-format
+msgid "Unable to match user %s on printer %s, applying default policy (%s)"
+msgstr "未能尋找使用者 %s 於印表機 %s，因此採用預設的政策(%s)"
+
+#, python-format
+msgid ""
+"Unable to find user %s's account balance, applying default policy (%s) for "
+"printer %s"
+msgstr "未能尋找使用者 %s 的帳目結算，因此採用預設的政策(%s)於列印機 %s"
+
+#, python-format
+msgid "User %s will not be charged for printing."
+msgstr ""
+
+#, python-format
+msgid "Print Quota exceeded for group %s on printer %s"
+msgstr "群組 %s 超出列印配額於列印機 %s"
+
+msgid "Print Quota Exceeded"
+msgstr "超出列印配額"
+
+#, python-format
+msgid "Print Quota low for group %s on printer %s"
+msgstr "羣組 %s 的列印配額於列印機 %s 經已很低"
+
+msgid "Print Quota Low"
+msgstr "列印配額經已很低"
+
+#, python-format
+msgid ""
+"Search base %s doesn't seem to exist. Probable misconfiguration. Please "
+"double check /etc/pykota/pykota.conf : %s"
+msgstr "%s 不存在，很可能是錯誤設定所致請撿查 /etc/pykota/pykota.conf : %s"
+
+#, python-format
+msgid "Search for %s(%s) from %s(scope=%s) returned no answer."
+msgstr "搜尋不到 %s(%s) 從 %s(scope=%s)"
+
+#, python-format
+msgid "Problem adding LDAP entry (%s, %s)"
+msgstr "新增LDAP紀錄 (%s, %s) 時出現問題"
+
+#, python-format
+msgid "Problem deleting LDAP entry (%s)"
+msgstr "刪除LDAP紀錄 (%s) 時出現問題"
+
+#, python-format
+msgid "Problem modifying LDAP entry (%s, %s)"
+msgstr "修改LDAP紀錄出現問題 (%s, %s)"
+
+#, python-format
+msgid ""
+"No pykotaAccountBalance object found for user %s. Did you create LDAP "
+"entries manually ?"
+msgstr ""
+"未能為使用者 %s 尋找pkotaAccountBalance object，請問你是否已手動建立LDAP 紀"
+"錄?  "
+
+msgid "Hidden because of privacy concerns"
+msgstr ""
+
+#, python-format
+msgid ""
+"Unable to find an existing objectClass %s entry with %s=%s to attach "
+"pykotaAccount objectClass"
+msgstr ""
+"未能尋找現存的objectclass %s 紀錄帶有 %s=%s 連繫到pykotaAccount objectClass "
+
+#, python-format
+msgid "%s. A new entry will be created instead."
+msgstr ""
+
+#, python-format
+msgid "Unable to find an existing entry to attach pykotaGroup objectclass %s"
+msgstr "未能尋找現存的紀錄連繫到pykotaGroup objectclass %s"
+
+msgid ""
+"Your version of python-mysqldb is too old. Please install a newer release."
+msgstr ""
+
+#, python-format
+msgid "A problem occured while reading printer %s's internal page counter."
+msgstr "在讀取列印機 %s 的內存頁面計算器時出現問題"
+
+#, python-format
+msgid "Retrieving printer %s's page counter from database instead."
+msgstr "從資料庫讀取，恢復列印機 %s 的頁面計算器的計算值"
+
+#, python-format
+msgid ""
+"Couldn't retrieve printer %s's internal page counter either before or after "
+"printing."
+msgstr "不能恢復列印機 %s 的內存頁面計算器不論在列印的之前或之後"
+
+#, python-format
+msgid "Job's size forced to 1 page for printer %s."
+msgstr "列印機 %s 被強制設定列印總頁數為 1 頁"
+
+#, python-format
+msgid "No previous job in database for printer %s."
+msgstr "資料庫沒有紀錄列印機 %s 上一次的列印紀錄"
+
+#, python-format
+msgid "Inconsistent values for printer %s's internal page counter."
+msgstr "列印機 %s 的內存頁面計算器的數值不一致"
+
+#, python-format
+msgid "Unknown printer address in HARDWARE(%s) for printer %s"
+msgstr "不明的列印機地址在硬體(%s)用於列印機 %s 上"
+
+#, python-format
+msgid "Launching HARDWARE(%s)..."
+msgstr "正在執行硬體(%s)..."
+
+#, python-format
+msgid "SIGTERM was sent to hardware accounter %s (pid: %s)"
+msgstr "中止信號傳送到硬體計算器 %s (pid: %s)"
+
+#, python-format
+msgid "Line [%s] skipped in accounter's output. Trying again..."
+msgstr "計算器輸出的第 [%s] 行被跳過，請再試一次..."
+
+#, python-format
+msgid "Hardware accounter %s exit code is %s"
+msgstr "硬件計算器 %s 中止，代碼為 %s"
+
+#, python-format
+msgid "Unable to query printer %s via HARDWARE(%s)"
+msgstr "未能夠查詢列印機 %s 透過硬件(%s)"
+
+#, python-format
+msgid ""
+"Unable to precompute the job's size and ink coverage with the generic PDL "
+"analyzer : %s"
+msgstr ""
+
+#, python-format
+msgid "Problem during connection to %s:%s : %s"
+msgstr "連線到 %s:%s : %s 時出現問題"
+
+#, python-format
+msgid "Problem while sending PJL query to %s:%s : %s"
+msgstr "傳送查詢到 %s:%s : %s 出現問題"
+
+#, python-format
+msgid "Problem while receiving PJL answer from %s:%s : %s"
+msgstr ""
+
+#, python-format
+msgid "Waiting for printer %s to be printing..."
+msgstr ""
+
+#, python-format
+msgid "Waiting for printer %s's idle status to stabilize..."
+msgstr "正等待列印機 %s 閒置狀況達到穩定..."
+
+#, python-format
+msgid ""
+"PJL querying stage interrupted. Using latest value seen for internal page "
+"counter (%s) on printer %s."
+msgstr "PJL查詢被中斷，使用最更新的數值來計算頁數計算器 (%s) 在列印機 %s 上"
+
+#, python-format
+msgid ""
+"SNMP querying stage interrupted. Using latest value seen for internal page "
+"counter (%s) on printer %s."
+msgstr "SNMP查詢被中斷，使用最更新的數值來計算頁數計算器 (%s) 在列印機 %s 上"
+
+#, python-format
+msgid "Network error while doing SNMP queries on printer %s : %s"
+msgstr "當列印機 %s : %s 進行SNMP查詢時出現網絡錯誤"
+
+#, python-format
+msgid "SNMP message decoding error for printer %s : %s"
+msgstr "SNMP信息解讀錯誤於列印機 %s : %s"
+
+#, python-format
+msgid "Problem encountered while doing SNMP queries on printer %s : %s"
+msgstr "當在列印機 %s 進行SNMP查詢時出現問題 : %s"
+
+#, python-format
+msgid "Unable to precompute the job's size with the generic PDL analyzer : %s"
+msgstr "未能運用通用的PDL分析器 %s 計算列印工作的數量"
+
+#, python-format
+msgid "Launching SOFTWARE(%s)..."
+msgstr "正在執行軟件(%s)..."
+
+#, python-format
+msgid "Unable to compute job size with accounter %s"
+msgstr "未能夠使用記帳器計算列印總頁數 %s"
+
+#, python-format
+msgid "Problem while waiting for software accounter pid %s to exit : %s"
+msgstr "等待軟件記帳時出現問題，pid為 %s : %s"
+
+#, python-format
+msgid "Software accounter %s exit code is %s"
+msgstr "軟件記帳器 %s 終止，代碼為 %s"
+
+msgid "Totals may be inaccurate if some users are members of several groups."
+msgstr "假若有些使用者是屬於幾個不同組別，總計數值有機會不準確"
+
+msgid "PyKota Data Dumper"
+msgstr ""
+
+msgid "Dump"
+msgstr ""
+
+msgid "Please click on the above button"
+msgstr "請按以上按鈕"
+
+msgid "Data Type"
+msgstr ""
+
+msgid "Output Format"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Summarize"
+msgstr ""
+
+msgid "only for payments or history"
+msgstr ""
+
+msgid "PyKota Reports"
+msgstr "PyKota 列印配額報告"
+
+msgid "Report"
+msgstr "報告"
+
+msgid "Printer"
+msgstr "列印機"
+
+msgid "User / Group names mask"
+msgstr "使用者/群組 名稱篩選"
+
+msgid "Groups report"
+msgstr "群組報告"
+
+msgid "Empty"
+msgstr "沒有紀錄"
+
+msgid "Action"
+msgstr "允許/禁止 列印"
+
+msgid "User"
+msgstr "使用者"
+
+msgid "Hostname"
+msgstr "列印使用電腦"
+
+msgid "JobId"
+msgstr "列印工作識別碼"
+
+msgid "Number of pages"
+msgstr ""
+
+msgid "Cost"
+msgstr ""
+
+msgid "Copies"
+msgstr "複製數量"
+
+msgid "Number of bytes"
+msgstr ""
+
+msgid "Printer's internal counter"
+msgstr ""
+
+msgid "Options"
+msgstr "其他選項"
+
+msgid "MD5Sum"
+msgstr ""
+
+msgid "Billing code"
+msgstr ""
+
+msgid "Precomputed number of pages"
+msgstr ""
+
+msgid "Precomputed cost"
+msgstr ""
+
+msgid "Pages details"
+msgstr ""
+
+msgid "(not supported yet)"
+msgstr ""
+
+msgid "Previous page"
+msgstr "上一頁"
+
+msgid "PyKota Quotes"
+msgstr ""
+
+msgid "Quote"
+msgstr ""
+
+msgid ""
+"The exact cost of a print job can only be determined for a particular user. "
+"Please retry while logged-in."
+msgstr ""
+
+msgid "Ordering"
+msgstr ""
+
+#~ msgid "Impossible to add printer %s"
+#~ msgstr "不能加入列印機 %s"
+
+#~ msgid "Prototype object %s not found in Quota Storage."
+#~ msgstr "在配額資料庫內未能找到物件類別 %s"
+
+#~ msgid "Prototype %s not found in Quota Storage for printer %s."
+#~ msgstr "在配額資料庫內未能找到類別 %s 用於列印機 %s"
+
+#~ msgid "Undefined hard limit set to soft limit (%s) on printer %s."
+#~ msgstr "未能確認的hard limit用於已設定soft limit (%s) 的列印機 %s上"
+
+#~ msgid "Undefined soft limit set to hard limit (%s) on printer %s."
+#~ msgstr "未能確認的soft limit用於已設定hard limit (%s) 的列印機 %s上"
+
+#~ msgid "Invalid group name %s"
+#~ msgstr "%s 是不正確的群組名稱"
+
+#~ msgid "Invalid user name %s"
+#~ msgstr "%s 是不正確的使用者名稱"
+
+#~ msgid "Quota not found for object %s on printer %s."
+#~ msgstr "%s 在印表機 %s 沒有列印配額"
+
+#~ msgid "Group %s not found in the PyKota Storage."
+#~ msgstr "群組 %s 未能夠於配額資料庫內找到"
+
+#~ msgid "File number %s unregistered twice from polling object, ignored."
+#~ msgstr "檔案編號 %s 在polling object上已兩次未能成功註冊，因此被忽略"
+
+#~ msgid "SIGTERM was sent to real backend %s (pid: %s)"
+#~ msgstr "中斷信號被傳送到 %s (pid: %s)"
+
+#~ msgid "CUPS backend %s died abnormally."
+#~ msgstr "CUPS %s 不正常的停止運作"
+
+#~ msgid "Software accounting already done in first pass. Ignoring."
+#~ msgstr "軟體記帳通過第一階段的運作，閒置中"
+
+#~ msgid "Hardware accounting already done in first pass. Ignoring."
+#~ msgstr "硬體記帳通過第一階段的運作，閒置中"
+
+#~ msgid "Job size and price now set in history."
+#~ msgstr "列印總頁數及列印費用已於列印紀錄中設定"
+
+#~ msgid "Invalid DeviceURI : %s"
+#~ msgstr "不正確的DeviceURI : %s"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please wait while pkhint analyzes your printing system's configuration..."
+#~ msgstr ""
+#~ "\n"
+#~ "pkhint正分析你的列印系統設定，請稍候"
+
+#~ msgid "Unknown device %s for printer %s"
+#~ msgstr "不知名裝置 %s 對應列印機 %s"
+
+#~ msgid ""
+#~ "\n"
+#~ "Put the following lines into your /etc/pykota/pykota.conf file :\n"
+#~ msgstr ""
+#~ "\n"
+#~ "請把以下的設定放到/etc/pykota/pykota.conf內 :\n"
+
+#~ msgid "# BEWARE : if software accounting is suggested, this doesn't mean"
+#~ msgstr "# 請注意 : 假若軟件記帳是建議使用，這並不表示"
+
+#~ msgid ""
+#~ "# that hardware accounting wouldn't work, this only means that PyKota"
+#~ msgstr "# 硬體記帳不能使用，這只代表PyKota"
+
+#~ msgid "# wasn't able to autodetect which hardware accounting method to use."
+#~ msgstr "未能自動偵測哪一個硬體記帳方法能夠使用"
+
+#~ msgid "JobSize"
+#~ msgstr "列印總頁數"
+
+#~ msgid "JobPrice"
+#~ msgstr "列印費用"
+
+#~ msgid "JobBytes"
+#~ msgstr "列印工作容量"
+
+#~ msgid "PageCounter"
+#~ msgstr "列印總計"
+
+#~ msgid "Printing system %s, args=%s"
+#~ msgstr "列印系統 %s，args=%s"
+
+#~ msgid "Printer hostname undefined, set to 'localhost'"
+#~ msgstr "列印機主機名稱未能確認，設定為'localhost'"
+
+#~ msgid "Printing system unknown, args=%s"
+#~ msgstr "未能確認列系統，args=%s"
+
+#~ msgid ""
+#~ "Internal SNMP accounting asked, but Python-SNMP is not available. Please "
+#~ "download it from http://pysnmp.sourceforge.net"
+#~ msgstr ""
+#~ "要求內存的SNMP計算器，但找不到Python-SNMP請到http://pysnmp.sourceforge.net"
+#~ "下載"
+
+#~ msgid "Too many arguments, see help."
+#~ msgstr "太多arguments，請參閱說明文件"
+
+#~ msgid ""
+#~ "Group           used    soft    hard    balance grace         total       "
+#~ "paid"
+#~ msgstr ""
+#~ "群組           已列印    警告限制    有效限制    結餘 寬限日期        付款"
+#~ "總計       已繳付"
+
+#~ msgid ""
+#~ "User            used    soft    hard    balance grace         total       "
+#~ "paid"
+#~ msgstr ""
+#~ "群組           已列印    警告限制    有效限制    結餘 寬限日期         付"
+#~ "款總計       已繳付"
+
+#~ msgid "Waiting for printer %s to be idle or printing..."
+#~ msgstr "正等待列印機 %s 致閒置或列印狀態..."

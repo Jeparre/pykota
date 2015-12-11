@@ -1,0 +1,104 @@
+# $Id: CREDITS 3155 2007-03-14 12:37:55Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+Sponsors :
+----------
+
+This document used to list all the sponsors of the PyKota project. 
+But, because of the success of this software, this is no longer 
+practical to do so. That's why the list of all the sponsors of the 
+PyKota project is now available online, and is updated in real time, 
+at : 
+
+        http://www.pykota.com/sponsorslist        
+  
+  
+Contributors :
+--------------
+
+  The following people contributed code or ideas to PyKota :
+  
+  - Joël Collet : PyKota's logo
+  - Stefan Wold - Stockholm University : inital code for external policies
+                                         and additionnal swedish translations.
+                                         Added code to retrieve email address
+                                         automatically from autopykota at
+                                         user creation time.
+  - John Flynn - University of Belize : LDAP support
+  - Wayne Godoy - University of Belize : LDAP support
+  - Leif Johansson - Stockholm University : LDAP support
+  - Bob Martel - Cleveland State University : SNMP examples
+  - Michael Stuebiger : Non-postscript printers support documentation
+  - Oleg Biteryakov - University of Michigan : Bug fix in SQL code
+  - Charl W. Möller - University of Stellenbosch : LDAP testing
+  - Dennis Romero L. : Spanish translation and installation guide.
+  - Daniel Mikkelsen : Sample configuration file fix
+  - Carlos Fernandes : Brazilian Portuguese translation
+  - René Lund Jensen : Contributed the pagecount.pl script
+  - Henrik Janhagen - Kungliga Tekniska Högskolan : Swedish translation
+  - Hugo Monteiro : Portuguese Portuguese translation
+  - Peter Hawkins : First try at Debian packaging 
+  - Michele Baldessari : Italian translation
+  - Ryan Suarez : Created a WiKi with lots of shemas
+  - Eduardo Gielamo Oliveira and Rodolfo Broco Manin : PCL page counter
+  - Sergey Romanov : bug fix
+  - Sergio González González : Debianization + Doc + Spanish translation.
+  - Suthep Yonpimai : Thai translation
+  - Jurandy Martins - Universidade Estadual de Campinas : Brazilian translation
+  - Spyros Melissovas - University of Ioannina : Greek translation
+  - Alban Crequy - Revolution Linux 
+  - Johannes Laemmermann - German translation
+  - Paulo Silva - Eurotux - Improved ESC/P2 miniparser
+  - Christian Andreetta - SNMP waiting script
+  - Paolo Nobili - Università degli Studi di Padova - SNMP waiting script
+  - Beda Szukics - Kantonsschule Obwalden - German translation
+  - Klaus Ade Johnstad - SkoleLinux - Norwegian Bokmål translation
+  - Matt Hyclak - Worked on banner handling and made MySQL support a reality
+  - Wilson Roberto Afonso - Sent a patch for PJL.
+  - Baris Cicek - Turkish translation.
+  - Kanakorn Horsiritham - Wrote phpPykotaAdmin.
+  - Tsang Yu Pong, Teddy - PHC Wing Kwong College - Chinese (Trad.) translation
+  - Marcus Flávio de Lima - Universidade Federal de Minas Gerais : 
+    Brazilian PyKota+LDAP Documentation
+  - Rong-En Fan - Helped improve the PJL stuff.
+  - Michal Dobroczynski - Polish translation.
+  - Jamuel P. Starkey - GCI Systems - Secondary MX server.
+  - Kris Kopicki - Walford Anglican School for Girls Inc. - Wrote pykotadmin.
+  - Brandon Holbrook - Mississipi State University : improved waitprinter.sh
+  - Brian Glogower - Worked on gnuplot scripts
+  - Andrew Ross - Parakeet Print Quota : Provided a patch to allow the
+    configuration files directory to be set at run time.
+  - Georger Araujo - Fixed a charset problem with MySQL.
+  - Nuno Rodrigues - Faculdade de Ciências e Tecnologia / Universidade Nova 
+    de Lisboa : Portuguese translation.
+
+==============================================================
+
+  IF YOUR NAME DOESN'T APPEAR IN THE LISTS ABOVE, AND YOU
+  THINK YOU DESERVE TO BE LISTED, JUST SEND ME AN EMAIL
+  ASKING FOR BEING INCLUDED.
+  
+  I APOLOGIZE IN ADVANCE IF I'VE FORGOTTEN TO ADD YOUR NAME.
+  
+  ALSO, SOME PEOPLE MAY HAVE REFUSED TO BE LISTED HERE, THIS 
+  IS YOUR RIGHT TO DO SO TOO, JUST TELL ME.
+  
+==============================================================

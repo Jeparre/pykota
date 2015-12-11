@@ -1,0 +1,71 @@
+<!-- $Id: pkbcodes.sgml 2555 2005-10-09 21:02:24Z jerome $ -->
+
+<chapter>
+  <title>Manage billing codes with pkbcodes</title>
+  <para>Last modified on $Date: 2005-10-09 23:02:24 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    Some people like lawyers for example need to be able to invoice their own clients
+    for printouts. To address such needs, <application>CUPS</application> features
+    the possibility to attach a particular billing code to each print job, and of course,
+    <application>PyKota</application> can make use of it.
+  </para>  
+  
+  <para>
+    To use a billing code when printing, you have to pass an additionnal argument to the 
+    <command>lp</command> command, for example for a client named <literal>smith</literal>
+    this could be something like :
+    <screen>
+$ lp -o job-billing=smith the_file_to_print.ps
+    </screen>
+  </para>
+  
+  <para>
+    For <application>PyKota</application> to be able to maintain statistics
+    per billing code, you first have to add these billing codes to <application>PyKota</application>'s
+    database. This is the main goal of the <command>pkbcodes</command> command line tool.
+  </para>
+  
+  <para>
+    But <command>pkbcodes</command> also allows you to add a textual description to each billing
+    code, to delete them, to reset billing code specific counters, and finally to list
+    existing billing codes.
+  </para>
+  
+  <para>
+    With the help of the <literal>unknown_billingcode</literal> directive in
+    <filename>pykota.conf</filename>, you can decide what happens when a billing
+    code is encountered when printing, and this billing code is not yet in
+    <application>PyKota</application>'s database. Automatically adding it to
+    the database is a common choice, which saves time for the <application>PyKota</application>
+    administrator.
+  </para>
+  
+  <para>
+    Finally, the <literal>overwrite_jobticket</literal> directive in
+    <filename>pykota.conf</filename> allows you to overwrite the job billing
+    information at the latest stage of printing, for example if the application used to print
+    doesn't allow end users to give a value to the billing code when submitting the print job.
+  </para>
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>pkbcodes</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt"><arg>-a</arg><arg>--add</arg></group>
+        <group choice="opt"><arg>-d</arg><arg>--delete</arg></group>
+        <group choice="opt">
+          <arg>-D <replaceable>desc</replaceable></arg>
+          <arg>--description <replaceable>desc</replaceable></arg>
+        </group>
+        <group choice="opt"><arg>-l</arg><arg>--list</arg></group>
+        <group choice="opt"><arg>-r</arg><arg>--reset</arg></group>
+        <group choice="opt"><arg>-s</arg><arg>--skipexisting</arg></group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

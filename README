@@ -1,0 +1,585 @@
+# $Id: README 3201 2007-07-09 19:51:01Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+====================================================================
+
+READ SPECIAL LICENSING AND REDISTRIBUTION TERMS IN THE FILE 'LICENSE'
+
+====================================================================
+
+PyKota features :
+-----------------
+
+        http://www.pykota.com/software/pykota/features/
+
+====================================================================
+        
+Planned features are described in the TODO file.
+
+Actually three (or an infinity of) page accounting methods are
+implemented :
+
+  - The 'hardware' method consists in querying the printer (via SNMP
+    or Netatalk or any other method of your choice) for its internal 
+    pages counter.
+    This is done both at the beginning and at the end of a
+    print job. The counters difference is then used to 
+    decrease the user's account balance or increase his quota usage.
+    
+  - The 'software' method consists in delegating the computation of the
+    job's size in number of pages to any external command of your choice.
+    The command can read the job's data from its standard input and MUST
+    output the job's size on its standard output. Changes to the user
+    account are reported immediately. PyKota by default internally
+    uses the code from pkpgcounter which can handle
+    several Page Description Languages : DSC compliant and binary PostScript,
+    PDF, PCLXL (aka PCL6), PCL3/4/5, ESC/P2, DVI, TIFF, OpenDocument,
+    Zenographics ZjStream, Samsung QPDL,Samsung SPL1, and plain text.
+    Of course this means you have to install pkpgcounter if you want to
+    use the default PDL parser.
+    
+  - The 'ink' method consists in using pkpgcounter's code to compute  
+    how much of each page is covered by ink in each color of a particular
+    colorspace chosen between CMYK, CMY, RGB, and BW (grayscale).
+    These values are then summed up together and multiplied by a set
+    of coefficients defined in PyKota's configuration files.
+    
+PyKota is known to work with most printers, excepted GDI ones (Windows
+only). At least one of the accounting methods above should work
+for you. If it's not the case, please report the problem : tell us
+the exact brand and model of the printer, if possible the driver used,
+and send some test files.
+
+============================================================
+
+SUPPORT CONTRACTS:
+==================
+
+  You can now purchase 8x5x365@NextBusinessDay Technical
+  Support Contracts from us. The yearly fee is computed with  
+  the following formula :
+
+  (100.0 * NbPrintServers) + (2.5 * NbPrinters) + (0.04 * NbUsers) EUROS.
+  
+  This fee includes the VAT, and a free subscription to Official
+  PyKota packages.
+
+  Please send an email to alet@librelogiciel.com if you're
+  interested in purchasing such a contract.   
+
+  Remember that purchasing a support contract for Free Software like PyKota
+  is a great way to show your appreciation for the work already being done 
+  on this project, and will help to improve this software in the future.
+
+============================================================
+
+INSTALLATION:
+=============
+
+NB :
+====
+
+  PyKota's documentation is available as DocBook SGML sources
+  files in the pykota/docs directory. If you obtained an
+  Official package, in the same directory you'll also find
+  the documentation in HTML and PDF formats. Otherwise you
+  have to compile it into HTML or PDF yourself by using
+  the appropriate tools as installed on your system.
+  
+  PyKota's collaborative documentation is available from :
+  
+    http://www.pykota.com/wiki/
+    
+  You may learn more about PyKota, if it fits your own organization,
+  its internal working, and some potential performance drawbacks and
+  how to avoid them, in a document created by Ryan Suarez at :
+  
+    http://archive.macosxlabs.org/forum/webcrossing_archive/documentation/Pykota_and_CUPS/Pykota_and_CUPS.html
+
+  You may also find the following document interesting :
+  
+    http://es.tldp.org/Tutoriales/doc-openldap-samba-cups-python/
+    
+  This document, written in Spanish by Sergio Gonzalez Gonzalez,  
+  describes the integration of PyKota into an OpenLDAP + Samba
+  + CUPS installation. Even for people who can't read spanish 
+  this document is really interesting, and contains lots of
+  screenshots.
+  
+  
+Prerequisite : 
+--------------
+   
+  See :
+  
+    http://www.pykota.com/wiki/Dependencies
+    
+  for an up-to-date list, or see below (maybe not up-to-date) :
+  
+  You need to have the following tools installed on the CUPS Server :
+  
+    - CUPS (http://www.cups.org)
+    - Python v2.3 or higher (http://www.python.org)
+    - eGenix' mxDateTime Python extension (http://www.egenix.com)
+    - The pkpgcounter command line tool, version 1.56 or higher. This
+      tool is now mandatory for PyKota to work. 
+      (http://www.pykota.com/software/pkpgcounter)
+    - The pkipplib Python library (http://www.pykota.com/software/pkipplib)  
+    - The JAXML Python module to be able to dump datas in the XML format.
+      (http://www.librelogiciel.com/software/)
+    - The Python-PAM module if you need the pknotify command to be able  
+      to check usernames and passwords. (http://www.pangalactic.org/PyPAM)
+    - The Python-SNMP module to query printers for their page counter.
+      (http://pysnmp.sourceforge.net) 
+      IMPORTANT : version 3.4.2 or higher is REQUIRED.
+      Versions 2.x won't work. Versions 4.x now work (tested with v4.1.5a).
+    - The Python-OSD module to use the graphical print quota reminder.
+      (http://repose.cx/pyosd/)
+    - The Python-chardet module to autodetect user's character set when  
+      printing. (http://chardet.feedparser.org)
+    - SNMP tools (specifically the snmpget command) if you prefer to
+      use your own script to request query printers.
+      (http://www.net-snmp.org)
+    - Netatalk (specifically the pap command) if you plan to
+      request your printer's lifetime page counter via AppleTalk.
+      (http://netatalk.sourceforge.net)
+    - The ReportLab Python module (http://www.reportlab.org) if you want  
+      to have PyKota generate nice banners for you.
+    - The Python Imaging Library (aka PIL) module 
+      (http://www.pythonware.com/downloads) if you want to have PyKota 
+      generate nice banners for you.
+    - PostgreSQL's PygreSQL Python extension and the PostgreSQL client
+      libraries if you plan to use PostgreSQL as the database backend.
+      (http://www.postgresql.org and http://www.pygreql.org)
+ or     
+    - python-ldap Python module and the OpenLDAP client libraries  
+      if you plan to use an LDAP server as the database backend.
+      (http://www.openldap.org and http://python-ldap.sourceforge.net)
+ or 
+    - SQLite v3.2.7 and the SQLite libraries if you plan to use SQLite
+      as the database backend (http://www.sqlite.org). You also need the 
+      PySQLite module v2.0.5 or higher (http://www.pysqlite.org)
+ or
+    - The MySQL-python bindings. 
+      IMPORTANT: If you are using MySQL 4.1, then MySQL-python must be 
+      version 1.2 or greater. Version 1.0 does not work correctly with 4.1.
+      
+    
+  On Intel i386 architecture, and for performance reasons, it is
+  strongly suggested that you install the Python accelerator Psyco, 
+  available at :
+  
+      http://psyco.sourceforge.net
+      
+  Under Debian :    
+  
+      $ apt-get install python-psyco
+      
+  Other architectures may be supported as well in the future, check    
+  this on Psyco's website.
+  
+  Installing Psyco is not mandatory, but it will speedup PCL5 parsing
+  by almost 3 times. PostScript and PDF parsing can also benefit,
+  but in an almost unnoticeable manner since this part of the code
+  is already optimal. For PCL5 this is a completely different matter,
+  and if you install Psyco you will never regret it !
+  Same remark applies for PCL6 (aka PCLXL) : the parser is completely
+  different, but the performance gain with Psyco is impressive.
+  
+  You may also benefit from having the following tools installed to
+  deal with some printers :
+  
+    - npadmin
+    - netcat
+    - ghostscript
+    
+  You need to have the following tools installed on the database
+  server :
+  
+    - PostgreSQL (http://www.postgresql.org)
+    
+  or  
+  
+    - OpenLDAP, or any other LDAP server (http://www.openldap.org)
+    
+  or   
+  
+    - SQLite, v3.2.7 or higher (http://www.sqlite.org).
+      Beware : with SQLite the database server and the print
+      servers MUST be the very same machine.
+      
+  or     
+  
+    - MySQL 4.1 or higher. 5.x is recommended.
+    
+  This list of prerequisite software may change in the future, when
+  PyKota will support more functionnalities you will be given 
+  alternatives.
+  
+  Of course the Print Server and the database server can be the 
+  very same machine if you've got a tiny network, or you can have 
+  multiple Print Servers all storing their quotas on the same database
+  server if you've got a bigger network. (NB : with SQLite, the database
+  can't be shared between several print servers)
+  
+Hint :  
+------
+
+  - The Debian GNU/Linux distribution is to our knowledge the 
+    easiest distribution to install PyKota on, because almost all
+    of PyKota dependencies are already included, excepted
+    the pkpgcounter utility which for now have to be downloaded
+    and installed separately, and maybe one or two other dependencies,
+    depending on the version of Debian you are using.
+    We recommend you to use Debian's Etch distribution or
+    more recent. PyKota works fine on Sarge, but some additional
+    dependencies are missing in Sarge and have to be installed
+    manually.
+
+Then :   
+------
+ 
+Download the latest PyKota version from the Subversion tree :
+
+    $ svn co svn://svn.librelogiciel.com/pykota/trunk pykota
+
+You can now check if the dependencies are correct by typing :
+
+    $ python checkdeps.py
+    
+    An availability report for all the software needed by PyKota
+    will be displayed : you'll have to install the missing
+    software if you want PyKota to work correctly.
+    
+To install the software, just type :
+
+    $ python setup.py install
+
+You may need to be logged in with sufficient privileges (e.g. root)
+
+If you use Debian or Ubuntu, and want to use PostgreSQL as the
+database backend, just type :
+
+    $ pksetup debian
+    
+or :    
+
+    $ pksetup ubuntu
+    
+and follow the instructions to install PyKota in interactive mode, then
+skip the remaining of the section below.
+
+Otherwise, you have to setup manually :
+
+Create a system user for PyKota :
+
+    $ adduser --system --group --home /etc/pykota --gecos PyKota pykota
+    
+Put the user your printing system is run as in the pykota system group :
+
+    $ adduser lp pykota
+    
+    NB : on our system, the CUPS printing system runs as system user 'lp'.
+    Please adapt this to your own system.
+
+Go to the initscripts/ subdirectory of PyKota's sources, and choose
+the appropriate storage backend for your configuration. Read carefully
+the associated README file, modify the initialization script to
+change the passwords, or, in the case of the LDAP backend, adapt it
+to your own LDAP DIT, and execute the initialization script
+to create an empty PyKota database. Upgrade scripts may be 
+provided as well. NB : if you use PostgreSQL, a good way to
+make PyKota work first time is to modify PostgreSQL's pg_hba.conf
+to allow the 'trust' database connection mode. However once PyKota
+works it is HIGHLY RECOMMENDED TO CHANGE THIS TO A MORE SECURE
+VALUE. Look at the SECURITY document, PyKota's Official documentation
+and PostgreSQL's documentation for details on this subject.
+
+Copy the conf/pykota.conf.sample and  conf/pykotadmin.conf.sample 
+sample configuration files to ~pykota/pykota.conf and 
+~pykota/pykotadmin.conf  
+The installation script usually copies these files into /usr/share/pykota
+
+NB : You can move PyKota's configuration files elsewhere, they will
+be searched first in user pykota's home directory, then in /etc/pykota.
+
+You need to adapt these files to your own needs. Especially you may 
+have to create sections named after your own printers, and change 
+the administrator's email address which by default is 
+root@localhost. Read and try to understand these two very well 
+commented files, so that you'll encounter less problems later. 
+
+The rest of the installation depends on your printing system :
+
+  - CUPS Printing System :
+  
+    Once and for all :
+    
+        Create a symbolic link to the cupspykota backend 
+        in CUPS's backend directory :
+        
+          $ cd /usr/lib/cups/backend
+          $ ln -s /usr/share/pykota/cupspykota cupspykota
+          
+        If you use CUPS v1.2 or higher, please do this as well :  
+        
+          $ chmod 700 /usr/share/pykota/cupspykota
+          
+          This allows the cupspykota backend to support other
+          backends which must be run as user root, like the
+          lpd backend for example.
+          
+        Restart CUPS so that the new backend can be detected.
+        
+          $ /etc/init.d/cupsys restart
+          
+          for example under Debian, or any similar command depending 
+          on your operating system of choice.
+          
+    For new printers :
+    
+        Go to CUPS management interface (http://localhost:631) 
+        and choose the appropriate PyKota managed device depending
+        on the type of printer you use. For example, if your
+        printer is waiting on :
+        
+            socket://myprinter.example.com:9100
+            
+        Then choose :    
+        
+            cupspykota:socket://myprinter.example.com:9100
+            
+        Configure your printer as usual.    
+        
+        Now double check /etc/pykota/pykota.conf 
+        
+        You should manually create a section named after the
+        printer you've just added, unless you have set
+        all options globally.
+        
+        The new pkturnkey command can help you with correct settings 
+        for your printers. To have pkturnkey give you some hints
+        about what to put into pykota.conf for a particular
+        print queue, just use its --doconf command line switch :
+        
+          $ pkturnkey --doconf TheNameOfThePrintQueue
+        
+        pkturnkey will try to tell you what is the best accounting
+        method for each printer and will print some lines you'll
+        just have to copy&paste in the appropriate sections in
+        /etc/pykota/pykota.conf
+        
+        For more informations about what pkturnkey can do for you,
+        see pkturnkey's manual page or use the --help command
+        line switch :
+        
+          $ pkturnkey --help | less
+        
+        That's all.
+    
+    For existing print queues :
+    
+        You want to route the print queue through PyKota,
+        and you can do this in several manners.
+        
+          $ pkprinters --add --cups TheNameOfThePrintQueue
+          
+        or   
+        
+          if your printer's DeviceURI is something like :
+          
+              socket://myprinter.example.com:9100
+              
+          then you can do this :    
+          
+          $ pkprinters --add TheNameOfThePrintQueue
+          $ lpadmin -p TheNameOfThePrintQueue \
+                    -v cupspykota://socket://myprinter.example.com:9100
+          
+        Finally, you could do it manually by modifying the 
+        the DeviceURI lines in /etc/cups/printers.conf :
+        You would have to preprend 'cupspykota://' in front 
+        of what is already on these lines. For example, replace :
+    
+            DeviceURI socket://myprinter.example.com:9100
+        
+        with :    
+    
+            DeviceURI cupspykota://socket://myprinter.example.com:9100
+            
+        or :    
+        
+            DeviceURI cupspykota://socket://myprinter.example.com:9100
+        
+        Save the file and restart CUPS for the changes to take effect.
+        
+        Here too, you may find it interesting to use the pkturnkey command as
+        described above to help with manual configuration of the file
+        /etc/pykota/pykota.conf
+
+  - LPRng Printing System :
+  
+    IMPORTANT : This release of PyKota DOES NOT support LPRng.
+    
+    If you want to use PyKota with LPRng, you have to download
+    an earlier release of PyKota, for example v1.22HotFix1.
+        
+Now you can begin to populate the PyKota's database with printers,
+users and groups :
+  
+Add printers and users to the quota system and set their quota values : 
+
+You can either use pkturnkey, or do the same things manually by
+using the pkprinters, pkusers and edpykota command line tools :
+
+Create printers :
+
+    $ pkprinters --help
+    
+    will tell you how to create, manage or delete printers and
+    printers groups.
+    
+    $ pkprinters --add --charge 0.05 hp2100
+    
+    would add the printer named hp2100 with a price per page
+    of 0.05 unit.
+
+Create users :
+
+    $ pkusers --add --limitby balance --balance 10.0 jerome
+    
+    would create user jerome and give him ten credits to spend
+    on any printer.
+    
+Finally create print quota entries :
+
+    $ edpykota --add --printer hp2100 john paul george ringo
+        
+    This will create print quota entries for The Beatles on    
+    printer hp2100. The print quota entry holds the number of
+    pages printed on a particular printer for a particular
+    user, as well as optional page limits to be used instead
+    of balance limits. See pkusers and edpykota's manual
+    pages for details.
+    
+Your users now should be able to print but not exceed their 
+printing quota.
+
+To see printer quota usage on printer hp2100, you can use :
+
+    $ repykota --printer hp2100
+    
+or :
+
+    $ repykota
+    
+    which will print quota usage for all users on all printers,
+    along with totals, if you are a PyKota Administator. If you are
+    a regular user, only your own quota report will be produced.
+    
+You can also use these commands :    
+
+    $ pkusers --list 
+    $ edpykota --list
+    
+    $ pkusers --list john paul george ringo
+    $ edpykota --list --printer hp2100 john paul george ringo
+    
+Quota reports are also available remotely by using the CGI script
+printquota.cgi provided in the cgi-bin/ subdirectory. You can 
+also use the CSS stylesheet present in the stylesheets/ subdirectory
+and put it at your web server's DocumentRoot, to benefit from a nicer 
+look, especially quota violations will appear in different colors.
+
+For additionnal security concerns, please give a look at the SECURITY
+file which is part of this software.
+
+To diagnose a problem when something doesn't work as expected,
+please read this FAQ entry :
+
+  http://otrs.librelogiciel.com/otrs/public.pl?ID=2
+           
+============================================================
+
+Additionnal tools :
+-------------------
+
+Some people have developped tools around PyKota, and make
+them available under the GNU General Public License :
+
+  - Kanakorn Horsiritham developped phpPykotaAdmin which is 
+    a web based database independant administrative GUI,
+    written in PHP.
+  
+      http://opensource.psu.ac.th/~kanakorn/mambo/
+      
+    He was also kind enough to write an installation guide  
+    in english for CUPS and PyKota with phpPykotaAdmin on Fedora
+    Core 3. You'll find this document on the same website.
+    
+    This great software currently at version 0.3 is a wonderful
+    basis for an administrative GUI since it only depends on 
+    PyKota commands to be present to successfully manage
+    PyKota's database. 
+    
+    However this tool is very old now and doesn't work
+    with more recent versions of PyKota. It could be
+    a good starting point if you planned to develop such
+    a web user interface though.
+  
+Additionnal software will be listed here when they will be  
+ready.
+
+============================================================
+
+Mailing list :
+--------------
+
+  A mailing list is dedicated to Pykota, you can subscribe to it
+  or consult its archives at :
+  
+    http://cgi.librelogiciel.com/mailman/listinfo/pykota
+    
+  The mailing list is the preferred way to obtain support, because  
+  all members can help and can also benefit from the solutions
+  proposed by other members. 
+  
+  Posts by non-members are usually rejected.
+  
+  The mailing list language is english and only english.
+    
+IRC :    
+-----
+
+  You can also chat with us :
+  
+        /server irc.freenode.net
+        /join #pykota
+        
+  Preferred language on this channel is english, but french      
+  is also accepted. Try to avoid exposing complex problems
+  in french because english speaking people on the channel
+  wouldn't benefit from the solutions.
+  
+  PyKota's main author is known as 'tamere' on IRC.
+    
+============================================================
+    
+Please e-mail bugs to the mailing list at : pykota@librelogiciel.com
+or to the main author at : alet@librelogiciel.com (Jerome Alet)

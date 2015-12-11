@@ -1,0 +1,63 @@
+#
+# PyKota sample LDAP directory tree
+#
+# YOU CAN USE IT TO CREATE AN INITIAL LDAP TREE WITH PYKOTA SUPPORT.
+# 
+# ITS STRUCTURE IS AN EXAMPLE : YOU CAN USE WHATEVER STRUCTURE YOU WANT,
+# PROVIDED YOU PUT CORRECT CONFIGURATION PARAMETERS IN /etc/pykota/pykota.conf
+# 
+# $Id: pykota-sample.ldif 2576 2005-11-07 21:00:53Z jerome $
+#
+ 
+# The encrypted password below in clear text is : BlfUPg7t
+dn: cn=pykotaadmin,dc=example,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: pykotaadmin
+description: PyKota Administrator
+userPassword:: e1NNRDV9WkdTNXlobUNaVFdkY0lZWDdrOFUxc1VGOHY0PQ==
+
+# The encrypted password below in clear text is : ls88DT5j
+dn: cn=pykotauser,dc=example,dc=com
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: pykotauser
+description: PyKota ReadOnly User
+userPassword:: e1NNRDV9ZFZrRjJWOG1QWGo1L3pTQkplSS9TK0hpYURBPQ==
+
+dn: ou=People,dc=example,dc=com
+ou: People
+objectClass: organizationalUnit
+
+dn: ou=Groups,dc=example,dc=com
+ou: Groups
+objectClass: organizationalUnit
+
+dn: ou=PyKota,dc=example,dc=com
+ou: PyKota
+objectClass: organizationalUnit
+
+dn: ou=Printers,ou=PyKota,dc=example,dc=com
+ou: Printers
+objectClass: organizationalUnit
+
+dn: ou=UQuotas,ou=PyKota,dc=example,dc=com
+ou: UQuotas
+objectClass: organizationalUnit
+
+dn: ou=GQuotas,ou=PyKota,dc=example,dc=com
+ou: GQuotas
+objectClass: organizationalUnit
+
+dn: ou=Jobs,ou=PyKota,dc=example,dc=com
+ou: Jobs
+objectClass: organizationalUnit
+
+dn: ou=LastJobs,ou=PyKota,dc=example,dc=com
+ou: LastJobs
+objectClass: organizationalUnit
+
+dn: ou=BillingCodes,ou=PyKota,dc=example,dc=com
+ou: BillingCodes
+objectClass: organizationalUnit
+

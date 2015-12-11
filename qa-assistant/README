@@ -1,0 +1,47 @@
+# $Id: README 3213 2007-07-24 07:59:46Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+=============================================================================
+
+This directory contains checklist templates to use with Gnome's qa-assistant
+utility.
+
+Just copy the XML files from this directory to /usr/share/qa-assistant/data/
+
+If you want to setup PyKota on a new machine, or help somebody do so,
+launch qa-assitant, then start a new QA review, and choose any of the 
+"PyKota Installation" templates. The other templates are unrelated
+to PyKota and are installed as part of qa-assistant.
+
+Confirm your choice and then apply it.
+
+qa-assistant will then display a checklist describing a step by step
+setup guide for PyKota. Moving the mouse cursor over each step will
+explain what you have to do before deciding if this particular step
+failed or passed.
+
+IMPORTANT : currently a single "PyKota Installation" template is provided,
+and it is still incomplete : it doesn't contain any database related
+instructions.
+
+If qa-assistant complains about not being able to load the PyKota template,
+you should probably upgrade qa-assistant. This template is known to work
+with qa-assistant v0.4.90.5
+
+=============================================================================

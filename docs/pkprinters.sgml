@@ -1,0 +1,109 @@
+<!-- $Id: pkprinters.sgml 2551 2005-10-09 20:39:06Z jerome $ -->
+
+<chapter>
+  <title>Manage printers with pkprinters</title>
+  <para>Last modified on $Date: 2005-10-09 22:39:06 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    <command>pkprinters</command> is the preferred tool to manage printers in <application>PyKota</application>.  
+    It only manages printers, and do it well. With it you can add or delete printers or printer groups, or modify
+    existing printers or printers groups. This is also the tool to use to put printers into one or more printers groups.
+  </para>  
+  
+  <para>
+    The very first thing you have to do once <application>PyKota</application> is installed but before it can work, 
+    is to add into <application>PyKota</application>'s database an entry for each of the print queues on
+    which you want to have print quota or accounting.
+    Although the <command>pkturnkey</command> command can be used to initialize your database and import
+    printers into it, the <command>pkprinters</command> command offers additionnal functionnalities
+    like full management of printers.
+  </para>
+  
+  <para>
+    Let's say your printing system has several print queues defined : <literal>HP2100</literal>, <literal>TekTro</literal>,
+    and <literal>StylusColor1</literal> and <literal>StylusColor2</literal>. You want to charge 5 cents per page on each of this print queues.
+    You just have to type :
+<screen>    
+$ pkprinters --add --charge 0.05 HP2100 TekTro StylusColor1 StylusColor2
+</screen>
+    <warning><title>Warning</title>
+      <para>Printers' names in PyKota are case-sensitive, so be careful to use the exact names
+            exposed by your printing system.
+      </para>
+    </warning>
+  </para>
+  
+  <para>
+    After some minutes, you think that you should charge more on the <literal>StylusColor1</literal> 
+    and <literal>StylusColor2</literal> because they can do color. 
+    You also want to enter a description for these printers, because you have several
+    of them :
+<screen>    
+$ pkprinters --charge 0.25 "StylusColor*"
+$ pkprinters --description "Stylus Color 900 First floor" StylusColor1
+$ pkprinters --description "Stylus Color 900 Second floor" StylusColor2
+</screen>
+  </para>
+  
+  <para>
+    You can now verify what you did :
+<screen>    
+$ pkprinters --list
+HP2100 [] (0.0 + #*0.05)
+TekTro [] (0.0 + #*0.05)
+StylusColor1 [Stylus Color 900 First floor] (0.0 + #*0.25)
+StylusColor2 [Stylus Color 900 Second floor] (0.0 + #*0.25)
+</screen>
+  </para>
+  
+  <para>
+    The command above has listed all print queues present in <application>PyKota</application>'s database,
+    along with their optional description and their base cost formula. 
+    The cost formula includes the price per job, <literal>0.0</literal> in our examples,
+    and the price per page (<literal>#</literal> representing the number of pages).
+  </para>
+  
+  <para>
+    If you defined printers groups, then the total cost is computed as the recursive
+    sum of the printing cost on the current printer plus all the printers groups it
+    is a member of. In addition, each user can have an overcharging (or undercharging)
+    factor, by which the total printing cost will be multiplied to determine the real
+    cost of printing on a particular printer for a particular user.
+  </para>
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>pkprinters</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt"><arg>-a</arg><arg>--add</arg></group>
+        <group choice="opt"><arg>-d</arg><arg>--delete</arg></group>
+        <group choice="opt">
+          <arg>-D <replaceable>desc</replaceable></arg>
+          <arg>--description <replaceable>desc</replaceable></arg>
+        </group>
+        <group choice="opt"><arg>-r</arg><arg>--remove</arg></group>
+        <group choice="opt">
+          <arg>-c <replaceable>p</replaceable>,<replaceable>j</replaceable></arg>
+          <arg>--charge <replaceable>p</replaceable>,<replaceable>j</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg>-g <replaceable>pgroup1</replaceable>,<replaceable>pgroup2</replaceable>,<replaceable>...</replaceable></arg>
+          <arg>--groups <replaceable>pgroup1</replaceable>,<replaceable>pgroup2</replaceable>,<replaceable>...</replaceable></arg>
+        </group>  
+        <group choice="opt"><arg>-l</arg><arg>--list</arg></group>
+        <group choice="opt"><arg>-r</arg><arg>--remove</arg></group>
+        <group choice="opt"><arg>-s</arg><arg>--skipexisting</arg></group>
+        <group choice="opt">
+          <arg>-m <replaceable>s</replaceable></arg>
+          <arg>--maxjobsize <replaceable>s</replaceable></arg>
+        </group>  
+        <group choice="opt"><arg>-p</arg><arg>--passthrough</arg></group>
+        <group choice="opt"><arg>-n</arg><arg>--nopassthrough</arg></group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

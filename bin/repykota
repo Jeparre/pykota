@@ -1,0 +1,180 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Print Quota Reports generator
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: repykota 3133 2007-01-17 22:19:42Z jerome $
+#
+#
+
+import sys
+import os
+import pwd
+
+from mx import DateTime
+
+from pykota.tool import PyKotaTool, PyKotaToolError, PyKotaCommandLineError, crashed, N_
+from pykota import reporter
+
+__doc__ = N_("""repykota v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Generates print quota reports.
+
+command line usage :
+
+  repykota [options] 
+
+options :
+
+  -v | --version       Prints repykota's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -u | --users         Generates a report on users quota, this is 
+                       the default.
+  
+  -g | --groups        Generates a report on group quota instead of users.
+  
+  -i | --ingroups g1[,g2...]  Only lists users who are members of these
+                              groups. Reserved to PyKota Administrators.
+  
+  -P | --printer p     Report quotas on this printer only. Actually p can
+                       use wildcards characters to select only
+                       some printers. The default value is *, meaning
+                       all printers.
+                       You can specify several names or wildcards, 
+                       by separating them with commas.
+  
+examples :                              
+
+  $ repykota --printer lp
+  
+  This will print the quota status for all users who use the lp printer.
+
+  $ repykota 
+  
+  This will print the quota status for all users on all printers.
+  
+  $ repykota --printer "laser*,*pson" jerome "jo*"
+  
+  This will print the quota status for user jerome and all users
+  whose name begins with "jo" on all printers which name begins
+  with "laser" or ends with "pson".
+  
+  If launched by an user who is not a PyKota administrator, additionnal
+  arguments representing users or groups names are ignored, and only the
+  current user/group is reported.
+""")
+        
+class RePyKota(PyKotaTool) :        
+    """A class for repykota."""
+    def main(self, ugnames, options) :
+        """Print Quota reports generator."""
+        if self.config.isAdmin :
+            # PyKota administrator
+            if not ugnames :
+                # no username, means all usernames
+                ugnames = [ "*" ]
+                
+            if options["ingroups"] :
+                groupsnames = options["ingroups"].split(",")
+                groups = [self.storage.getGroup(gname) for gname in groupsnames]
+                members = {}
+                for group in groups :
+                    if not group.Exists :
+                        self.printInfo("Group %s doesn't exist." % group.Name, "warn")
+                    else :    
+                        for user in self.storage.getGroupMembers(group) :
+                            members[user.Name] = user
+                ugnames = [ m for m in members.keys() if self.matchString(m, ugnames) ]
+        else :        
+            # reports only the current user
+            if options["ingroups"] :
+                raise PyKotaCommandLineError, _("Option --ingroups is reserved to PyKota Administrators.")
+                
+            username = pwd.getpwuid(os.geteuid())[0]
+            if options["groups"] :
+                user = self.storage.getUser(username)
+                if user.Exists :
+                    ugnames = [ g.Name for g in self.storage.getUserGroups(user) ]
+                else :    
+                    ugnames = [ ]
+            else :
+                ugnames = [ username ]
+        
+        printers = self.storage.getMatchingPrinters(options["printer"])
+        if not printers :
+            raise PyKotaCommandLineError, _("There's no printer matching %s") % options["printer"]
+            
+        self.reportingtool = reporter.openReporter(self, "text", printers, ugnames, (options["groups"] and 1) or 0)    
+        print self.reportingtool.generateReport()
+                    
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        defaults = { \
+                     "printer" : "*", \
+                   }
+        short_options = "vhugi:P:"
+        long_options = ["help", "version", "users", "groups", "ingroups=", "printer="]
+        
+        # Initializes the command line tool
+        reportTool = RePyKota(doc=__doc__)
+        reportTool.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = reportTool.parseCommandline(sys.argv[1:], short_options, long_options, allownothing=1)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["users"] = options["u"] or options["users"]
+        options["groups"] = options["g"] or options["groups"]
+        options["printer"] = options["P"] or options["printer"] or defaults["printer"]
+        options["ingroups"] = options["i"] or options["ingroups"]
+        
+        if options["help"] :
+            reportTool.display_usage_and_quit()
+        elif options["version"] :
+            reportTool.display_version_and_quit()
+        elif (options["users"] or options["ingroups"]) and options["groups"] :
+            raise PyKotaCommandLineError, _("incompatible options, see help.")
+        else :
+            retcode = reportTool.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            reportTool.crashed("repykota failed")
+        except :    
+            crashed("repykota failed")
+        retcode = -1
+
+    try :
+        reportTool.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

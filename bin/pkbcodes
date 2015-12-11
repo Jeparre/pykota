@@ -1,0 +1,222 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Billing Codes manager
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pkbcodes 3133 2007-01-17 22:19:42Z jerome $
+#
+#
+
+import os
+import sys
+import pwd
+
+from pykota.tool import Percent, PyKotaTool, PyKotaCommandLineError, crashed, N_
+from pykota.storage import StorageBillingCode
+
+__doc__ = N_("""pkbcodes v%(__version__)s (c) %(__years__)s %(__author__)s
+
+A billing codes Manager for PyKota.
+
+command line usage :
+
+  pkbcodes [options] code1 code2 code3 ... codeN
+
+options :
+
+  -v | --version       Prints pkbcodes version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -a | --add           Adds billing codes if they don't exist in PyKota's
+                       database. If they exist, they are modified
+                       unless -s|--skipexisting is also used.
+
+  -d | --delete        Deletes billing codes from PyKota's database.
+                       NB : the history entries with this billing code
+                       are not deleted, voluntarily.
+
+  -D | --description d Adds a textual description to billing codes.
+
+  -l | --list          List informations about the billing codes.
+
+  -r | --reset         Resets the billing codes' balance and page counters
+                       to 0.
+
+  -s | --skipexisting  In combination with the --add option above, tells
+                       pkbcodes to not modify existing billing codes.
+
+  code1 through codeN can contain wildcards if the --add option
+  is not set.
+
+examples :                              
+
+  $ pkbcodes --add -D "My project" myproj
+
+  Will create the myproj billing code with "My project"
+  as the description.
+
+  $ pkbcodes --delete "*"
+
+  This will completely delete all the billing codes, but without
+  removing any matching job from the history. USE WITH CARE ANYWAY !
+  
+  $ pkbcodes --list "my*"
+  
+  This will list all billing codes which name begins with 'my'.
+""")
+        
+class PKBcodes(PyKotaTool) :        
+    """A class for a billing codes manager."""
+    def modifyBillingCode(self, billingcode, reset, description) :
+        """Modifies a billing code."""
+        if reset :
+            billingcode.reset()    
+        if description is not None : # NB : "" is allowed !
+            billingcode.setDescription(description)
+        
+    def main(self, names, options) :
+        """Manage billing codes."""
+        if (not self.config.isAdmin) and (not options["list"]) :
+            raise PyKotaCommandLineError, "%s : %s" % (pwd.getpwuid(os.geteuid())[0], _("You're not allowed to use this command."))
+            
+        if not options["list"] :    
+            percent = Percent(self)
+            
+        if not options["add"] :
+            if not options["list"] :
+                percent.display("%s..." % _("Extracting datas"))
+            if not names :      # NB : can't happen for --delete because it's catched earlier
+                names = ["*"]
+            billingcodes = self.storage.getMatchingBillingCodes(",".join(names))
+            if not billingcodes :
+                if not options["list"] :
+                    percent.display("\n")
+                raise PyKotaCommandLineError, _("There's no billingcode matching %s") % " ".join(names)
+            if not options["list"] :    
+                percent.setSize(len(billingcodes))
+                        
+        if options["list"] :
+            for billingcode in billingcodes :
+                print "%s [%s] %s %s %s %.2f %s" % \
+                      (billingcode.BillingCode, billingcode.Description, \
+                       billingcode.PageCounter, \
+                       _("pages"), \
+                       _("and"), \
+                       billingcode.Balance, \
+                       _("credits"))
+        elif options["delete"] :    
+            percent.display("\n%s..." % _("Deletion"))
+            self.storage.deleteManyBillingCodes(billingcodes)
+            percent.display("\n")
+        else :
+            reset = options["reset"]
+            description = options["description"]
+            if description :
+                description = options["description"].strip()
+            skipexisting = options["skipexisting"]        
+            
+            self.storage.beginTransaction()
+            try :
+                if options["add"] :    
+                    percent.display("%s...\n" % _("Creation"))
+                    percent.setSize(len(names))
+                    for bname in names :
+                        billingcode = StorageBillingCode(self.storage, bname)
+                        self.modifyBillingCode(billingcode, reset, description)
+                        oldbillingcode = self.storage.addBillingCode(billingcode)
+                        if oldbillingcode is not None :
+                            if skipexisting :
+                                self.logdebug(_("Billing code [%s] already exists, skipping.") % bname)
+                            else :    
+                                self.logdebug(_("Billing code [%s] already exists, will be modified.") % bname)
+                                self.modifyBillingCode(oldbillingcode, reset, description)
+                                oldbillingcode.save()
+                        percent.oneMore()
+                else :        
+                    percent.display("\n%s...\n" % _("Modification"))
+                    for billingcode in billingcodes :
+                        self.modifyBillingCode(billingcode, reset, description)
+                        billingcode.save()    
+                        percent.oneMore()
+            except :                    
+                self.storage.rollbackTransaction()
+                raise
+            else :    
+                self.storage.commitTransaction()
+                        
+        if not options["list"] :
+            percent.done()
+                     
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        short_options = "hvaD:dlrs"
+        long_options = ["help", "version", "add", "description=", "delete", "list", "reset", "skipexisting"]
+        
+        # Initializes the command line tool
+        manager = PKBcodes(doc=__doc__)
+        manager.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = manager.parseCommandline(sys.argv[1:], short_options, long_options)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["add"] = options["a"] or options["add"]
+        options["description"] = options["D"] or options["description"]
+        options["delete"] = options["d"] or options["delete"] 
+        options["list"] = options["l"] or options["list"]
+        options["reset"] = options["r"] or options["reset"]
+        options["skipexisting"] = options["s"] or options["skipexisting"]
+        
+        if options["help"] :
+            manager.display_usage_and_quit()
+        elif options["version"] :
+            manager.display_version_and_quit()
+        elif (options["delete"] and (options["add"] or options["reset"] or options["description"])) \
+           or (options["skipexisting"] and not options["add"]) \
+           or (options["list"] and (options["add"] or options["delete"] or options["reset"] or options["description"])) :
+            raise PyKotaCommandLineError, _("incompatible options, see help.")
+        elif (not args) and (options["add"] or options["delete"]) :    
+            raise PyKotaCommandLineError, _("You have to pass billing codes on the command line")
+        else :
+            retcode = manager.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            manager.crashed("pkbcodes failed")
+        except :    
+            crashed("pkbcodes failed")
+        retcode = -1
+
+    try :
+        manager.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

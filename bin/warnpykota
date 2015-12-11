@@ -1,0 +1,179 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Print Quota Warning sender
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: warnpykota 3133 2007-01-17 22:19:42Z jerome $
+#
+#
+
+import sys
+import os
+import pwd
+
+from pykota.tool import PyKotaTool, PyKotaCommandLineError, crashed, N_
+
+__doc__ = N_("""warnpykota v%(__version__)s (c) %(__years__)s %(__author__)s
+
+Sends mail to users over print quota.
+
+command line usage :
+
+  warnpykota  [options]  [names]
+
+options :
+
+  -v | --version       Prints warnpykota's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -u | --users         Warns users over their print quota, this is the 
+                       default.
+  
+  -g | --groups        Warns users whose groups quota are over limit.
+  
+  -P | --printer p     Verify quotas on this printer only. Actually p can
+                       use wildcards characters to select only
+                       some printers. The default value is *, meaning
+                       all printers.
+                       You can specify several names or wildcards, 
+                       by separating them with commas.
+  
+examples :                              
+
+  $ warnpykota --printer lp
+  
+  This will warn all users of the lp printer who have exceeded their
+  print quota.
+
+  $ warnpykota 
+  
+  This will warn all users  who have exceeded their print quota on
+  any printer.
+
+  $ warnpykota --groups --printer "laserjet*" "dev*"
+  
+  This will warn all users of groups which names begins with "dev" and
+  who have exceeded their print quota on any printer which name begins 
+  with "laserjet"
+  
+  If launched by an user who is not a PyKota administrator, additionnal
+  arguments representing users or groups names are ignored, and only the
+  current user/group is reported.
+""")
+        
+class WarnPyKota(PyKotaTool) :        
+    """A class for warnpykota."""
+    def main(self, ugnames, options) :
+        """Warn users or groups over print quota."""
+        if self.config.isAdmin :
+            # PyKota administrator
+            if not ugnames :
+                # no username, means all usernames
+                ugnames = [ "*" ]
+        else :        
+            # not a PyKota administrator
+            # warns only the current user
+            # the utility of this is discutable, but at least it
+            # protects other users from mail bombing if they are
+            # over quota.
+            username = pwd.getpwuid(os.geteuid())[0]
+            if options["groups"] :
+                user = self.storage.getUser(username)
+                if user.Exists :
+                    ugnames = [ g.Name for g in self.storage.getUserGroups(user) ]
+                else :    
+                    ugnames = [ ]
+            else :
+                ugnames = [ username ]
+        
+        printers = self.storage.getMatchingPrinters(options["printer"])
+        if not printers :
+            raise PyKotaCommandLineError, _("There's no printer matching %s") % options["printer"]
+        alreadydone = {}
+        for printer in printers :
+            if options["groups"] :
+                for (group, grouppquota) in self.storage.getPrinterGroupsAndQuotas(printer, ugnames) :
+                    self.warnGroupPQuota(grouppquota)
+            else :
+                for (user, userpquota) in self.storage.getPrinterUsersAndQuotas(printer, ugnames) :
+                    # we only want to warn users who have ever printed something
+                    # and don't want to warn users who have never printed
+                    if ((user.AccountBalance > self.config.getBalanceZero()) and \
+                       (user.AccountBalance != user.LifeTimePaid)) or \
+                       userpquota.PageCounter or userpquota.LifePageCounter or \
+                       self.storage.getUserNbJobsFromHistory(user) :
+                        done = alreadydone.get(user.Name)
+                        if (user.LimitBy == 'quota') or not done :
+                            action = self.warnUserPQuota(userpquota)
+                            if not done :
+                                alreadydone[user.Name] = (action in ('WARN', 'DENY'))
+                     
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        defaults = { \
+                     "printer" : "*", \
+                   }
+        short_options = "vhugP:"
+        long_options = ["help", "version", "users", "groups", "printer="]
+        
+        # Initializes the command line tool
+        sender = WarnPyKota(doc=__doc__)
+        sender.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = sender.parseCommandline(sys.argv[1:], short_options, long_options, allownothing=1)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["users"] = options["u"] or options["users"]
+        options["groups"] = options["g"] or options["groups"]
+        options["printer"] = options["P"] or options["printer"] or defaults["printer"]
+        
+        if options["help"] :
+            sender.display_usage_and_quit()
+        elif options["version"] :
+            sender.display_version_and_quit()
+        elif options["users"] and options["groups"] :    
+            raise PyKotaCommandLineError, _("incompatible options, see help.")
+        else :
+            retcode = sender.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            sender.crashed("warnpykota failed")
+        except :    
+            crashed("warnpykota failed")
+        retcode = -1
+        
+    try :
+        sender.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

@@ -1,0 +1,126 @@
+<!-- $Id: pkusers.sgml 2833 2006-04-05 19:17:51Z jerome $ -->
+
+<chapter>
+  <title id="pkusers">Manage Users and Groups with pkusers</title>
+  <para>Last modified on $Date: 2006-04-05 21:17:51 +0200 (mer, 05 avr 2006) $</para>
+  
+  <para>
+    You'll use this tool to create, manage or delete users or users groups from the database.
+    Before you can assign print quotas to an user or group with the <command>edpykota</command> you
+    MUST add this user or group to the database using <command>pkusers</command>.
+  </para>
+  
+  <para>
+    The simplest way to add an user named <literal>jerome</literal> to the database is
+    to type :
+<screen>    
+$ pkusers --add jerome
+</screen>
+  </para>
+  
+  <para>
+    The commands above have created user <literal>jerome</literal> in the database. By default this
+    user will be limited by page quotas, that is a maximal number of pages can be assigned to this
+    user on any printer. This has to be done through the <command>edpykota</command> command line tool.
+  </para>
+  
+  <para>
+    You can apply different sorts of limitations to an user or users group, by specifying a
+    different value for the <literal>--limitby</literal> command line option to <command>pkusers</command> :
+    <itemizedlist>
+      <listitem>
+        <para>
+          <literal>--limitby quota</literal> : Page quotas are defined for each user on each printer. 
+          This means that an user can be
+          limited to print more than 20 pages on printer <literal>HP2100</literal> while still
+          being allowed to print 500 pages on printer <literal>TekTro</literal>.
+          This is the default.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          <literal>--limitby balance</literal> : Account balance quotas are defined once for each user.
+          You give a number of credits
+          to an user, and whenever he prints on any printer, his number of credits diminishes
+          by the cost of the current print job, until his balance reaches 0 (or the value
+          defined in the <literal>balancezero</literal> configuration directive in <filename>~pykota/pykota.conf</filename>).
+          In other terms, while page quotas are specific to a particular printer for a particular
+          user, account balance quotas are shared between all printers for a particular user.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          <literal>--limitby noquota</literal> : the user or group can print without any limitation, but
+          accounting continues to be done.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          <literal>--limitby nochange</literal> : the user can print without any limitation, but
+          accounting is not done.
+          This value is not supported for users groups.
+        </para>
+      </listitem>  
+      <listitem>
+        <para>
+          <literal>--limitby noprint</literal> : the user can not print.
+          This value is not supported for users groups.
+        </para>
+      </listitem>  
+    </itemizedlist>  
+  </para>
+  
+  <para>
+    Here's an incomplete list of features :
+    
+    <itemizedlist>
+      <listitem>
+        <para>
+          Add and delete users and groups ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Add or remove users from users groups ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Choose the way you will limit printing for users or groups ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Set users' account balances. An optional comment can be added to each payment ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Set users' overcharging (or undercharging) factor ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Sets a textual description for users or groups ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Sets users' email addresses (on creation only) ;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Lists users or groups ;
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  
+  <para>
+    For more details on the use of <command>pkusers</command>, please see this command's manual
+    page or help.
+  </para>
+  
+</chapter>
+

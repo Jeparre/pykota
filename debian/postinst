@@ -1,0 +1,11 @@
+#!/bin/sh -e
+# $Id: postinst 3232 2007-07-24 10:56:50Z jerome $
+
+. /usr/share/debconf/confmodule
+
+/bin/chown -R pykota.pykota ~pykota
+/bin/chmod 0640 ~pykota/pykota.conf
+/bin/chmod 0600 ~pykota/pykotadmin.conf
+/bin/chmod 0700 /usr/share/pykota/cupspykota
+
+exit 0

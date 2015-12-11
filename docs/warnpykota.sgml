@@ -1,0 +1,74 @@
+<!-- $Id: warnpykota.sgml 2844 2006-04-07 20:34:44Z jerome $ -->
+
+<chapter>
+  <title>Warn users above print quota with warnpykota</title>
+  <para>Last modified on $Date: 2006-04-07 22:34:44 +0200 (ven, 07 avr 2006) $</para>
+  
+  <para>
+    Whenever a user tries to print a document, if he is over his print quota,
+    then the job is refused. Depending on <application>PyKota</application>'s
+    configuration, especially the <literal>mailto</literal> option, he and/or
+    the administrator may eventually receive an email message which explains
+    the situation and invites him to solve the problem before being allowed
+    to print again.
+  </para>
+  
+  <para>
+    However this may not be sufficient, and you may want to warn users who
+    have reached their print quota at
+    regular intervals, like every day, for example from a <application>cron</application> job.
+  </para>
+  
+  <para>
+    This may be useful if the user has reached his print quota, and have received an email message telling him so,
+    but then he doesn't print for some days and may forget to fix the problem, by buying more
+    paper for example.
+  </para>
+  
+  <para>
+    The <command>warnpykota</command> command was written with this in mind. 
+    If you put this command in your <filename>crontab</filename>, launching it for example
+    every day, then you'll be sure that all your users who are above their print quota
+    will not forget it ! Of course they may delete the messages without having read them,
+    but at least they won't be able to say that they didn't receive them ;-)
+  </para>
+  
+  <para>
+    When an user who is not a <application>PyKota</application> administrator launches this command, only him can receive a warning
+    message. He can specify a printer name's filter to check his quota only
+    on specific printers. If a normal user uses the <literal>--groups</literal> command line
+    argument, then for each group he is a member of in the print quota database, each
+    group member may receive a warning message. You can take care of this if this
+    becomes annoying by forbidding normal users to launch the <command>warnpykota</command>
+    command.
+  </para>
+  
+  <para>
+    <application>PyKota</application> administrators can pass additionnal user or group names 
+    (or wildcard filters) to only check the users or groups whose name matches.
+  </para>  
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>warnpykota</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt"><arg>-u</arg><arg>--users</arg></group>
+        <group choice="opt"><arg>-g</arg><arg>--groups</arg></group>
+        <group choice="opt">
+          <arg>-P <replaceable>printername</replaceable></arg>
+          <arg>--printer <replaceable>printername</replaceable></arg>
+        </group>  
+        <group choice="opt">
+          <arg><replaceable>name1</replaceable></arg>
+          <arg><replaceable>name2</replaceable></arg>
+          <arg><replaceable>...</replaceable></arg>
+          <arg><replaceable>nameN</replaceable></arg>
+        </group>  
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

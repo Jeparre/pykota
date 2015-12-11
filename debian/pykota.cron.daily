@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# check if print quota package is available
+test -x /usr/bin/warnpykota || exit 0
+
+# check if warnpyquota run is configured
+test -f /etc/default/printquota || exit 0
+. /etc/default/printquota
+
+if [ "$run_warnpykota" = "true" ]; then
+        /usr/bin/warnpykota
+fi
+
+exit 0

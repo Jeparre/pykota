@@ -1,0 +1,398 @@
+#! /usr/bin/env python
+# -*- coding: ISO-8859-15 -*-
+
+# PyKota Printers Manager
+#
+# PyKota - Print Quotas for CUPS and LPRng
+#
+# (c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# $Id: pkprinters 3394 2008-07-10 19:47:46Z jerome $
+#
+#
+
+import os
+import sys
+import pwd
+
+from pykota.tool import Percent, PyKotaTool, PyKotaCommandLineError, crashed, N_
+from pykota.storage import StoragePrinter
+
+from pkipplib import pkipplib
+
+__doc__ = N_("""pkprinters v%(__version__)s (c) %(__years__)s %(__author__)s
+
+A Printers Manager for PyKota.
+
+command line usage :
+
+  pkprinters [options] printer1 printer2 printer3 ... printerN
+
+options :
+
+  -v | --version       Prints pkprinters's version number then exits.
+  -h | --help          Prints this message then exits.
+  
+  -a | --add           Adds printers if they don't exist on the Quota 
+                       Storage Server. If they exist, they are modified
+                       unless -s|--skipexisting is also used.
+                       
+  -d | --delete        Deletes printers from the quota storage.
+  
+  -D | --description d Adds a textual description to printers.
+
+  -C | --cups          Also modifies the DeviceURI in CUPS' printers.conf
+
+  -c | --charge p[,j]  Sets the price per page and per job to charge.
+                       Job price is optional.
+                       If both are to be set, separate them with a comma.
+                       Floating point and negative values are allowed.
+  
+  -g | --groups pg1[,pg2...] Adds or Remove the printer(s) to the printer 
+                       groups pg1, pg2, etc... which must already exist.
+                       A printer group is just like a normal printer,
+                       only that it is usually unknown from the printing
+                       system. Create printer groups exactly the same
+                       way that you create printers, then add other 
+                       printers to them with this option.
+                       Accounting is done on a printer and on all
+                       the printer groups it belongs to, quota checking
+                       is done on a printer and on all the printer groups
+                       it belongs to.
+                       If the --remove option below is not used, the 
+                       default action is to add printers to the specified
+                       printer groups.
+                       
+  -l | --list          List informations about the printer(s) and the
+                       printers groups it is a member of.
+                       
+  -r | --remove        In combination with the --groups option above,                       
+                       remove printers from the specified printers groups.
+                       
+  -s | --skipexisting  In combination with the --add option above, tells
+                       pkprinters to not modify existing printers.
+                       
+  -m | --maxjobsize s  Sets the maximum job size allowed on the printer
+                       to s pages.
+                       
+  -p | --passthrough   Activate passthrough mode for the printer. In this
+                       mode, users are allowed to print without any impact
+                       on their quota or account balance.
+                       
+  -n | --nopassthrough Deactivate passthrough mode for the printer.
+                       Without -p or -n, printers are created in 
+                       normal mode, i.e. no passthrough.
+  
+  printer1 through printerN can contain wildcards if the --add option 
+  is not set.
+  
+examples :                              
+
+  $ pkprinters --add -D "HP Printer" --charge 0.05,0.1 hp2100 hp2200 hp8000
+  
+  Will create three printers named hp2100, hp2200 and hp8000.
+  Their price per page will be set at 0.05 unit, and their price
+  per job will be set at 0.1 unit. Units are in your own currency,
+  or whatever you want them to mean.
+  All of their descriptions will be set to the string "HP Printer".
+  If any of these printers already exists, it will also be modified 
+  unless the -s|--skipexisting command line option is also used.
+            
+  $ pkprinters --delete "*"
+  
+  This will completely delete all printers and associated quota information,
+  as well as their job history. USE WITH CARE !
+  
+  $ pkprinters --groups Laser,HP "hp*"
+  
+  This will put all printers which name matches "hp*" into printers groups 
+  Laser and HP, which MUST already exist.
+  
+  $ pkprinters --groups LexMark --remove hp2200
+  
+  This will remove the hp2200 printer from the LexMark printer group.
+""")
+        
+class PKPrinters(PyKotaTool) :        
+    """A class for a printers manager."""
+    def modifyPrinter(self, printer, charges, perpage, perjob, description, passthrough, nopassthrough, maxjobsize) :
+        if charges :
+            printer.setPrices(perpage, perjob)    
+        if description is not None :        # NB : "" is allowed !
+            printer.setDescription(description)
+        if nopassthrough :    
+            printer.setPassThrough(False)
+        if passthrough :    
+            printer.setPassThrough(True)
+        if maxjobsize is not None :
+            printer.setMaxJobSize(maxjobsize)
+            
+    def managePrintersGroups(self, pgroups, printer, remove) :        
+        """Manage printer group membership."""
+        for pgroup in pgroups :
+            if remove :
+                pgroup.delPrinterFromGroup(printer)
+            else :
+                pgroup.addPrinterToGroup(printer)    
+                
+    def getPrinterDeviceURI(self, printername) :            
+        """Returns the Device URI attribute for a particular printer."""
+        if not printername :
+            return ""
+        cups = pkipplib.CUPS()
+        req = cups.newRequest(pkipplib.IPP_GET_PRINTER_ATTRIBUTES)
+        req.operation["printer-uri"] = ("uri", cups.identifierToURI("printers", printername))
+        try :
+            return cups.doRequest(req).printer["device-uri"][0][1]
+        except :    
+            return ""
+        
+    def isPrinterCaptured(self, printername=None, deviceuri=None) :
+        """Returns True if the printer is already redirected through PyKota's backend, else False."""
+        if (deviceuri or self.getPrinterDeviceURI(printername)).find("cupspykota:") != -1 :
+            return True
+        else :    
+            return False
+        
+    def reroutePrinterThroughPyKota(self, printer) :    
+        """Reroutes a CUPS printer through PyKota."""
+        uri = self.getPrinterDeviceURI(printer.Name)
+        if uri and (not self.isPrinterCaptured(deviceuri=uri)) :
+             newuri = "cupspykota://%s" % uri
+             self.regainPriv() # to avoid having to enter password.
+             os.system('lpadmin -p "%s" -v "%s"' % (printer.Name, newuri))
+             self.logdebug("Printer %s rerouted to %s" % (printer.Name, newuri))
+             self.dropPriv()
+             
+    def deroutePrinterFromPyKota(self, printer) :    
+        """Deroutes a PyKota printer through CUPS only."""
+        uri = self.getPrinterDeviceURI(printer.Name)
+        if uri and self.isPrinterCaptured(deviceuri=uri) :
+             newuri = uri.replace("cupspykota:", "")
+             if newuri.startswith("//") :
+                 newuri = newuri[2:]
+             self.regainPriv() # to avoid having to enter password.
+             os.system('lpadmin -p "%s" -v "%s"' % (printer.Name, newuri))
+             self.logdebug("Printer %s rerouted to %s" % (printer.Name, newuri))
+             self.dropPriv()    
+                                     
+    def main(self, names, options) :
+        """Manage printers."""
+        if (not self.config.isAdmin) and (not options["list"]) :
+            raise PyKotaCommandLineError, "%s : %s" % (pwd.getpwuid(os.geteuid())[0], _("You're not allowed to use this command."))
+            
+        docups = options["cups"]
+        
+        if not options["list"] :    
+            percent = Percent(self)
+            
+        if not options["add"] :
+            if not options["list"] :
+                percent.display("%s..." % _("Extracting datas"))
+            if not names :      # NB : can't happen for --delete because it's catched earlier
+                names = ["*"]
+            printers = self.storage.getMatchingPrinters(",".join(names))
+            if not printers :
+                if not options["list"] :
+                    percent.display("\n")
+                raise PyKotaCommandLineError, _("There's no printer matching %s") % " ".join(names)
+            if not options["list"] :    
+                percent.setSize(len(printers))
+                
+        if options["list"] :
+            for printer in printers :
+                parents = ", ".join([p.Name for p in self.storage.getParentPrinters(printer)])
+                print "%s [%s] (%s + #*%s)" % \
+                      (printer.Name, printer.Description, printer.PricePerJob, \
+                       printer.PricePerPage)
+                print "    %s" % (_("Passthrough mode : %s") % ((printer.PassThrough and _("ON")) or _("OFF")))
+                print "    %s" % (_("Maximum job size : %s") % ((printer.MaxJobSize and (_("%s pages") % printer.MaxJobSize)) or _("Unlimited")))
+                print "    %s" % (_("Routed through PyKota : %s") % ((self.isPrinterCaptured(printer.Name) and _("YES")) or _("NO")))
+                if parents : 
+                    print "    %s %s" % (_("in"), parents)
+                print    
+        elif options["delete"] :    
+            percent.display("\n%s..." % _("Deletion"))
+            self.storage.deleteManyPrinters(printers)
+            percent.display("\n")
+            if docups :
+                percent.display("%s...\n" % _("Rerouting printers to CUPS"))
+                for printer in printers :
+                    self.deroutePrinterFromPyKota(printer)
+                    percent.oneMore()
+        else :
+            if options["groups"] :        
+                printersgroups = self.storage.getMatchingPrinters(options["groups"])
+                if not printersgroups :
+                    raise PyKotaCommandLineError, _("There's no printer matching %s") % " ".join(options["groups"].split(','))
+            else :         
+                printersgroups = []
+                    
+            if options["charge"] :
+                try :
+                    charges = [float(part) for part in options["charge"].split(',', 1)]
+                except ValueError :    
+                    raise PyKotaCommandLineError, _("Invalid charge amount value %s") % options["charge"]
+                else :    
+                    if len(charges) > 2 :
+                        charges = charges[:2]
+                    if len(charges) != 2 :
+                        charges = [charges[0], None]
+                    (perpage, perjob) = charges
+            else :        
+                charges = perpage = perjob = None
+                    
+            if options["maxjobsize"] :        
+                try :
+                    maxjobsize = int(options["maxjobsize"])
+                    if maxjobsize < 0 :
+                        raise ValueError
+                except ValueError :    
+                    raise PyKotaCommandLineError, _("Invalid maximum job size value %s") % options["maxjobsize"]
+            else :        
+                maxjobsize = None
+                    
+            description = options["description"]
+            if description :
+                description = description.strip()
+                
+            nopassthrough = options["nopassthrough"]    
+            passthrough = options["passthrough"]
+            remove = options["remove"]
+            skipexisting = options["skipexisting"]
+            self.storage.beginTransaction()
+            try :
+                if options["add"] :    
+                    percent.display("%s...\n" % _("Creation"))
+                    percent.setSize(len(names))
+                    for pname in names :
+                        if self.isValidName(pname) :
+                            printer = StoragePrinter(self.storage, pname)
+                            self.modifyPrinter(printer, charges, perpage, perjob, \
+                                           description, passthrough, \
+                                           nopassthrough, maxjobsize)
+                            oldprinter = self.storage.addPrinter(printer)               
+                            
+                            if docups :
+                                 self.reroutePrinterThroughPyKota(printer)
+                                     
+                            if oldprinter is not None :
+                                if skipexisting :
+                                    self.logdebug(_("Printer %s already exists, skipping.") % pname)
+                                else :    
+                                    self.logdebug(_("Printer %s already exists, will be modified.") % pname)
+                                    self.modifyPrinter(oldprinter, charges, \
+                                               perpage, perjob, description, \
+                                               passthrough, nopassthrough, \
+                                               maxjobsize)
+                                    oldprinter.save()           
+                                    self.managePrintersGroups(printersgroups, oldprinter, remove)
+                            elif printersgroups :        
+                                self.managePrintersGroups(printersgroups, \
+                                                          self.storage.getPrinter(pname), \
+                                                          remove)
+                        else :    
+                            raise PyKotaCommandLineError, _("Invalid printer name %s") % pname
+                        percent.oneMore()
+                else :        
+                    percent.display("\n%s...\n" % _("Modification"))
+                    for printer in printers :        
+                        self.modifyPrinter(printer, charges, perpage, perjob, \
+                                           description, passthrough, \
+                                           nopassthrough, maxjobsize)
+                        printer.save()    
+                        self.managePrintersGroups(printersgroups, printer, remove)
+                        if docups :
+                            self.reroutePrinterThroughPyKota(printer)
+                        percent.oneMore()
+            except :                    
+                self.storage.rollbackTransaction()
+                raise
+            else :    
+                self.storage.commitTransaction()
+                
+        if not options["list"] :
+            percent.done()
+                     
+if __name__ == "__main__" : 
+    retcode = 0
+    try :
+        short_options = "hvaCc:D:dg:lrsnpm:"
+        long_options = ["help", "version", "add", "cups", "charge=", "description=", \
+                        "delete", "groups=", "list", "remove", \
+                        "skipexisting", "passthrough", "nopassthrough", \
+                        "maxjobsize="]
+        
+        # Initializes the command line tool
+        manager = PKPrinters(doc=__doc__)
+        manager.deferredInit()
+        
+        # parse and checks the command line
+        (options, args) = manager.parseCommandline(sys.argv[1:], short_options, long_options)
+        
+        # sets long options
+        options["help"] = options["h"] or options["help"]
+        options["version"] = options["v"] or options["version"]
+        options["add"] = options["a"] or options["add"]
+        options["cups"] = options["C"] or options["cups"]
+        options["charge"] = options["c"] or options["charge"]
+        options["description"] = options["D"] or options["description"]
+        options["delete"] = options["d"] or options["delete"] 
+        options["groups"] = options["g"] or options["groups"]
+        options["list"] = options["l"] or options["list"]
+        options["remove"] = options["r"] or options["remove"]
+        options["skipexisting"] = options["s"] or options["skipexisting"]
+        options["maxjobsize"] = options["m"] or options["maxjobsize"]
+        options["passthrough"] = options["p"] or options["passthrough"]
+        options["nopassthrough"] = options["n"] or options["nopassthrough"]
+        
+        if options["help"] :
+            manager.display_usage_and_quit()
+        elif options["version"] :
+            manager.display_version_and_quit()
+        elif (options["delete"] and (options["add"] or options["groups"] or options["charge"] or options["remove"] or options["description"])) \
+           or (options["skipexisting"] and not options["add"]) \
+           or (options["list"] and (options["add"] or options["delete"] or options["groups"] or options["charge"] or options["remove"] or options["description"])) \
+           or (options["passthrough"] and options["nopassthrough"]) \
+           or (options["remove"] and options["add"]) :
+            raise PyKotaCommandLineError, _("incompatible options, see help.")
+        elif options["remove"] and not options["groups"] :
+            raise PyKotaCommandLineError, _("You have to pass printer groups names on the command line")
+        elif (not args) and (options["add"] or options["delete"]) :
+            raise PyKotaCommandLineError, _("You have to pass printer names on the command line")
+        else :
+            retcode = manager.main(args, options)
+    except KeyboardInterrupt :        
+        sys.stderr.write("\nInterrupted with Ctrl+C !\n")
+        retcode = -3
+    except PyKotaCommandLineError, msg :    
+        sys.stderr.write("%s : %s\n" % (sys.argv[0], msg))
+        retcode = -2
+    except SystemExit :        
+        pass
+    except :
+        try :
+            manager.crashed("pkprinters failed")
+        except :    
+            crashed("pkprinters failed")
+        retcode = -1
+
+    try :
+        manager.storage.close()
+    except (TypeError, NameError, AttributeError) :    
+        pass
+        
+    sys.exit(retcode)    

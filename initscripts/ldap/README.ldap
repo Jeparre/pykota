@@ -1,0 +1,122 @@
+# $Id: README.ldap 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+============================================================
+
+Documentation :
+---------------
+
+pykota.schema :
+
+    This file can be used to modify an existing LDAP directory
+    to add the necessary object classes and attributes for use 
+    with PyKota.
+    
+    Include it in your LDAP server's configuration.
+    For example, with OpenLDAP under Debian :
+    
+        $ cp pykota.schema /etc/ldap/schema
+        (no need to do this if you install from PyKota's Debian package)
+        
+    Then edit /etc/ldap/slapd.conf and add a line to    
+    include the PyKota schema. You should have something
+    like :
+    
+        # Schema and objectClass definitions
+        include         /etc/ldap/schema/core.schema
+        include         /etc/ldap/schema/cosine.schema
+        include         /etc/ldap/schema/nis.schema
+        include         /etc/ldap/schema/inetorgperson.schema
+        include         /etc/ldap/schema/pykota.schema
+        
+    While this is not mandatory, you may want to create    
+    some indexes to speed things up a bit :
+    
+      You should already have these :
+      
+        index objectClass eq
+        index cn pres,eq,sub
+        index uid pres,eq,sub
+        
+      But we recommend that you add these :  
+      
+        index pykotaUserName pres,eq,sub
+        index pykotaGroupName pres,eq,sub
+        index pykotaPrinterName pres,eq,sub
+        index pykotaBillingCode pres,eq,sub
+        index pykotaLastJobIdent eq
+        
+    Now you must ensure that the DNs PyKota will use to bind to
+    your OpenLDAP server don't have search queries size limits,
+    which gives for example (OpenLDAP 2.1.x or above) :
+    
+        limits dn="cn=pykotaadmin,dc=example,dc=com" size.soft=-1 size.hard=soft
+        limits dn="cn=pykotauser,dc=example,dc=com" size.soft=-1 size.hard=soft
+    
+    Where pykotaadmin and pykotauser are the usernames used to bind to your
+    OpenLDAP server within PyKota, respectively in complete ReadWrite mode 
+    (as set in pykotadmin.conf) and in ReadOnly mode (pykota.conf).
+    
+    NB : YOU have to define the ACLs necessary for user pykotaadmin to
+    have unlimited Read+Write access to your LDAP tree, and for user
+    pykotauser to have unlimited ReadOnly access to your LDAP tree.
+    In the sentence above, "unlimited" means no limit with regard to
+    the number of records returned by a search operation. Of course
+    you may want to restrict the access to only some attributes, but
+    this is up to you to decide. An example giving full write access
+    to the pykotaadmin user is :
+    
+        access to dn.subtree="ou=PyKota,dc=example,dc=com" 
+               by dn="cn=pykotaadmin,dc=example,dc=com" write   
+               
+        access to dn.subtree="ou=People,dc=example,dc=com" 
+               by dn="cn=pykotaadmin,dc=example,dc=com" write   
+               
+        access to dn.subtree="ou=Groups,dc=example,dc=com" 
+               by dn="cn=pykotaadmin,dc=example,dc=com" write   
+               
+    Please adapt this to your own needs and configuration.
+    
+    Now, stop the OpenLDAP server :    
+    
+        $ /etc/init.d/slapd stop
+        
+    Generate the index files :    
+    
+        $ slapindex
+        
+    And finally restart the OpenLDAP server :    
+    
+        $ /etc/init.d/slapd start
+
+pykota-sample.ldif :
+
+    You can use this file to initialize an LDAP tree for PyKota, if
+    you want.
+    
+    The structure used in this file is NOT mandatory !
+    Provided you put correct parameters into /etc/pykota/pykota.conf,
+    you can structure your LDAP directory the way you want.
+    
+To use an LDAP directory as the Quota Storage, just modify  
+/etc/pykota/pykota.conf to make it contain lines similar to the LDAP
+related ones in conf/pykota.conf.sample, but adapted to your
+own configuration. Also de-activate the PostgreSQL-related lines.
+    
+============================================================

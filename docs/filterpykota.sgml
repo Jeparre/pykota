@@ -1,0 +1,75 @@
+<!-- $Id: filterpykota.sgml 1454 2005-03-06 16:52:43Z jerome $ -->
+
+<chapter>
+  <title id="filter">PyKota's internals</title>
+  
+  <para>Last modified on $Date: 2005-03-06 17:52:43 +0100 (dim, 06 mar 2005) $</para>
+  
+  <para>
+    To account for pages or eventually ink usage 
+    <footnote>
+      <para>
+        PyKota doesn't currently account for ink usage, it only accounts
+        pages. To account for ink usage, you should use PrintBill instead for now.
+      </para>  
+    </footnote>  
+    , you must plug your accounting
+    system somewhere into the printing system you use. One way to do this without having
+    to modify the printing system itself, is by using a <firstterm>filter</firstterm>.
+  </para>
+  
+  <para>
+    A filter is a computer program which takes data in one format as its input, and outputs the
+    same data but transformed into another format. <application>CUPS</application> already
+    contains many filters. For example there's one filter named <command>pstops</command> which accepts 
+    PostScript data as its input, and, as its name implies, outputs PostScript data too, but after having
+    eventually rearranged the pages to fit several pages on a single sheet of paper, or other manipulations
+    like that.
+  </para>
+  
+  <para>
+    The <command>pstops</command> filter described above is also in charge of doing basic page
+    accounting, but <application>PyKota</application> currently doesn't use this facility since it may
+    prove to be unreliable depending on the drivers used or if a paper jam occurs for example.
+  </para>
+  
+  <para>
+    So to do its own accounting, <application>PyKota</application> has its own filters, for <application>CUPS</application>
+    it's named <command>cupspykota</command>, which is in fact a <application>CUPS</application> backends wrapper.
+    The procedure to plug the correct filter into your printing system is described in the 
+    <xref linkend="installation" endterm="installation"> chapter.
+  </para>
+  
+  <para>
+    Currently with <application>CUPS</application>' internal accounting mechanism, the <command>pstops</command>
+    filter can be bypassed. That's why <application>PyKota</application> uses its own backend.
+    The <command>cupspykota</command> backend wrapper ensures that jobs can't bypass it, so you can use
+    any printer with any driver and any command line option, and you can be sure that your
+    print job will be correctly accounted for.
+  </para>
+  
+  <para>
+    When using the <literal>hardware</literal> accounting method,
+    <application>PyKota</application> launches the script you specified to
+    ask the printer for its internal page counter at the start and at the end of the print job, and
+    computes the values' difference to know the job's size. 
+  </para>
+  
+  <para>
+    When using the <literal>software</literal> accounting method,
+    the command you specified is launched with the job's data on its 
+    standard input. Your command must print the job's size in number of
+    pages on a single line on its standard output. This number is then
+    read by <application>PyKota</application> and used to update the current user's quota information.
+  </para>
+  
+  <para>
+    If a problem occurs, it is logged either to the filter's standard error or to the system logger, depending on
+    your preferences in <application>PyKota</application>'s configuration files. Also if a print quota is reached
+    you may choose if the administrator, the user, both or no-one will receive an email message explaining
+    the situation and proposing a solution. You can even configure another action instead of sending email
+    messages if you want.
+  </para>
+  
+</chapter>
+

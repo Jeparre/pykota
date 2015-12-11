@@ -1,0 +1,42 @@
+# $Id: README 3133 2007-01-17 22:19:42Z jerome $
+
+PyKota - Print Quotas for CUPS and LPRng
+
+(c) 2003, 2004, 2005, 2006, 2007 Jerome Alet <alet@librelogiciel.com>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+====================================================================
+
+This directory contains the PyKota logo in Gimp's xcf format, as
+well as 4-bit/pixel png big (925x925) and small (100x100) versions.
+
+PyKota's logo was drawn by Joël Collet, I added the text.
+
+IMPORTANT : I ask you to NOT use any image which displays the 
+"OFFICIAL" word on it unless you use or redistribute a complete and 
+unmodified version of a real "PyKota Official" package. 
+    
+If you redistribute a modified version of a real "PyKota Official", 
+or a work based on a modified version of a real "PyKota Official" 
+package, or a version of PyKota directly obtained from the CVS tree, 
+please use the images which don't display the word "OFFICIAL". 
+
+Both sets of images are included in this directory, please use the 
+one which correctly describes the software you redistribute or base 
+your work on. 
+
+Thanks in advance.
+
+====================================================================

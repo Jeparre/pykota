@@ -1,0 +1,379 @@
+<?xml version='1.0' encoding="UTF-8" ?>
+<!DOCTYPE checklist PUBLIC "-//BadgerWare//DTD QA Assistant Checklist File 0.3//EN" "http://qa-assistant.sf.net/dtds/checklist/0.3/checklist.dtd">
+<checklist version="0.3" name="PyKota Installation" revision="0.1">
+  <summary>Ensures PyKota downloaded from Subversion is installed and functional under Debian</summary>
+  <category name="Preliminary steps">
+    <description>Before being able to install PyKota, some packages have to be downloaded and installed.
+    </description>
+    <entry name="Install CUPS" display="true">
+      <states>
+        <state name="Pass">CUPS is installed</state>
+        <state name="Fail">CUPS is not installed</state>
+      </states>
+      <description>PyKota currently only works with the CUPS printing system, and must be installed on
+        the print server. So before installing PyKota you must first install CUPS.
+        You can install it with 'apt-get install cupsys'
+      </description>
+    </entry>
+    <entry name="Install Python &amp; Python Development packages" display="true">
+      <states>
+        <state name="Pass">Python is installed</state>
+        <state name="Fail">Python is not installed</state>
+      </states>
+      <description>PyKota is 100% written in the Python language. To install PyKota you
+        need both Python and Python's Distutils facility, available from Python's
+        development package.
+        You can install these packages with 'apt-get install python python-dev'
+      </description>
+    </entry>
+    <entry name="Install Subversion client" display="true">
+      <states>
+        <state name="Pass">Subversion is installed</state>
+        <state name="Fail">Subversion is not installed</state>
+      </states>
+      <description>PyKota's latest development tree is always available with Subversion, aka the 'svn' command.
+        To be able to download PyKota, the 'svn' command must be present.
+        You can install it with 'apt-get install subversion'
+      </description>
+    </entry>
+    <entry name="Download PyKota from development tree" display="true">
+      <states>
+        <state name="Pass">PyKota is downloaded</state>
+        <state name="Fail">PyKota is not downloaded</state>
+      </states>
+      <description>PyKota must be downloaded before being installed.
+        You can download its latest development tree with 
+        'svn export svn://svn.librelogiciel.com/pykota/trunk pykota'
+      </description>
+    </entry>
+  </category>
+  <category name="Look for missing dependencies">
+    <description>PyKota depends on a lot of third party software.
+      Some of them are required, other ones simply recommended : they don't
+      prevent most of PyKota from working, but some functionnalities will
+      be unavailable to you if they are not installed. You can see the
+      status for each of PyKota's dependencies with 
+      'python pykota/checkdeps.py'
+    </description>  
+    <entry name="python-egenix-mxdatetime" display="true">
+      <states>
+        <state name="Pass">python-egenix-mxdatetime is installed</state>
+        <state name="Fail">python-egenix-mxdatetime is not installed</state>
+      </states>
+      <description>
+        python-egenix-mxdatetime is required for PyKota to work. 
+        You must install it with 'apt-get install python-egenix-mxdatetime'
+      </description>
+    </entry>
+    <entry name="python-imaging" display="true">
+      <states>
+        <state name="Pass">python-imaging is installed</state>
+        <state name="Fail">python-imaging is not installed</state>
+      </states>
+      <description>
+        python-imaging is required for PyKota to work. While basic PyKota functionnality
+        may work without python-imaging, it is highly recommended that you install it
+        You must install it with 'apt-get install python-imaging'
+      </description>
+    </entry>
+    <entry name="python-pygresql" display="true">
+      <states>
+        <state name="Pass">python-pygresql is installed</state>
+        <state name="Fail">python-pygresql is not installed</state>
+        <state name="Not-Applicable">I don't want to use a PostgreSQL database backend for PyKota</state>
+      </states>
+      <description>
+        python-pygresql allows PyKota to use a PostgreSQL database backend. 
+        If this is what you want you must install it with 'apt-get install python-pygresql'
+      </description>
+    </entry>
+    <entry name="python-ldap" display="true">
+      <states>
+        <state name="Pass">python-ldap is installed</state>
+        <state name="Fail">python-ldap is not installed</state>
+        <state name="Not-Applicable">I don't want to use an LDAP database backend for PyKota</state>
+      </states>
+      <description>
+        python-ldap allows PyKota to use an LDAP database backend. 
+        If this is what you want you must install it with 'apt-get install python-ldap'
+      </description>
+    </entry>
+    <entry name="python-mysqldb" display="true">
+      <states>
+        <state name="Pass">python-mysqldb is installed</state>
+        <state name="Fail">python-mysqldb is not installed</state>
+        <state name="Not-Applicable">I don't want to use a MySQL database backend for PyKota</state>
+      </states>
+      <description>
+        python-mysqldb allows PyKota to use a MySQL database backend. 
+        If this is what you want you must install it with 'apt-get install python-mysqldb'
+      </description>
+    </entry>
+    <entry name="python-pysqlite2" display="true">
+      <states>
+        <state name="Pass">python-pysqlite2 is installed</state>
+        <state name="Fail">python-pysqlite2 is not installed</state>
+        <state name="Not-Applicable">I don't want to use an SQLite database backend for PyKota</state>
+      </states>
+      <description>
+        python-pysqlite2 allows PyKota to use an SQLite database backend. 
+        If this is what you want you must install it with 'apt-get install python-pysqlite2'
+      </description>
+    </entry>
+    <entry name="python-osd" display="true">
+      <states>
+        <state name="Pass">python-osd is installed</state>
+        <state name="Fail">python-osd is not installed</state>
+        <state name="Not-Applicable">I don't want to use 'pykosd', PyKota's X-Window end user print quota reminder</state>
+      </states>
+      <description>
+        python-osd is only needed if you want to use the 'pykosd' utility, which is an X-Window 
+        print quota reminded for end users.
+        You can install it with 'apt-get install python-osd'
+      </description>
+    </entry>
+    <entry name="python-pysnmp4" display="true">
+      <states>
+        <state name="Pass">python-pysnmp4 is installed</state>
+        <state name="Fail">python-pysnmp4 is not installed</state>
+        <state name="Not-Applicable">I don't want to use PyKota's internal SNMP hardware accounting</state>
+      </states>
+      <description>
+        python-pysnmp4 allows PyKota to compute the size of print jobs by retrieving a printer's
+        internal page counter through SNMP queries at the start and at the end of printing.
+        If you don't want to use hardware accounting you don't need to install this module.
+        You can install it with 'apt-get install python-pysnmp4'
+      </description>
+    </entry>
+    <entry name="python-jaxml" display="true">
+      <states>
+        <state name="Pass">python-jaxml is installed</state>
+        <state name="Fail">python-jaxml is not installed</state>
+        <state name="Not-Applicable">I don't want to use PyKota's XML data dumping facilities</state>
+      </states>
+      <description>
+        python-jaxml allows PyKota's data dumper command, named 'dumpykota' to dump the database's contents
+        into XML formatted documents.
+        If you don't want to use this facility, the data dumper can still dump in several CSV formats.
+        You can install it with 'apt-get install python-jaxml'
+      </description>
+    </entry>
+    <entry name="python-reportlab" display="true">
+      <states>
+        <state name="Pass">python-reportlab is installed</state>
+        <state name="Fail">python-reportlab is not installed</state>
+        <state name="Not-Applicable">I don't want to use PyKota banners, nor its invoicing and refunding modules</state>
+      </states>
+      <description>
+        python-reportlab allows PyKota to generate PDF documents as part of its invoicing and refunding modules, and
+        is also used to produce PyKota generated dynamic banner pages for print jobs.
+        If you don't want to use any of these facilities, you don't need to install this module.
+        You can install it with 'apt-get install python-reportlab'
+      </description>
+    </entry>
+    <entry name="python-chardet" display="true">
+      <states>
+        <state name="Pass">python-chardet is installed</state>
+        <state name="Fail">python-chardet is not installed</state>
+        <state name="Non-Blocker">Our system is correctly configured and up-to-date so PyKota won't need this module</state>
+      </states>
+      <description>
+        python-chardet allows PyKota to automatically detect the character set used in a print job's textual information (like its title)
+        in the case your system and/or installed release of CUPS doesn't produce UTF-8.
+        It can also be useful when dumping incorrectly encoded database contents (because of the problem mentioned
+        above).
+        You can install it with 'apt-get install python-chardet'
+      </description>
+    </entry>
+    <entry name="python-pam" display="true">
+      <states>
+        <state name="Pass">python-pam is installed</state>
+        <state name="Fail">python-pam is not installed</state>
+        <state name="Non-Blocker">I don't want to force the authentication of end users at printing time through pknotify+PyKotIcon</state>
+      </states>
+      <description>
+        python-pam allows PyKota to check an user's name and password through PAM at printing time, provided you
+        use the PyKotIcon end user helper tool on all client hosts. 
+        If you don't have guest logins or people with administrator (or root) access on their own
+        machine, you probably don't need this module.
+        You can install it with 'apt-get install python-pam'
+      </description>
+    </entry>
+    <entry name="python-pkipplib" display="true">
+      <states>
+        <state name="Pass">python-pkipplib is installed</state>
+        <state name="Fail">python-pkipplib is not installed</state>
+        <state name="Non-Blocker">PyKota v1.26 is the latest release which still falls back to another method if pkipplib is not installed</state>
+      </states>
+      <description>
+        python-pkipplib allows PyKota to dialog with CUPS directly, instead of having to parse CUPS' configuration file to learn some details.
+        Unfortunately this library is not yet available as a package, so you must download and install it manually.
+        You can download it with 'wget http://www.pykota.com/software/pkipplib/download/tarballs/pkipplib-0.07.tar.gz'
+      </description>
+    </entry>
+    <entry name="pkpgcounter" display="true">
+      <states>
+        <state name="Pass">pkpgcounter is installed</state>
+        <state name="Fail">pkpgcounter is not installed</state>
+        <state name="Non-Blocker">Only advanced PyKota administrators can make PyKota work without pkpgcounter. I am an Advanced PyKota Administrator</state>
+      </states>
+      <description>
+        pkpgcounter is PyKota's Page Description Languages parser. It really is the heart of software based
+        accounting methods in PyKota, since it is responsible for counting pages and computing ink usage.
+        While you can make PyKota work without pkpgcounter, this is not recommended excepted in the
+        situations where you've got a better or faster parser.
+        Unfortunately this software is not yet available as a package, so you must download and install it manually.
+        You can download it with 'wget http://www.pykota.com/software/pkpgcounter/download/tarballs/pkpgcounter-2.17.tar.gz'
+      </description>
+    </entry>
+    <entry name="python-psyco" display="true">
+      <states>
+        <state name="Pass">python-psyco is installed</state>
+        <state name="Fail">python-psyco is not installed</state>
+        <state name="Not-Applicable">python-psyco is not supported on this platform</state>
+      </states>
+      <description>
+        python-psyco is an accelerator module for the Python language which can make the parsing 
+        of Page Description Languages by pkpgcounter faster.
+        It is only supported on the x86 platform though, so if you use something else you
+        won't be able to install it.
+        It recommended but not necessary that you install it for PyKota to work.
+        You can install it with 'apt-get install python-psyco'
+      </description>
+    </entry>
+  </category>
+  <category name="Print Server Installation procedure">
+    <description>PyKota needs to be installed on the CUPS server.
+    </description>  
+    <entry name="Go to PyKota's download directory" display="true">
+      <states>
+        <state name="Pass">Working directory is now pykota/</state>
+        <state name="Fail">Current working directory is not pykota/</state>
+      </states>
+      <description>
+        PyKota's installation script expects to be run from PyKota's download directory.
+        You've previously downloaded PyKota into the ./pykota/ directory, so
+        you can go to this directory with 'cd pykota'
+      </description>
+    </entry>
+    <entry name="Install PyKota's files" display="true">
+      <states>
+        <state name="Pass">PyKota files are installed</state>
+        <state name="Fail">PyKota's files are not installed</state>
+      </states>
+      <description>
+        PyKota's files must be installed on your system for PyKota to work.
+        Once you're in the pykota/ directory you can install them
+        with 'python setup.py install'
+      </description>
+    </entry>
+    <entry name="Create a 'pykota' system group" display="true">
+      <states>
+        <state name="Pass">The 'pykota' system group exists</state>
+        <state name="Fail">The 'pykota' system group doesn't exist</state>
+      </states>
+      <description>
+        PyKota requires a dedicated system group named 'pykota', you can create
+        it with 'addgroup --system pykota'
+      </description>
+    </entry>
+    <entry name="Create a 'pykota' system user in group 'pykota'" display="true">
+      <states>
+        <state name="Pass">The 'pykota' system user exists</state>
+        <state name="Fail">The 'pykota' system user doesn't exist</state>
+      </states>
+      <description>
+        PyKota requires a dedicated system user named 'pykota'.
+        You can create it with 'adduser --system --ingroup pykota --home /etc/pykota --gecos PyKota pykota'
+      </description>
+    </entry>
+    <entry name="Copy PyKota's sample configuration file from conf/" display="true">
+      <states>
+        <state name="Pass">pykota.conf now exists in ~pykota/</state>
+        <state name="Fail">pykota.conf doesn't exist in ~pykota/</state>
+      </states>
+      <description>
+        PyKota's main configuration file is named 'pykota.conf' and must be present in user pykota's home directory,
+        by default /etc/pykota/
+      </description>
+    </entry>
+    <entry name="Copy PyKota's sample administrative configuration file from conf/" display="true">
+      <states>
+        <state name="Pass">pykotadmin.conf now exists in ~pykota/</state>
+        <state name="Fail">pykotadmin.conf doesn't exist in ~pykota/</state>
+      </states>
+      <description>
+        PyKota's administrative configuration file is named 'pykotadmin.conf' and must be present in user pykota's home directory,
+        by default /etc/pykota/.
+        All users who can read this file have write access to PyKota's database.
+      </description>
+    </entry>
+    <entry name="Check permissions on PyKota's configuration files" display="true">
+      <states>
+        <state name="Pass">Permissions on configuration files are correct</state>
+        <state name="Fail">Permissions on configuration files are incorrect</state>
+      </states>
+      <description>
+        Any user who with read access to ~pykota/pykotadmin.conf will be considered a PyKota 
+        administrator, with full read+write access to PyKota's database.
+        Any user with read access to ~pykota/pykota.conf will have read access to PyKota's database. Access
+        is limited to this particular user's personal datas and to impersonal datas like printers
+        informations. Take extreme care when relaxing the permissions on those files.
+        In any case, the user CUPS runs as, for example 'lp' or 'cupsys', MUST be given read
+        access to both of these files for PyKota to work. Under Debian, CUPS currently runs
+        as root, following the recommandations from CUPS' authors, so it's safe to make
+        both of these files owned by user pykota:pykota and chmod 0640. You can even
+        make ~pykota/pykotadmin.conf be chmod 0600 if you want to be really secure.
+      </description>
+    </entry>
+    <entry name="Modify PyKota's configuration files" display="true">
+      <states>
+        <state name="Pass">PyKota configuration files are correct</state>
+        <state name="Fail">PyKota configuration files are incorrect</state>
+      </states>
+      <description>
+        PyKota's configuration files must be adapted to your own configuration,
+        and you can do this with any text editor of your choice.
+        In particular, the usernames and passwords used for the readonly
+        and the read+write database accounts have to be put there.
+        You'll also define the print administrator's name and email address,
+        and define the hostname of your SMTP server.
+        Finally many configuration directives must be checked or modified
+        to control PyKota's behavior. To help you in doing this, the
+        sample configuration files which you have installed are
+        extensively documented with comments.
+      </description>
+    </entry>
+    <entry name="Setup the cupspykota backend" display="true">
+      <states>
+        <state name="Pass">cupspykota is installed</state>
+        <state name="Fail">cupspykota is not installed</state>
+      </states>
+      <description>
+        To be able to route printing traffic through PyKota, CUPS must
+        be told that PyKota is installed. To do this, we must
+        add the 'cupspykota' backend wrapper to CUPS' backend directory,
+        usually '/usr/lib/cups/backend'.
+        To do this the easiest is to create a symbolic link :
+        'ln -s /usr/share/pykota/cupspykota /usr/lib/cups/backend/'
+        and then '/etc/init.d/cupsys restart'
+      </description>
+    </entry>
+    <entry name="Verify that PyKota is known to CUPS" display="true">
+      <states>
+        <state name="Pass">PyKota is known to CUPS</state>
+        <state name="Fail">PyKota is not known to CUPS</state>
+      </states>
+      <description>
+        Once you've installed the 'cupspykota' backend wrapper and
+        restarted CUPS. You may want to check that CUPS recognizes it.
+        Just look at http://cupsserver.example.com:631/admin/ to see
+        if any 'PyKota managed' device is available. If none is available
+        the permissions on the cupspykota backend are probably incorrect
+        for your setup : the user CUPS runs as MUST be able to exectute
+        the 'cupspykota' backend wrapper, as well as to read both
+        PyKota's configuration files.
+      </description>
+    </entry>
+  </category>  
+</checklist>

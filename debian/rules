@@ -1,0 +1,120 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# GNU copyright 1997 to 1999 by Joey Hess.
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+export DH_COMPAT=1
+
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	#/usr/bin/docbook-to-man debian/pykota.sgml > pykota.1
+	/usr/bin/python setup.py build
+	(cd docs; make -f ../debian/Makefile.docs build)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	/usr/bin/python setup.py clean --all
+	(cd docs; make -f ../debian/Makefile.docs clean)
+	rm -f pykota/__init__.pyc pykota/version.pyc
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	/usr/bin/python setup.py install --prefix=`pwd`/debian/tmp/usr --no-compile
+
+	install -m 644 conf/pykota.conf.sample $(CURDIR)/debian/tmp/etc/pykota/pykota.conf
+	install -m 640 conf/pykotadmin.conf.sample $(CURDIR)/debian/tmp/etc/pykota/pykotadmin.conf
+	install -m 644 debian/printquota.default $(CURDIR)/debian/tmp/etc/default/printquota
+	install -m 755 debian/pykota.cron.daily $(CURDIR)/debian/tmp/etc/cron.daily/pykota
+
+	install -m 755 -g www-data -o www-data cgi-bin/printquota.cgi $(CURDIR)/debian/tmp/usr/lib/cgi-bin/printquota.cgi
+	install -m 755 -g www-data -o www-data cgi-bin/dumpykota.cgi $(CURDIR)/debian/tmp/usr/lib/cgi-bin/dumpykota.cgi
+	install -m 755 -g www-data -o www-data cgi-bin/pykotme.cgi $(CURDIR)/debian/tmp/usr/lib/cgi-bin/pykotme.cgi
+	install -m 644 stylesheets/pykota.css $(CURDIR)/debian/tmp/var/www/pykota.css
+	install -m 644 logos/pykotasmall.png $(CURDIR)/debian/tmp/var/www/pykota.png
+	install -m 644 initscripts/README $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/README
+	install -m 644 initscripts/ldap/pykota-sample.ldif $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/ldap/pykota-sample.ldif
+	install -m 644 initscripts/ldap/pykota.schema $(CURDIR)/debian/tmp/etc/ldap/schema/pykota.schema
+	install -m 644 initscripts/ldap/README.ldap $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/ldap/README.ldap
+	install -m 644 initscripts/sqlite/README.sqlite $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/sqlite/README.sqlite
+	install -m 644 initscripts/sqlite/pykota-sqlite.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/sqlite/pykota-sqlite.sql
+	install -m 644 initscripts/mysql/README.mysql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/mysql/README.mysql
+	install -m 644 initscripts/mysql/pykota-mysql.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/mysql/pykota-mysql.sql
+	install -m 644 initscripts/postgresql/README.postgresql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/README.postgresql
+	install -m 644 initscripts/postgresql/pykota-postgresql.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/pykota-postgresql.sql
+	install -m 644 initscripts/postgresql/upgrade-from-before-1.03.py $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-from-before-1.03.py
+	install -m 644 initscripts/postgresql/upgrade-to-1.14.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.14.sql
+	install -m 644 initscripts/postgresql/upgrade-to-1.16.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.16.sql
+	install -m 644 initscripts/postgresql/upgrade-to-1.19.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.19.sql
+	install -m 644 initscripts/postgresql/upgrade-to-1.21.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.21.sql
+	install -m 644 initscripts/postgresql/upgrade-to-1.23.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.23.sql
+	install -m 644 initscripts/postgresql/VERYOLDpykota-upgrade-postgresql.sql $(CURDIR)/debian/tmp/usr/share/doc/pykota/initscripts/postgresql/VERYOLDpykota-upgrade-postgresql.sql
+	install -m 644 logos/pleaseupgrade.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pleaseupgrade.png
+	install -m 644 logos/pykotaofficialindexed.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykotaofficialindexed.png
+	install -m 644 logos/pykotaofficialindexedsmall.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykotaofficialindexedsmall.png
+	install -m 644 logos/pykotaofficial.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykotaofficial.png
+	install -m 644 logos/pykotaofficialsmall.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykotaofficialsmall.png
+	install -m 644 logos/pykota.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykota.png
+	install -m 644 logos/pykotasmall.png $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykotasmall.png
+	install -m 644 logos/pykota.xcf $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/pykota.xcf
+	install -m 644 logos/README $(CURDIR)/debian/tmp/usr/share/doc/pykota/logos/README
+	install -m 644 qa-assistant/pykota.xml $(CURDIR)/debian/tmp/usr/share/qa-assistant/data/pykota.xml
+	(chown www-data.www-data $(CURDIR)/debian/tmp/usr/lib/cgi-bin/printquota.cgi)
+	(chown www-data.www-data $(CURDIR)/debian/tmp/usr/lib/cgi-bin/dumpykota.cgi)
+	(chown www-data.www-data $(CURDIR)/debian/tmp/usr/lib/cgi-bin/pykotme.cgi)
+	(cd docs; make -f ../debian/Makefile.docs install DESTDIR=$(CURDIR)/debian/tmp/)
+
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+# Build architecture-independent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+	dh_installdebconf
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+#	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

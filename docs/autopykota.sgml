@@ -1,0 +1,48 @@
+<!-- $Id: autopykota.sgml 2147 2005-03-06 16:52:43Z jerome $ -->
+
+<chapter>
+  <title>Automate user account creation with autopykota</title>
+  <para>Last modified on $Date: 2005-03-06 17:52:43 +0100 (dim, 06 mar 2005) $</para>
+  
+  <para>
+    If you want to automate the users account and quota entries creation on first print,
+    you can do this easily with the <literal>policy: external( your command here )</literal>
+    directive in <filename>pykota.conf</filename>.
+    You just have to put your command of choice there.
+  </para>
+  
+  <para>
+    <command>autopykota</command> was designed to automatically set
+    an initial account balance value to newly added users, while taking
+    care of not resetting the balance value if the user already exists 
+    but doesn't have a quota entry on the current printer. 
+  </para>
+  
+  <para>
+    If you want to limit your users by page quota then you must not use
+    this command. Just use some form of the <command>edpykota</command>
+    command and it will work just fine. On the other hand, if you want
+    to limit your users by their account balance, this command was
+    made to ease your life : you don't have to design a complex shell
+    script to check if user already exists or have a quota entry on
+    the current printer before deciding if you have to set the initial
+    balance value or not : <command>autopykota</command> takes
+    care of all this automagically.
+  </para>
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>autopykota</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+        <group choice="opt">
+          <arg>-i <replaceable>value</replaceable></arg>
+          <arg>--initbalance <replaceable>value</replaceable></arg>
+        </group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

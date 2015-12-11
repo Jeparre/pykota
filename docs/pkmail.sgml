@@ -1,0 +1,101 @@
+<!-- $Id: pkmail.sgml 2551 2005-10-09 20:39:06Z jerome $ -->
+
+<chapter>
+  <title>Control PyKota by email with pkmail</title>
+  <para>Last modified on $Date: 2005-10-09 22:39:06 +0200 (dim, 09 oct 2005) $</para>
+  
+  <para>
+    <command>pkmail</command> is an email gateway which allows you to control
+    <application>PyKota</application> using email messages.
+  </para>  
+  
+  <para>
+    For now, this command can't do more than print quota reports, but more
+    powerful functionnalities are planned for a future release.
+  </para>
+  
+  <sect1>
+    <title>Installation</title>
+    <para>
+      Contrary to other commands included with <application>PyKota</application>,
+      <command>pkmail</command> is not meant to be used from the command line,
+      but instead launched from your mail server when particular messages are
+      received.
+    </para>
+    
+    <para>
+      In order to achieve this, the easiest way is to define a special
+      email alias. Every message received on this address will cause your webserver to automatically
+      launch <command>pkmail</command>, passing the message's content on <command>pkmail</command>'s standard input.
+    </para>
+    
+    <para>
+      The name of the email alias is completely free, let's call it <literal>pykotacmd</literal> for example.
+      Now edit <filename>/etc/aliases</filename> with your favorite text editor and enter the following :
+<screen>      
+pykotacmd :     "|/usr/bin/pkmail"
+</screen>
+    </para>
+    
+    <para>
+      Finally, tell your mail server that new aliases are available. To do so, at the command prompt just
+      type :
+<screen>      
+$ newaliases
+</screen>      
+    </para>
+    
+    <para>
+      But to be useful, <command>pkmail</command> must be able to read <application>PyKota</application>'s
+      <filename>pykotadmin.conf</filename> configuration file. A simple way to do so is to put the system
+      user your mail server runs aliases commands as into the <literal>pykota</literal> system group, then
+      restart your mail server software.
+      <tip>
+        <title>Tip</title>
+        <para>
+          Depending on the software you use as the mail server, additional work may be needed. For example
+          <application>Exim</application> doesn't by default initialize all the groups when launching a
+          command from the <filename>/etc/aliases</filename> database. Please refer to your mail server's
+          documentation for details.
+        </para>
+      </tip>  
+    </para>
+  </sect1>  
+  
+  <sect1>
+    <title>Usage</title>
+    <para>
+      Now that <command>pkmail</command> is installed, we can use it by sending email messages to the address
+      <literal>pykotacmd@yourmailserver.example.com</literal>. This command will then process your request,
+      and send the result back to you by email.
+    </para>
+    
+    <para>
+      For now, <command>pkmail</command> only accepts commands in the <literal>Subject:</literal> field
+      of the email message you send to it.
+    </para>
+    
+    <para>
+      <command>pkmail</command> is still in a pretty experimental state, and only recognizes a single command :
+      <command>report</command>
+    </para>
+    
+    <para>
+      The <command>report</command> takes an username as its only optional argument. So for example to
+      receive a print quota report for user <literal>jerome</literal>, you'll just have to send
+      an email message with <literal>report jerome</literal> in the subject.
+    </para>
+  </sect1>  
+  
+  <sect1>
+    <title>Reference</title>
+    <para>
+      <cmdsynopsis>
+        <command>pkmail</command>
+        <group choice="opt"><arg>-v</arg><arg>--version</arg></group>
+        <group choice="opt"><arg>-h</arg><arg>--help</arg></group>
+      </cmdsynopsis>
+    </para>
+  </sect1>
+</chapter>
+

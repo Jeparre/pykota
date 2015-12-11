@@ -1,0 +1,15 @@
+usr/bin
+usr/share/pykota
+usr/share/doc/pykota/logos
+usr/share/doc/pykota/initscripts/ldap
+usr/share/doc/pykota/initscripts/sqlite
+usr/share/doc/pykota/initscripts/mysql
+usr/share/doc/pykota/initscripts/postgresql
+usr/share/qa-assistant/data
+usr/lib/cups/backend
+usr/lib/cgi-bin
+etc/pykota
+etc/default
+etc/cron.daily
+etc/ldap/schema
+var/www

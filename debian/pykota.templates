@@ -1,0 +1,61 @@
+
+Template: pykota/upgrading_1.23
+Type: note
+Description: Upgrading from a pre-1.23 to >=1.23
+ Warning: if you are upgrading from a pre-1.23 to
+ 1.23 or above and use the postgreSQL backend,
+ then you have to modify your database schema using
+ /usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.23.sql
+ .
+ Please read documentation in
+ /usr/share/doc/pykota/initscripts/postgresql/ to learn
+ how to do.
+ .
+ You don't have anything special to do if this is your
+ first installation or if you are already running
+ version 1.23 or above.
+
+Template: pykota/upgrading_1.21alpha24
+Type: note
+Description: Upgrading from a pre-1.21alpha24 to >=1.21alpha24
+ Warning: if you ar upgrading from a pre-1.21alpha24 to
+ 1.21alpha24 or above and use the postgreSQL backend,
+ then you have to modify your database schema using
+ /usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.21.sql
+ .
+ Please read documentation in
+ /usr/share/doc/pykota/initscripts/postgresql/ to learn
+ how to do.
+ .
+ You don't have anything special to do if this is your
+ first installation or if you are already running
+ version 1.21alpha24 or above.
+
+Template: pykota/upgrading_1.19alpha17
+Type: note
+Description: Upgrading from a pre-1.19alpha17 to >=1.19alpha17
+ Warning: if you ar upgrading from a pre-1.19alpha17 to
+ 1.19alpha17 or above and use the postgreSQL backend,
+ then you have to modify your database schema using
+ /usr/share/doc/pykota/initscripts/postgresql/upgrade-to-1.19.sql
+ .
+ Please read documentation in
+ /usr/share/doc/pykota/initscripts/postgresql/ to learn
+ how to do.
+ .
+ You don't have anything special to do if this is your
+ first installation or if you are already running
+ version 1.19alpha17 or above.
+
+Template: pykota/upgrading_1.19alpha10
+Type: note
+Description: Upgrading from a pre-1.19alpha10 to >=1.19alpha10
+ Warning: if you are upgrading from a pre-1.19alpha10
+ to 1.19alpha10 or above you **MUST** modify your
+ /etc/pykota/pykota.conf file because "accounter"
+ and "requester" directives supported values have
+ changed.
+ .
+ You don't have anything special to do if this is your
+ first installation or if you are already running
+ version 1.19alpha10 or above.

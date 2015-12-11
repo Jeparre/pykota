@@ -1,0 +1,20 @@
+#!/bin/sh -e
+# $Id: preinst 3222 2007-07-24 09:59:35Z jerome $
+
+. /usr/share/debconf/confmodule
+
+if [ "$1" = "install" -o "$1" = "upgrade" ]; then
+        if ! id -g pykota > /dev/null 2>&1 ; then
+                addgroup --system pykota
+        fi
+        if ! id -u pykota > /dev/null 2>&1 ; then
+                adduser --system --home /etc/pykota --ingroup pykota pykota
+                chsh -s /bin/sh pykota
+        fi
+        if [ "$1" = "upgrade" ]; then
+                cp -a /etc/pykota/pykota.conf /etc/pykota/pykota.conf.saved 2>/dev/null
+                cp -a /etc/pykota/pykotadmin.conf /etc/pykota/pykotadmin.conf.saved 2>/dev/null
+        fi
+fi
+
+exit 0
