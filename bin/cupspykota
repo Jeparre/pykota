@@ -23,7 +23,7 @@
 # $Id: cupspykota 3462 2008-12-01 10:05:22Z jerome $
 #
 #
-
+import re
 import sys
 import os
 import fcntl
@@ -660,7 +660,7 @@ class CUPSBackend(PyKotaTool) :
         os.environ["PYKOTADATAFILE"] = self.DataFile
         os.environ["PYKOTAJOBSIZEBYTES"] = str(self.JobSizeBytes)
         os.environ["PYKOTAMD5SUM"] = self.JobMD5Sum
-        os.environ["PYKOTAJOBORIGINATINGHOSTNAME"] = self.ClientHost or ""
+        os.environ["PYKOTAJOBORIGINATINGHOSTNAME"] = self.ClientHost or str(''.join(list(re.findall( r'[0-9]+(?:\.[0-9]+){3}',self.Options)))) or ""
         os.environ["PYKOTAJOBID"] = self.JobId
         os.environ["PYKOTAUSERNAME"] = self.UserName
         os.environ["PYKOTAORIGINALUSERNAME"] = self.OriginalUserName
