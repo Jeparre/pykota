@@ -435,7 +435,7 @@ class SQLStorage :
     def getParentPrintersFromBackend(self, printer) :    
         """Get all the printer groups this printer is a member of."""
         pgroups = []
-        result = self.doSearch("SELECT groupid,printername FROM printergroupsmembers JOIN printers ON groupid=id WHERE printerid=%s" % self.doQuote(printer.ident))
+        result = self.doSearch("SELECT groupid,printername FROM printergroupsmembers JOIN printers ON groupid=printers.id WHERE printerid=%s" % self.doQuote(printer.ident))
         if result :
             for record in result :
                 if record["groupid"] != printer.ident : # in case of integrity violation
