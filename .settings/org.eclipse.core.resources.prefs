@@ -15,4 +15,5 @@ encoding//pykota/reporter.py=ISO-8859-15
 encoding//pykota/storages/sql.py=ISO-8859-15
 encoding//pykota/tool.py=ISO-8859-15
 encoding//pykota/version.py=ISO-8859-15
+encoding/checkdeps.py=ISO-8859-15
 encoding/setup.py=ISO-8859-15
