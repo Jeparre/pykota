@@ -60,10 +60,6 @@ class Storage(BaseStorage, SQLStorage) :
             raise PGError, msg
         self.closed = 0
         try :
-            self.quote = self.database._quote
-        except AttributeError : # pg <v4.x
-            self.quote = pg._quote
-        try :
             self.database.query("SET CLIENT_ENCODING TO 'UTF-8';")
         except PGError, msg :
             self.tool.logdebug("Impossible to set database client encoding to UTF-8 : %s" % msg)
@@ -137,15 +133,7 @@ class Storage(BaseStorage, SQLStorage) :
 
     def doQuote(self, field) :
         """Quotes a field for use as a string in SQL queries."""
-        if type(field) == type(0.0) :
-            typ = "decimal"
-        elif type(field) == type(0) :
-            typ = "int"
-        elif type(field) == type(0L) :
-            typ = "int"
-        else :
-            typ = "text"
-        return self.quote(field, typ)
+        return self.database.adapter.adapt_inline(field)
 
     def prepareRawResult(self, result) :
         """Prepares a raw result by including the headers."""
